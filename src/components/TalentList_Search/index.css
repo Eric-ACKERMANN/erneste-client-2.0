@@ -1,0 +1,24 @@
+.tools-search {
+  display: flex;
+  border: solid 1px var(--input-border-color);
+  border-radius: 5px;
+  height: var(--input-height);
+  margin-right: 30px;
+  align-items: center;
+  padding: 0px 10px;
+}
+
+.tools-search > input {
+  padding: 5px;
+  border: none;
+  text-decoration: none;
+  outline: none;
+  font-size: 14px;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.tools-search > i {
+  font-size: 16px;
+  color: #333366;
+}

@@ -1,0 +1,23 @@
+.all-button-add-talent {
+  display: flex;
+  align-items: center;
+  background-color: #333366;
+  border-radius: 5px;
+  height: var(--input-height);
+  cursor: pointer;
+  padding: 0px 10px;
+  overflow: hidden;
+}
+
+.all-button-add-talent > i {
+  color: white;
+  font-size: 14px;
+}
+
+.all-button-add-talent > button {
+  color: white;
+  font-size: 14px;
+  background-color: #333366;
+  border: none;
+  cursor: pointer;
+}

@@ -1,0 +1,70 @@
+.client-users-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  padding: 30px 20px;
+  background-color: var(--container-background);
+  margin: 50px 0 0 20px;
+  border-radius: 2px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* width: 500px; */
+}
+
+.client-users-header {
+  font-size: 11px;
+  margin-bottom: 20px;
+}
+
+.client-users-email {
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--input-border-color);
+  margin-bottom: 10px;
+}
+
+.client-users-footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.client-users-add-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--dark-blue);
+  color: white;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  height: 30px;
+  padding: 0 20px;
+  box-sizing: border-box;
+  position: relative;
+  bottom: -5px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.client-users-activation-key-container > div {
+  font-size: 10px;
+}
+
+.client-users-activation-key-container > input {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--input-border-color);
+  border-radius: 3px;
+  height: 30px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}

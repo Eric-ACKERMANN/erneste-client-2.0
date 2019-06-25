@@ -1,0 +1,17 @@
+.client-for-admin-container {
+  max-width: 1200px;
+  height: 90vh;
+  display: flex;
+  margin: auto;
+}
+
+.client-for-admin-overlay {
+  width: 100vw;
+  height: 100%;
+  background-color: var(--placeholder-grey);
+  opacity: 0.2;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 2;
+}

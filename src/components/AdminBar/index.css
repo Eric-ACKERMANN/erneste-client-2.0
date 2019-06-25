@@ -1,0 +1,25 @@
+.admin-bar-container {
+  --input-padding: 10px;
+  --container-background: rgb(254, 254, 254);
+  display: flex;
+  width: 480px;
+  /* justify-content: space-around; */
+  margin: auto;
+  margin-top: 50px;
+  border-radius: 5px;
+  background-color: var(--container-background);
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+}
+
+.admin-bar-container div {
+  display: flex;
+  width: 160px;
+  justify-content: center;
+  align-items: center;
+  padding: var(--input-padding) 40px;
+  cursor: pointer;
+}
+
+.admin-bar-container div:hover {
+  background-color: #fafafc;
+}

@@ -1,0 +1,150 @@
+.talent-display-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  padding: 35px;
+  background-color: var(--container-background);
+  margin: 100px 20px;
+  border-radius: 2px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  position: relative;
+}
+
+/* PICTURE */
+
+.talent-info-picture-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 auto 20px auto;
+  cursor: pointer;
+  height: 220px;
+  width: 220px;
+  position: relative;
+}
+
+.talent-info-picture {
+  position: absolute;
+  height: auto;
+  width: 220px;
+  object-fit: cover;
+  top: 0;
+}
+
+.talent-info-empty-photo {
+  height: 220px;
+  width: 220px;
+  border: 1px dotted #333266;
+  border-radius: 5px;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.talent-info-text-empty-picture {
+  width: 70%;
+  text-align: center;
+  padding: 5px;
+  color: var(--placeholder-grey);
+}
+
+.talent-info-update-profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33px;
+  height: 27px;
+  border-radius: 3px;
+  background-color: var(--container-background);
+  position: absolute;
+  right: 37px;
+  top: 237px;
+  z-index: 2;
+  box-shadow: 0px 3px 6px rgba(28, 28, 28, 0.1);
+  cursor: pointer;
+}
+
+/* INFORMATIONS */
+
+.talent-info-detail-display {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+/* Name */
+
+.talent-info-first-name {
+  font-size: 30px;
+  width: 220px;
+}
+
+/* Availability */
+
+.talent-info-availability-dot {
+  display: flex;
+  align-items: center;
+  height: var(--input-height);
+  width: 220px;
+  justify-content: flex-start;
+  margin: 10px 0;
+}
+
+.talent-info-availability-dot div {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Everything else */
+
+.talent-info-display-div {
+  width: 220px;
+  margin-top: 5px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--input-border-color);
+}
+
+/* Date */
+
+.talent-info-display-update {
+  font-size: 11px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+@media screen and (max-width: 414px) {
+  .talent-display-container {
+    margin: 30px 20px;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .talent-info-update-profile {
+    width: 53px;
+    height: 47px;
+    font-size: 30px;
+    right: 5px;
+    top: 5px;
+    box-shadow: none;
+  }
+
+  .talent-info-display-div {
+    width: 300px;
+    font-size: 17px;
+  }
+  .talent-info-display-update {
+    font-size: 13px;
+  }
+}

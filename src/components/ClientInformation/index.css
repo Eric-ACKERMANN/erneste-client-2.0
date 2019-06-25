@@ -1,0 +1,105 @@
+.client-information-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  padding: 35px 25px;
+  background-color: var(--container-background);
+  margin-top: 50px;
+  border-radius: 2px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  flex: 1.5;
+  /*  height: 100%; */
+}
+
+.client-information-detail-container {
+  display: flex;
+}
+
+.client-information-empty-picture {
+  width: 150px;
+  height: 150px;
+  border: 2px solid var(--input-border-color);
+}
+
+.client-information-detail {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 20px;
+}
+
+.client-information-field {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  padding: 0 20px;
+  background-color: rgb(153, 166, 204);
+  color: white;
+  border-radius: 3px;
+  margin: 5px 0;
+}
+
+.client-information-size {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  padding: 0 20px;
+  background-color: var(--soft-skill-color);
+  color: white;
+  border-radius: 3px;
+  margin: 5px 0;
+}
+
+.client-information-name {
+  margin: 0;
+  font-size: 30px;
+}
+
+/* Talent container */
+
+.client-information-talent-search {
+  display: flex;
+  margin: 30px 0;
+  height: 30px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 4px;
+  width: 45%;
+}
+
+.client-information-magnifier {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.client-information-talent-search > input {
+  flex: 1;
+  border: none;
+  font-size: 14px;
+}
+
+.client-information-talent-list-title {
+  display: flex;
+  border-bottom: 2px solid var(--input-border-color);
+  padding-bottom: 10px;
+}
+
+.client-information-talent {
+  flex: 2;
+}
+
+.client-information-state {
+  flex: 2;
+}
+
+.client-information-rating {
+  flex: 1;
+}

@@ -1,0 +1,78 @@
+.reset-password-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  /* width: 1200px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.reset-password-input-container {
+  display: flex;
+  flex-direction: column;
+  overflow: wrap;
+  width: 220px;
+  background-color: var(--container-background);
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  margin-top: 100px;
+}
+
+.reset-password-input-container img {
+  width: 220px;
+  height: auto;
+  margin-top: 0;
+  position: relative;
+  top: -20px;
+  border-bottom: 1px solid var(--placeholder-grey);
+}
+
+.reset-password-input-container input {
+  height: var(--input-height);
+  width: var(--input-width);
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  padding: 0 var(--input-padding);
+  margin: var(--input-margin) 0;
+  outline: none;
+  font-size: 14px;
+  color: #31313c;
+  margin-top: 20px;
+}
+
+.reset-password-input-container .reset-password-error {
+  border-color: var(--soft-skill-color);
+}
+
+.reset-password-error-message {
+  color: var(--soft-skill-color);
+}
+
+.reset-password-validate {
+  text-align: center;
+  color: var(--container-background);
+  background-color: var(--dark-blue);
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-top: 30px;
+  cursor: pointer;
+}
+
+/* .reset-password-cancel {
+  border: 1px solid var(--placeholder-grey);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.reset-password-cancel,
+.reset-password-validate {
+ 
+}
+ */

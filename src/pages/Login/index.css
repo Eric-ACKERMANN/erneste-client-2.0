@@ -1,0 +1,304 @@
+.login-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  display: flex;
+  /* justify-content: space-around; */
+  align-items: center;
+  margin: 5px auto;
+  width: 1280px;
+  color: #6e78ad;
+}
+
+.login-h3 {
+  margin: 5px 0 0 0;
+  color: var(--dark-blue);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.login-left-side {
+  margin: 60px 0 60px 80px;
+  width: 500px;
+}
+
+/* .login-container >  */
+.login-img {
+  width: 845px;
+  height: 700px;
+  margin-right: 15px;
+  background-color: var(--container-background);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-special-title {
+  font-family: "Playfair Display";
+  font-size: 60px;
+  color: var(--dark-blue);
+  margin: 70px 0;
+}
+
+.login-special-title span {
+  font-weight: bold;
+  color: var(--soft-skill-color);
+}
+
+.login-special-title div {
+  font-size: 40px;
+  font-weight: 200;
+  margin: 50px 0;
+}
+
+.login-circle {
+  width: 900px;
+  height: 900px;
+  background-color: #fafafc;
+  position: absolute;
+  border-radius: 50%;
+  right: -665px;
+  top: -60px;
+}
+
+.logo-login {
+  width: 100px;
+  height: auto;
+}
+
+/* .login-img img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+} */
+
+.login-input-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+/* Button to chosse Talent or Entreprise connexion */
+.login-input-title {
+  color: var(--dark-blue);
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 20px;
+  background-color: #fafafc;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.login-input-connexion-notClicked {
+  width: 45%;
+  cursor: pointer;
+  padding: 10px 0px 10px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fafafc;
+  color: #333266;
+  border-radius: 10px;
+}
+
+.login-input-connexion-clicked {
+  width: 45%;
+  cursor: pointer;
+  padding: 10px 0px 10px 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fafafc;
+  background-color: #333266;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(100, 100, 100, 0.1);
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+}
+
+/* From Connectez-vous to the end*/
+.login-input-body {
+  padding: 0px 20px 25px 20px;
+  background-color: var(--container-background);
+  box-shadow: 0 6px 20px rgba(100, 100, 100, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/*block containing title,input,required*/
+.login-input-block {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0 20px 0;
+  position: relative;
+}
+
+/*block containing title,input*/
+.login-input-block-input {
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  font-weight: 500;
+}
+
+/*When email etc false*/
+.login-input-block-input-blockFalse {
+  padding-top: 15px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: #f44336;
+  font-weight: 500;
+}
+
+/* Votre email*/
+.login-input-block-title {
+  position: absolute;
+  font-size: 16px;
+  top: 22px;
+  -webkit-transition: top 0.5s, font-size 0.5s;
+  transition: top 0.2s, font-size 0.2s;
+}
+
+/*Votre email lorsque l'input est focus*/
+.login-input-block-title-focused {
+  position: absolute;
+  top: 0px;
+  font-size: 12px;
+  -webkit-transition: top 0.5s, font-size 0.5s;
+  transition: top 0.2s, font-size 0.2s;
+}
+
+/* Input*/
+.login-input {
+  width: 300px;
+  font-weight: 500;
+  padding: 7px 0 7px 0;
+  border: none;
+  border-bottom: 2px solid #6e78ad;
+  outline: none;
+  font-size: 14px;
+}
+
+.inputPassword {
+  border: none;
+}
+
+/* Input incorrect*/
+.inputFalse {
+  border-bottom: 2px solid red;
+}
+
+/*Choose Talent - pas de clé d'activation*/
+.talentMode {
+  height: 0px;
+  margin: 0;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  overflow: hidden;
+}
+/*Choose Company - clé d'activation*/
+.companyMode {
+  height: 80px;
+  margin-bottom: 0;
+  margin-top: 30px;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  overflow: hidden;
+}
+
+/* Requis*/
+.login-input-block-required {
+  font-size: 12px;
+  position: absolute;
+  top: 55px;
+  color: red;
+}
+
+.test {
+  width: 300px;
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #6e78ad;
+}
+
+/* Input incorrect*/
+.inputFalse {
+  border-bottom: 2px solid red;
+}
+
+.login-password-eye {
+  padding: 0px 5px;
+  cursor: pointer;
+}
+
+::placeholder {
+  font-size: 14px;
+  color: #6e78ad;
+}
+
+.login-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--dark-blue);
+  color: white;
+  margin-top: 30px;
+  font-size: 15.5px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  height: 60px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.wrong-password {
+  overflow: hidden;
+  height: 20px;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #ef6364;
+  font-weight: 600;
+}
+
+.not-wrong-password {
+  overflow: hidden;
+  height: 0px;
+  -webkit-transition: all 0.5s;
+  transition: all 0.5s;
+  color: #ef6364;
+}
+.login-redirect {
+  display: flex;
+  margin-top: 20px;
+  font-size: 13.5px;
+}
+
+.login-input-container a {
+  text-decoration: none;
+}
+
+.login-input-container a:visited {
+  color: var(--dark-blue);
+}
+
+.login-redirect div {
+  margin-left: 5px;
+  font-weight: 600;
+}
+
+.link-block {
+  margin-top: 10px;
+  text-decoration: underline;
+  display: flex;
+  max-width: 300px;
+  font-size: 12px;
+}

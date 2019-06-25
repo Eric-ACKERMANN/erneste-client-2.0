@@ -1,0 +1,210 @@
+.talent-informations-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  padding: 35px;
+  background-color: var(--container-background);
+  margin: 100px 20px;
+  border-radius: 2px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+}
+
+.talent-informations-picture-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0 auto 20px auto;
+  cursor: pointer;
+  height: 220px;
+  width: 220px;
+  position: relative;
+}
+
+.talent-informations-picture {
+  position: absolute;
+  height: auto;
+  width: 220px;
+  object-fit: cover;
+  top: 0;
+}
+
+.talent-informations-empty-picture {
+  height: 220px;
+  width: 220px;
+  border: 1px dotted #333266;
+  border-radius: 5px;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.talent-informations-text-empty-picture {
+  width: 70%;
+  text-align: center;
+  padding: 5px;
+  color: var(--placeholder-grey);
+}
+
+.talent-informations-details-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.talent-informations-container input {
+  height: var(--input-height);
+  width: var(--input-width);
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  padding: 0 var(--input-padding);
+  margin: var(--input-margin) 0;
+  outline: none;
+  font-size: 14px;
+  color: #31313c;
+}
+
+.talent-informations-container .talent-informations-error {
+  border-color: var(--soft-skill-color);
+}
+
+.talent-informations-displayed-array {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 10px 0 10px;
+}
+
+.talent-informations-displayed-array-delete {
+  height: 25px;
+  width: 25px;
+  cursor: pointer;
+  font-size: 8px;
+}
+
+.talent-informations-relative-container {
+  position: relative;
+}
+
+.talent-informations-select-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--input-padding);
+  color: var(--placeholder-grey);
+  height: var(--input-height);
+  width: var(--input-width);
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  margin: var(--input-margin) 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.talent-informations-open-arrow {
+  transform: rotate(-90deg);
+}
+
+.talent-informations-close-arrow {
+  transform: rotate(90deg);
+}
+
+.talent-informations-list {
+  position: absolute;
+  top: 10px;
+  right: -225px;
+  border-radius: 5px;
+  height: 150px;
+  width: 200px;
+  z-index: 2;
+  padding: 0 var(--input-padding);
+  background-color: var(--container-background);
+  overflow: scroll;
+  border: 1px solid var(--input-border-color);
+}
+
+.talent-informations-list-element {
+  padding: 7px var(--input-padding);
+  cursor: pointer;
+  border-bottom: 1px solid var(--input-border-color);
+}
+
+.talent-informations-list-element:hover {
+  background-color: #fafafc;
+}
+
+.talent-informations-size-list {
+  position: absolute;
+  top: 10px;
+  right: -225px;
+  border-radius: 5px;
+  width: 200px;
+  z-index: 2;
+  padding: 0 var(--input-padding);
+  background-color: var(--container-background);
+  border: 1px solid var(--input-border-color);
+}
+
+.talent-informations-availability-dot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: var(--input-height);
+  width: 20px;
+}
+
+.talent-informations-availability-dot > div {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.talent-informations-buttons {
+  display: flex;
+  margin-top: 40px;
+  margin-left: 0;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.talent-informations-buttons a {
+  text-decoration: none;
+}
+
+.talent-informations-buttons a:visited {
+  color: var(--placeholder-grey);
+}
+
+.talent-informations-validate {
+  color: var(--container-background);
+  background-color: var(--dark-blue);
+}
+
+.talent-informations-cancel {
+  border: 1px solid var(--placeholder-grey);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.talent-informations-cancel,
+.talent-informations-validate {
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 414px) {
+  .talent-informations-container {
+    margin: 30px 20px;
+    border-radius: 10px;
+    position: relative;
+  }
+}

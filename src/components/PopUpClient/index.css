@@ -1,0 +1,99 @@
+.popup-client-container {
+  --input-padding: 10px;
+  --input-margin: 10px;
+  --input-width: 200px;
+  --input-height: 35px;
+  --container-background: rgb(254, 254, 254);
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+  --soft-skill-color: #ef6364;
+  width: 500px;
+  background-color: var(--container-background);
+  opacity: 1;
+  top: 30%;
+  left: 34%;
+  position: absolute;
+  z-index: 5;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.popup-client-title {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--input-border-color);
+  margin-bottom: 5px;
+}
+
+.popup-client-top-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.popup-client-close {
+  cursor: pointer;
+}
+
+.popup-client-input-container {
+  padding: 5px 20px;
+}
+
+.popup-client-name-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-client-name {
+  font-weight: 500;
+}
+
+.popup-client-container input {
+  height: 30px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 3px;
+  margin: 10px 0;
+  font-size: 14px;
+  padding-left: 10px;
+  color: var(--dark-blue);
+}
+
+.popup-client-name-container input {
+  width: 200px;
+}
+
+.popup-client-email-container > input {
+  width: 97.5%;
+}
+
+.popup-client-buttons {
+  padding: 0 20px;
+  margin: 10px 0 30px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.popup-client-buttons div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 10px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.popup-client-cancel {
+  margin-right: 20px;
+  border: 1px solid var(--placeholder-grey);
+  color: var(--placeholder-grey);
+}
+
+.popup-client-validate {
+  background-color: var(--dark-blue);
+  color: white;
+}

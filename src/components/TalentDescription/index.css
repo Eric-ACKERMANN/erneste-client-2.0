@@ -1,0 +1,173 @@
+.talent-description-container {
+  background-color: var(--container-background);
+  height: 50%;
+  width: 61%;
+  padding: 35px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  border-radius: 2px;
+  margin: 100px 0;
+}
+
+.talent-description-top-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+}
+
+.talent-description-h3 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.talent-description-container textarea {
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  margin: var(--input-margin) 0;
+  resize: none;
+  height: 80px;
+  outline: none;
+  overflow: scroll;
+  font-size: 14px;
+  color: #31313c;
+}
+
+.talent-description-container textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.talent-description-bot-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.talent-description-bot-left-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-right: 50px;
+}
+
+.talent-description-skills {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.talent-description-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+  box-sizing: border-box;
+  margin: 0 10px 7px 0;
+  overflow: hidden;
+}
+
+.talent-description-skills > div {
+  display: flex;
+  flex-wrap: wrap;
+  margin: var(--input-margin) 0;
+}
+
+.talent-description-tag-name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--input-height);
+  padding: 0 20px;
+  color: white;
+  border-radius: 3px;
+}
+
+.talent-description-remove-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  color: white;
+  cursor: pointer;
+}
+
+.talent-description-add-skills {
+  display: flex;
+  position: relative;
+}
+
+.talent-description-add-skills-button {
+  border: 1px solid var(--placeholder-grey);
+  padding: 4px 10px;
+  width: 120px;
+  border-radius: 3px;
+  color: var(--dark-blue);
+  text-align: center;
+  cursor: pointer;
+}
+
+.talent-description-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+}
+
+.talent-description-buttons a {
+  text-decoration: none;
+}
+
+.talent-description-buttons a:visited {
+  color: var(--placeholder-grey);
+}
+
+.talent-description-validate {
+  color: var(--container-background);
+  background-color: var(--dark-blue);
+}
+
+.talent-description-cancel,
+.talent-description-validate {
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.talent-description-cancel {
+  border: 1px solid var(--placeholder-grey);
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.talent-description-cancel:hover {
+  border-color: var(--dark-blue);
+  color: var(--dark-blue);
+}
+
+.talent-description-validate:hover {
+  background-color: var(--placeholder-grey);
+}
+
+@media screen and (min-width: 375px) and (max-width: 667px) {
+  .talent-description-container {
+    height: auto;
+    width: 93vw;
+    padding: 35px 10px;
+    margin: 0px 0;
+  }
+
+  .talent-description-h3 {
+    font-size: 18px;
+  }
+
+  .talent-description-bot-container {
+    flex-direction: column;
+  }
+  .talent-description-bot-left-container {
+    flex-direction: column;
+
+    margin-right: 0px;
+  }
+  textarea {
+    font-size: 16px;
+  }
+}

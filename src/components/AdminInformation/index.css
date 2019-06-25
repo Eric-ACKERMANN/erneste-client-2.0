@@ -1,0 +1,73 @@
+.admin-information-container {
+  --container-background: rgb(254, 254, 254);
+  width: 1200px;
+  display: flex;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  margin-top: 50px;
+  --input-border-color: rgba(168, 176, 208, 0.3);
+  --dark-blue: #333266;
+}
+
+.admin-informations-div {
+  border: 1px solid var(--input-border-color);
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px;
+  margin: 10px 0 20px 20px;
+}
+
+.admin-informations-top-div {
+  color: var(--dark-blue);
+  font-weight: 500;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+
+.admin-information-left-side {
+  background-color: var(--container-background);
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.admin-information-left-side input {
+  font-size: 14px;
+}
+
+.admin-informations-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 200px;
+  padding: 10px;
+  margin: 50px auto 20px auto /*  0 20px 20px */;
+  cursor: pointer;
+}
+
+.admin-information-right-side {
+  flex: 1;
+  background-color: var(--container-background);
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  border-radius: 5px;
+  padding: 20px;
+  margin-left: 20px;
+}
+
+.admin-information-password-change {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+}
+
+.admin-information-padding-top {
+  padding-top: 10px;
+}
+
+/*
+.input-password-change {
+  padding: 0;
+}
+ */

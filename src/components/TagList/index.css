@@ -1,0 +1,69 @@
+.tag-list-pop-up {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  z-index: 2;
+  background-color: var(--container-background);
+  border: 1px solid var(--placeholder-grey);
+  border-radius: 4px;
+  width: 200px;
+}
+
+.tag-list-pop-up input {
+  padding: 8px var(--input-padding);
+  margin: 0;
+  box-sizing: border-box;
+  width: 200px;
+  outline: none;
+  border: none;
+}
+
+.tag-list-pop-up-list {
+  overflow: scroll;
+  max-height: 120px;
+  border-top: 1px solid var(--input-border-color);
+  border-bottom: 1px solid var(--input-border-color);
+}
+
+.tag-list-buttons {
+  text-align: center;
+  padding: var(--input-padding);
+  cursor: pointer;
+}
+
+.tag-list-soft-skills {
+  background-color: var(--soft-skill-color);
+  color: white;
+}
+
+.tag-list-hard-skills {
+  background-color: var(--dark-blue);
+  color: white;
+}
+
+.tag-list-soft-skills:hover,
+.tag-list-hard-skills:hover {
+  opacity: 0.6;
+}
+
+.tag-list-tag-option-hard {
+  padding: 7px var(--input-padding);
+  cursor: pointer;
+  border-bottom: 1px solid var(--input-border-color);
+}
+
+.tag-list-tag-option-hard:hover {
+  background-color: var(--dark-blue);
+  color: white;
+}
+
+.tag-list-tag-option-soft {
+  padding: 7px var(--input-padding);
+  cursor: pointer;
+  border-bottom: 1px solid var(--input-border-color);
+}
+
+.tag-list-tag-option-soft:hover {
+  background-color: var(--soft-skill-color);
+  color: white;
+}
