@@ -267,6 +267,7 @@
   transition: all 0.5s;
   color: #ef6364;
   font-weight: 600;
+  margin-top: 20px;
 }
 
 .not-wrong-password {
@@ -284,6 +285,7 @@
 
 .login-input-container a {
   text-decoration: none;
+  color: #6d78ad;
 }
 
 .login-input-container a:visited {

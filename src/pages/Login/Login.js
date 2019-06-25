@@ -22,27 +22,48 @@ export default class Login extends React.Component {
 
   setEmail = e => {
     e.target.value === ""
-      ? this.setState({ email: e.target.value, emailInputFalse: true })
-      : this.setState({ email: e.target.value, emailInputFalse: false });
+      ? this.setState({
+          email: e.target.value,
+          emailInputFalse: true,
+          wrong: false
+        })
+      : this.setState({
+          email: e.target.value,
+          emailInputFalse: false,
+          wrong: false
+        });
   };
 
   setPassword = e => {
     e.target.value === ""
-      ? this.setState({ password: e.target.value, passwordInputFalse: true })
+      ? this.setState({
+          password: e.target.value,
+          passwordInputFalse: true,
+          wrong: false
+        })
       : this.setState({
           password: e.target.value,
-          passwordInputFalse: false
+          passwordInputFalse: false,
+          wrong: false
         });
   };
 
   setKey = e => {
     e.target.value === ""
-      ? this.setState({ key: e.target.value, keyInputFalse: true })
-      : this.setState({ key: e.target.value, keyInputFalse: false });
+      ? this.setState({
+          key: e.target.value,
+          keyInputFalse: true,
+          wrong: false
+        })
+      : this.setState({
+          key: e.target.value,
+          keyInputFalse: false,
+          wrong: false
+        });
   };
 
   setLogin = toto => {
-    this.setState({ login: toto });
+    this.setState({ login: toto, wrong: false });
   };
 
   showPassword = () => {
