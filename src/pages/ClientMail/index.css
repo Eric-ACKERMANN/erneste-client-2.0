@@ -100,7 +100,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin: 0;
+  margin: 5px;
   padding: 0;
 }
 
@@ -112,23 +112,15 @@
 }
 
 .client-mail-leftBlock-contactBlock-list-talent {
-  min-width: 160px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  min-width: 30%;
 }
 .client-mail-leftBlock-contactBlock-list-objet {
-  min-width: 160px;
-  display: flex;
-  align-items: center;
+  width: 50%;
+  font-size: 14px;
 }
 
 .client-mail-leftBlock-contactBlock-list-statut {
-  min-width: 160px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
+  min-width: 15%;
 }
 
 /* LEFT BLOCK - CONTACT BLOCK - LIST - TALENT */
@@ -142,19 +134,24 @@
   display: flex;
   flex-direction: row;
   list-style-type: none;
+  justify-content: flex-start;
   margin: 0;
-  padding: 10px 0px;
+  padding: 15px 0px;
   border-bottom: solid 1px var(--placeholder-grey);
   background-color: var(--container-background);
   transition: background-color 0.5s;
 }
 .client-mail-leftBlock-contactBlock-list-contact > ul:hover {
   background-color: #fafafc;
+  transition: background-color 0.5s;
 }
 
 /* LEFT BLOCK - CONTACT BLOCK - LIST - TALENT -TALENTLINE - ELEMENT */
 .client-mail-leftBlock-contactBlock-list-contact > ul > li {
-  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 5px;
   padding: 0;
 }
 
@@ -163,7 +160,7 @@
   width: 49%;
   box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
   background-color: var(--container-background);
-  height: 500px;
+  min-height: 500px;
 }
 
 .client-mail-conversationShown-container {
@@ -174,15 +171,48 @@
   font-weight: 500;
 }
 
+/* FIRST MESSAGE SENT FORM THE COMPANY */
+.client-mail-conversationShown-title-block {
+  border-top: 1px solid #a8b0d0;
+  border-bottom: 1px solid #a8b0d0;
+}
+
 .client-mail-conversationShown-object {
+  margin-top: 10px;
   margin-bottom: 20px;
   font-weight: 600;
 }
+.client-mail-conversationShown-object > i {
+  margin-left: 15px;
+}
+
 .client-mail-conversationShown-firstMessage {
-  margin-bottom: 20px;
+  max-height: 500px;
+  white-space: pre-line;
+  white-space: pre-wrap;
+  -webkit-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  overflow: hidden;
+}
+
+.client-mail-conversationShown-firstMessage-shrinked {
+  max-height: 0px;
+  white-space: pre-line;
+  white-space: pre-wrap;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  overflow: hidden;
 }
 .client-mail-conversationShown-link {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+
+.client-mail-conversationShown-link > span:nth-child(1) {
+  color: #6e78ad;
+  font-weight: 600;
+}
+.client-mail-conversationShown-link > span:nth-child(2) {
+  color: red;
 }
 
 .client-mail-conversationShown-messageBlock {

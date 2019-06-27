@@ -1,16 +1,15 @@
 import React from "react";
 import "./index.css";
 
-export default function ClientWelcomePopUp(props) {
-  const {
-    cancelPopUp,
-    objectValue,
-    messageValue,
-    setObject,
-    setMessage,
-    sendMessage,
-    talent
-  } = props;
+export default function ClientWelcomePopUp({
+  cancelPopUp,
+  objectValue,
+  messageValue,
+  setObject,
+  setMessage,
+  sendMessage,
+  talent
+}) {
   return (
     <div className="contactPopUp-background">
       <div className="contactPopUp">
@@ -46,6 +45,8 @@ export default function ClientWelcomePopUp(props) {
             </div>
           </div>
           <div className="contactPopUp-added">Pièce jointe téléchargée</div>
+
+          <input type="file" name="file" />
           <div className="contactPopUp-buttons">
             <div className="contactPopUp-cancel" onClick={cancelPopUp}>
               Annuler

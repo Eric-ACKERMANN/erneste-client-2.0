@@ -48,7 +48,7 @@ export default class TalentListPage extends React.Component {
   };
 
   // Function to GET data from /talent
-  getData = async toto => {
+  getTalentList = async toto => {
     this.setState({ isLoading: true });
     const response = await axios.get(
       "https://erneste-server-improved.herokuapp.com/talent/",
@@ -86,16 +86,20 @@ export default class TalentListPage extends React.Component {
       return (e.lastUpdate = e.lastUpdate[0].join("."));
     });
 
-    // Get data from tagList
-    const response2 = await axios.get(
+    this.setState({
+      isLoading: false,
+      talentList: response.data
+    });
+  };
+
+  getTagList = async () => {
+    const response = await axios.get(
       "https://erneste-server-improved.herokuapp.com/tag",
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
-
     this.setState({
       isLoading: false,
-      talentList: talentList,
-      tagList: response2.data
+      tagList: response.data
     });
   };
 
@@ -165,7 +169,6 @@ export default class TalentListPage extends React.Component {
 
   // Function to insert the filter chosen
   filterCheckBox = async (title, filter) => {
-    console.log(title, filter);
     const chevronFilter = [...this.state.chevronFilter];
     let filterOrder = this.state.filterOrder;
     let position = chevronFilter
@@ -452,9 +455,7 @@ export default class TalentListPage extends React.Component {
           ArrayOfFilteredTalentList.push(talentList);
         }
       }
-      console.log("hey", talentList);
     }
-    console.log(talentList);
     return (
       <div className="content">
         <div className="container">
@@ -506,7 +507,8 @@ export default class TalentListPage extends React.Component {
   }
 
   async componentDidMount() {
-    this.getData();
+    this.getTalentList();
+    this.getTagList();
     this.props.setPageActive("admin/talent");
   }
 }

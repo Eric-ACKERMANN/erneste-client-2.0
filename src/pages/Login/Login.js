@@ -156,8 +156,7 @@ export default class Login extends React.Component {
         token: response.data.token,
         permission: response.data.permission,
         id: response.data.id,
-        clientId: response.data.clientId,
-        email: response.data.email
+        clientId: response.data.clientId
       });
       this.props.onLogIn({
         token: response.data.token,
@@ -165,6 +164,7 @@ export default class Login extends React.Component {
         id: response.data.id,
         clientId: response.data.clientId
       });
+      console.log("hello");
       this.setState({ wrong: false });
     } catch (error) {
       this.setState({ wrong: true, password: "" });

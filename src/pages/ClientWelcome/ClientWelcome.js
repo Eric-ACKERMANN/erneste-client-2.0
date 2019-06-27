@@ -2,8 +2,6 @@ import React from "react";
 import axios from "axios";
 import "./index.css";
 import box from "../../features/icons/check_24px.svg";
-
-import ReactFileReader from "react-file-reader";
 import PopUpClientWelcome from "../../components/ClientWelcome_PopUp";
 
 export default class ClientWelcome extends React.Component {
@@ -11,9 +9,7 @@ export default class ClientWelcome extends React.Component {
     isLoading: true,
     titleList: ["Nom", "Fonction", "Entreprise", "Intéressé(e) par"],
     clientData: null,
-    talentList: null,
-    wantedTitleList: null,
-    tagList: null,
+    talentList: [],
     talentShown: [],
     positionShown: 0,
     hoverContact: false,
@@ -22,48 +18,49 @@ export default class ClientWelcome extends React.Component {
     popUpMessageInputValue: ""
   };
 
-  getTalentList = async () => {
-    this.setState({ isLoading: true });
+  getSelectedTalentList = async () => {
     const response = await axios.get(
       "https://erneste-server-improved.herokuapp.com/talent/",
       {
         headers: { authorization: `Bearer ${this.props.token}` }
       }
     );
-    await this.setState({ talentList: response.data });
-    this.setState({ isLoading: false });
+    // Filter response.data to become an array of selectedTalent for this client
+    let selectedTalent = [];
+    let clientSize = "";
+    let clientSector = "";
+
+    if (this.state.clientData && response.data) {
+      clientSize = this.state.clientData.size;
+      clientSector = this.state.clientData.field.name;
+
+      selectedTalent = response.data.filter(function(e) {
+        let wantedSize = e.informations.wantedSize;
+        let wantedSector = e.informations.wantedSector;
+        return (
+          (wantedSize &&
+            wantedSector &&
+            (wantedSize === "Indifférent" || wantedSize === clientSize)) ||
+          wantedSector
+            .map(e => {
+              return e.name;
+            })
+            .indexOf(clientSector) !== -1
+        );
+      });
+    }
+    this.setState({ talentList: selectedTalent, isLoading: false });
   };
 
   getClientData = async () => {
-    this.setState({ isLoading: true });
     const response = await axios.get(
       "https://erneste-server-improved.herokuapp.com/client/" +
         this.props.match.params.id,
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
-    await this.setState({ clientData: response.data });
-    this.setState({ isLoading: false });
+    this.setState({ clientData: response.data, isLoading: false });
   };
 
-  getTitleList = async () => {
-    this.setState({ isLoading: true });
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/title/",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    await this.setState({ wantedTitleList: response.data });
-    this.setState({ isLoading: false });
-  };
-
-  getTagList = async () => {
-    this.setState({ isLoading: true });
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/tag/",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    await this.setState({ tagList: response.data });
-    this.setState({ isLoading: false });
-  };
   // Function that displays the list of selected Talent
 
   displayTitle = titleList => {
@@ -175,7 +172,7 @@ export default class ClientWelcome extends React.Component {
           </li>
           <li className="client-welcome-leftBlock-talentBlock-list-talent-interestedBy">
             {element.informations.wantedTitle.map(e => {
-              return <div>{e}</div>;
+              return <div key={e.name}>{e.name}</div>;
             })}
           </li>
         </ul>
@@ -268,13 +265,23 @@ export default class ClientWelcome extends React.Component {
   };
 
   handlePopUpSendMessageClick = async talentMail => {
+    // We find the mail of the sender
+    const mailSender = this.state.clientData.users[
+      this.state.clientData.users
+        .map(e => {
+          return e._id;
+        })
+        .indexOf(this.props.userData.id)
+    ].email;
+
     await axios.post(
       "https://erneste-server-improved.herokuapp.com/user/message",
       {
-        from: this.props.userMail,
+        from: mailSender,
         to: talentMail,
         message: this.state.popUpMessageInputValue,
-        title: this.state.popUpObjectInputValue
+        title: this.state.popUpObjectInputValue,
+        companyName: this.state.clientData.name
       },
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
@@ -321,47 +328,6 @@ export default class ClientWelcome extends React.Component {
       }
     }
 
-    // Change the ID of the wantedTitle into its value
-
-    if (this.state.wantedTitleList) {
-      for (let i = 0; i < selectedTalent.length; i++) {
-        for (
-          let j = 0;
-          j < selectedTalent[i].informations.wantedTitle.length;
-          j++
-        ) {
-          let titleTested = selectedTalent[i].informations.wantedTitle[j];
-          let position = this.state.wantedTitleList
-            .map(e => {
-              return e._id;
-            })
-            .indexOf(titleTested);
-          if (position !== -1) {
-            selectedTalent[i].informations.wantedTitle[
-              j
-            ] = this.state.wantedTitleList[position].name;
-          }
-        }
-      }
-    }
-
-    // Change the ID of the tag into its value
-    if (this.state.tagList) {
-      for (let i = 0; i < selectedTalent.length; i++) {
-        for (let j = 0; j < selectedTalent[i].skills.length; j++) {
-          let tagTested = selectedTalent[i].skills[j];
-          let position = this.state.tagList
-            .map(e => {
-              return e._id;
-            })
-            .indexOf(tagTested);
-          if (position !== -1) {
-            selectedTalent[i].skills[j] = this.state.tagList[position];
-          }
-        }
-      }
-    }
-
     return (
       <div className="client-welcome-content">
         <div className="client-welcome-body-container">
@@ -372,9 +338,7 @@ export default class ClientWelcome extends React.Component {
               messageValue={this.state.messageInputValue}
               setObject={this.setPopUpObjectValue}
               setMessage={this.setPopUpMessageInputValue}
-              sendMessage={contactMail =>
-                this.handlePopUpSendMessageClick(contactMail)
-              }
+              sendMessage={this.handlePopUpSendMessageClick}
               talent={this.state.talentShown[this.state.positionShown]}
             />
           )}
@@ -395,7 +359,7 @@ export default class ClientWelcome extends React.Component {
                   {this.displayTitle(this.state.titleList)}
                 </div>
                 <div className="client-welcome-leftBlock-talentBlock-list-talent">
-                  {this.displayTalent(selectedTalent)}
+                  {this.displayTalent(this.state.talentList)}
                 </div>
               </div>
             </div>
@@ -406,27 +370,21 @@ export default class ClientWelcome extends React.Component {
                 <div className="client-welcome-rightBlock-header">
                   <div className="client-welcome-rightBlock-header-left">
                     <div className="client-welcome-rightBlock-header-left-picture-block">
-                      <ReactFileReader
-                        fileTypes={[".png", ".jpg"]}
-                        base64={true}
-                        multipleFiles={false}
-                      >
-                        {this.state.talentShown[this.state.positionShown].profil
-                          .informations.photo !== null ? (
-                          <img
-                            className="client-welcome-rightBlock-header-left-picture-picture"
-                            src={
-                              this.state.talentShown[this.state.positionShown]
-                                .profil.informations.photo
-                            }
-                            alt="portrait of talent"
-                          />
-                        ) : (
-                          <div className="empty-photo">
-                            <div className="text-empty-picture" />
-                          </div>
-                        )}
-                      </ReactFileReader>
+                      {this.state.talentShown[this.state.positionShown].profil
+                        .informations.photo !== null ? (
+                        <img
+                          className="client-welcome-rightBlock-header-left-picture-picture"
+                          src={
+                            this.state.talentShown[this.state.positionShown]
+                              .profil.informations.photo
+                          }
+                          alt="portrait of talent"
+                        />
+                      ) : (
+                        <div className="empty-photo">
+                          <div className="text-empty-picture" />
+                        </div>
+                      )}
                     </div>
                     <div className="client-welcome-rightBlock-header-left-comments">
                       <span className="client-welcome-rightBlock-header-left-comments-name">
@@ -561,6 +519,7 @@ export default class ClientWelcome extends React.Component {
                     ].profil.skills.map(tag => {
                       return (
                         <div
+                          key={tag.name}
                           style={{
                             backgroundColor:
                               tag.type === "hard" ? "#333266" : "#EF6364"
@@ -585,9 +544,7 @@ export default class ClientWelcome extends React.Component {
 
   async componentDidMount() {
     this.props.setPageActive("client");
-    this.getTitleList();
     this.getClientData();
-    this.getTalentList();
-    this.getTagList();
+    this.getSelectedTalentList();
   }
 }

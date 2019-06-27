@@ -29,7 +29,6 @@ class App extends React.Component {
     super(props);
     // Get the token and permission from the cookies
     const userData = Cookies.getJSON("erneste");
-
     this.state = {
       userData: null || userData,
       pageActive: null
@@ -43,8 +42,11 @@ class App extends React.Component {
     this.setPageActive = toto => {
       this.setState({ pageActive: toto });
     };
-  }
 
+    this.onLogIn = e => {
+      this.setState({ userData: e });
+    };
+  }
   render() {
     return (
       <Router>
@@ -81,13 +83,7 @@ class App extends React.Component {
                   return <Redirect to={clientLink} />;
                 }
               }
-              return (
-                <Login
-                  onLogIn={toto => {
-                    this.setState({ userData: toto });
-                  }}
-                />
-              );
+              return <Login onLogIn={this.onLogIn} />;
             }}
           />
           {/* ------ ADMIN ROADS ------ */}
@@ -217,6 +213,7 @@ class App extends React.Component {
                   permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
+                  talentProfile={this.state.userData.profile}
                 />
               );
             }}
@@ -235,7 +232,7 @@ class App extends React.Component {
                   permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
-                  userMail={this.state.userData.email}
+                  userData={this.state.userData}
                 />
               );
             }}

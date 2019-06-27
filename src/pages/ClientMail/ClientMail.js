@@ -10,7 +10,8 @@ export default class ClientMail extends React.Component {
     talentList: null,
     conversations: null,
     conversationShown: null,
-    contactShown: null
+    contactShown: null,
+    objectShown: true
   };
 
   getConversations = async () => {
@@ -65,7 +66,7 @@ export default class ClientMail extends React.Component {
     );
   };
 
-  displayMessage = conversations => {
+  displayContacts = conversations => {
     return conversations.map(conversation => {
       return (
         <ul
@@ -114,33 +115,58 @@ export default class ClientMail extends React.Component {
             contactShown.informations.lastName
           }`}
         </div>
-        <div className="client-mail-conversationShown-object">
-          {conversationShown.title}
-        </div>
-        <div className="client-mail-conversationShown-firstMessage">
-          {conversationShown.messages[0].body}
-        </div>
-        <div className="client-mail-conversationShown-link">
-          Fiche de poste proposée
+        <div className="client-mail-conversationShown-title-block">
+          <div className="client-mail-conversationShown-object">
+            <span>{conversationShown.title}</span>
+            <i
+              onClick={() => {
+                this.handleClickObject();
+              }}
+              className={
+                this.state.objectShown
+                  ? "far fa-minus-square"
+                  : "far fa-plus-square"
+              }
+            />
+          </div>
+          <p
+            className={
+              this.state.objectShown
+                ? "client-mail-conversationShown-firstMessage"
+                : "client-mail-conversationShown-firstMessage-shrinked"
+            }
+          >
+            {conversationShown.messages[0].body}
+          </p>
+          <div className="client-mail-conversationShown-link">
+            <span>Fiche de poste proposée</span>{" "}
+            <span>(Not available - coming soon)</span>
+          </div>
         </div>
         <div className="client-mail-conversationShown-messagesBlock">
           {conversationShown.messages.map(message => {
-            return (
-              <div className="client-mail-conversationShown-messageBlock">
-                <div className="client-mail-conversationShown-picture">
-                  {conversationShown.action === "received"
-                    ? "talentPhoto"
-                    : "clientPhoto"}
+            if (conversationShown.messages.indexOf(message) !== 0) {
+              return (
+                <div className="client-mail-conversationShown-messageBlock">
+                  <div className="client-mail-conversationShown-picture">
+                    {conversationShown.action === "received"
+                      ? "talentPhoto"
+                      : "clientPhoto"}
+                  </div>
+                  <div className="client-mail-conversationShown-message">
+                    {message.body}
+                  </div>
                 </div>
-                <div className="client-mail-conversationShown-message">
-                  {message.body}
-                </div>
-              </div>
-            );
+              );
+            } else return false;
           })}
         </div>
       </div>
     );
+  };
+
+  handleClickObject = () => {
+    this.setState({ objectShown: !this.state.objectShown });
   };
 
   render() {
@@ -171,7 +197,7 @@ export default class ClientMail extends React.Component {
                 </div>
                 <div className="client-mail-leftBlock-contactBlock-list-contact">
                   {this.state.conversations &&
-                    this.displayMessage(this.state.conversations)}
+                    this.displayContacts(this.state.conversations)}
                 </div>
               </div>
             </div>

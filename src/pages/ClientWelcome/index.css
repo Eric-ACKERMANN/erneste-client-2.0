@@ -103,6 +103,8 @@
 
 .client-welcome-leftBlock-talentBlock-list-talent-name-text {
   flex-wrap: wrap;
+  text-align: jusitfy;
+  white-space: normal;
 }
 .client-welcome-leftBlock-talentBlock-list-talent-actualTitle {
   width: 120px;
@@ -394,6 +396,7 @@
   overflow: scroll;
   font-size: 12px;
   color: #31313c;
+  text-align: justify;
 }
 /* RIGHT BLOCK - IDEALCOMPANY */
 .client-welcome-rightBlock-idealCompany {
