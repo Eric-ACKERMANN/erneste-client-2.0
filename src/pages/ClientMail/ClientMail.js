@@ -256,7 +256,10 @@ export default class ClientMail extends React.Component {
                           src={this.state.contactShown.informations.photo}
                         />
                       ) : (
-                        "clientPhoto"
+                        <img
+                          alt="logo of company"
+                          src={this.state.clientData.logo}
+                        />
                       )}
                     </div>
                     <div
@@ -281,12 +284,12 @@ export default class ClientMail extends React.Component {
             })}
 
             <div className="client-mail-conversationShown-messageBlock">
-              <div className="client-mail-conversationShown-picture">
-                photo du client
-                {/* <img
-              alt="portrait of talent"
-              src={this.state.talentProfile.informations.photo}
-            /> */}
+              <div className="client-mail-conversationShown-picture-company">
+                <img
+                  className="client-mail-logo-company"
+                  alt="logo of company"
+                  src={this.state.clientData.logo}
+                />
               </div>
               <div className="client-mail-conversationShown-message">
                 <textarea

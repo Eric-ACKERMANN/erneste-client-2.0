@@ -308,11 +308,20 @@ export default class TalentOpportunities extends React.Component {
                   >
                     <div className="talent-opportunities-conversationShown-picture">
                       {message.action === "received" ? (
-                        "clientPhoto"
+                        <img
+                          className="talent-opportunities-logo-company"
+                          alt="logo of company"
+                          src={conversationShown.companyLogo}
+                        />
                       ) : (
                         <img
+                          className="talent-opportunities-picture-talent"
                           alt="portrait of talent"
-                          src={this.state.talentProfile.informations.photo}
+                          src={
+                            this.state.talentProfile
+                              ? this.state.talentProfile.informations.photo
+                              : "Photo talent"
+                          }
                         />
                       )}
                     </div>
@@ -340,8 +349,13 @@ export default class TalentOpportunities extends React.Component {
             <div className="talent-opportunities-conversationShown-messageBlock">
               <div className="talent-opportunities-conversationShown-picture">
                 <img
+                  className="talent-opportunities-picture-talent"
                   alt="portrait of talent"
-                  src={this.state.talentProfile.informations.photo}
+                  src={
+                    this.state.talentProfile
+                      ? this.state.talentProfile.informations.photo
+                      : "Photo talent"
+                  }
                 />
               </div>
               <div className="talent-opportunities-conversationShown-message">

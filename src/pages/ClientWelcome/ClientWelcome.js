@@ -273,7 +273,14 @@ export default class ClientWelcome extends React.Component {
         })
         .indexOf(this.props.userData.id)
     ].email;
-
+    console.log("ce qu'on envoie", {
+      from: mailSender,
+      to: talentMail,
+      message: this.state.popUpMessageInputValue,
+      title: this.state.popUpObjectInputValue,
+      companyName: this.state.clientData.name,
+      companyLogo: this.state.clientData.logo
+    });
     await axios.post(
       "https://erneste-server-improved.herokuapp.com/user/message",
       {
@@ -281,7 +288,8 @@ export default class ClientWelcome extends React.Component {
         to: talentMail,
         message: this.state.popUpMessageInputValue,
         title: this.state.popUpObjectInputValue,
-        companyName: this.state.clientData.name
+        companyName: this.state.clientData.name,
+        companyLogo: this.state.clientData.logo
       },
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
