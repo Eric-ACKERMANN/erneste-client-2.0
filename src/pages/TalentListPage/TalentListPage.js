@@ -150,7 +150,7 @@ export default class TalentListPage extends React.Component {
       },
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
-    this.getData();
+    this.getTalentList();
   };
 
   /* SEARCH INPUT FUNCTION */
