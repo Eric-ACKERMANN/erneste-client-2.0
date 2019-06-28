@@ -29,6 +29,8 @@
   overflow: scroll;
   font-size: 14px;
   color: #31313c;
+  padding: 10px;
+  text-align: justify;
 }
 
 .talent-description-container textarea::-webkit-scrollbar {

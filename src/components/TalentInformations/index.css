@@ -29,8 +29,7 @@
 
 .talent-informations-picture {
   position: absolute;
-  height: auto;
-  width: 220px;
+  height: 220px;
   object-fit: cover;
   top: 0;
 }

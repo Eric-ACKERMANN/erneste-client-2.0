@@ -75,7 +75,7 @@ export default function SectorFilter(props) {
         <div className="sectorList-input-block">
           <input
             className="sectorInput"
-            placeholder="Ecrivez votre sector ici"
+            placeholder="Ecrivez votre secteur ici"
             value={sectorInputValue}
             onChange={event => onChangeSectorInput(event.target.value)}
             onKeyDown={onKeyDownSectorInput}
