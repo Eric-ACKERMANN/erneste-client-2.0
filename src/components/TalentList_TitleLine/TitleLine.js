@@ -207,14 +207,17 @@ export default function TitleLine(props) {
 
       {/*ACTUAL TITLE*/}
       <div className="talentList-right-block-actualTitle">
-        {titleArray[1].value}
-        <i
-          className="fas fa-sort-down"
-          onClick={() => props.chevronClick(titleArray[1].value)}
-        />
-
+        <div onClick={() => props.chevronClick(titleArray[1].value)}>
+          {titleArray[1].value}
+          <i className="fas fa-sort-down" />
+        </div>
         {chevronClicked && chevronClickedPosition === 1 && (
-          <div className="chevron-filter">
+          // Box
+          <div
+            className="chevron-filter"
+            tabIndex="0"
+            onBlur={() => props.onBlurChevron()}
+          >
             {actualTitleArray.map((element, index) => {
               let clicked = false;
               for (let i = 0; i < chevronFilter.length; i++) {
@@ -257,18 +260,17 @@ export default function TitleLine(props) {
         )}
       </div>
       {/* ACTUAL COMPANY */}
-      <div
-        className="talentList-right-block-actualCompany"
-        onClick={() => props.chevronClick(titleArray[2].value)}
-      >
-        {titleArray[2].value}
-        <i
-          className="fas fa-sort-down"
-          onClick={() => props.chevronClick(titleArray[2].value)}
-        />
-
+      <div className="talentList-right-block-actualCompany">
+        <div onClick={() => props.chevronClick(titleArray[2].value)}>
+          {titleArray[2].value}
+          <i className="fas fa-sort-down" />
+        </div>
         {chevronClicked && chevronClickedPosition === 2 && (
-          <div className="chevron-filter">
+          <div
+            className="chevron-filter"
+            tabIndex="0"
+            onBlur={() => props.onBlurChevron()}
+          >
             {actualCompanyArray.map((element, index) => {
               let clicked = false;
               for (let i = 0; i < chevronFilter.length; i++) {
@@ -311,14 +313,16 @@ export default function TitleLine(props) {
       </div>
       {/* WANTED TITLE */}
       <div className="talentList-right-block-wantedTitle">
-        {titleArray[3].value}
-        <i
-          className="fas fa-sort-down"
-          onClick={() => props.chevronClick(titleArray[3].value)}
-        />
-
+        <div onClick={() => props.chevronClick(titleArray[3].value)}>
+          {titleArray[3].value}
+          <i className="fas fa-sort-down" />
+        </div>
         {chevronClicked && chevronClickedPosition === 3 && (
-          <div className="chevron-filter">
+          <div
+            className="chevron-filter"
+            tabIndex="0"
+            onBlur={() => props.onBlurChevron()}
+          >
             {wantedTitleArray.map((element, index) => {
               let clicked = false;
               for (let i = 0; i < chevronFilter.length; i++) {
@@ -362,13 +366,16 @@ export default function TitleLine(props) {
 
       {/* VALIDATED */}
       <div className="talentList-right-block-validated">
-        {titleArray[4].value}
-        <i
-          className="fas fa-sort-down"
-          onClick={() => props.chevronClick(titleArray[4].value)}
-        />
+        <div onClick={() => props.chevronClick(titleArray[4].value)}>
+          {titleArray[4].value}
+          <i className="fas fa-sort-down" />
+        </div>
         {chevronClicked && chevronClickedPosition === 4 && (
-          <div className="chevron-filter">
+          <div
+            className="chevron-filter"
+            tabIndex="0"
+            onBlur={() => props.onBlurChevron()}
+          >
             {validatedArray.map((element, index) => {
               let clicked = false;
               for (let i = 0; i < chevronFilter.length; i++) {
@@ -412,14 +419,16 @@ export default function TitleLine(props) {
       </div>
       {/* STATUS */}
       <div className="talentList-right-block-status">
-        {titleArray[5].value}
-        <i
-          className="fas fa-sort-down"
-          onClick={() => props.chevronClick(titleArray[5].value)}
-        />
-
+        <div onClick={() => props.chevronClick(titleArray[5].value)}>
+          {titleArray[5].value}
+          <i className="fas fa-sort-down" />
+        </div>
         {chevronClicked && chevronClickedPosition === 5 && (
-          <div className="chevron-filter">
+          <div
+            className="chevron-filter"
+            tabIndex="0"
+            onBlur={() => props.onBlurChevron()}
+          >
             {statusArray.map((element, index) => {
               let clicked = false;
               for (let i = 0; i < chevronFilter.length; i++) {
@@ -463,14 +472,16 @@ export default function TitleLine(props) {
 
       {/* LAST UPDATE */}
       <div className="talentList-right-block-lastUpdate">
-        {titleArray[6].value}
-        <i
-          className="fas fa-sort-down"
-          onClick={() => props.chevronClick(titleArray[6].value)}
-        />
-
+        <div onClick={() => props.chevronClick(titleArray[6].value)}>
+          {titleArray[6].value}
+          <i className="fas fa-sort-down" />
+        </div>
         {chevronClicked && chevronClickedPosition === 6 && (
-          <div className="chevron-filter">
+          <div
+            className="chevron-filter"
+            tabIndex="0"
+            onBlur={() => props.onBlurChevron()}
+          >
             {lastUpdateArray.map((element, index) => {
               let clicked = false;
               for (let i = 0; i < chevronFilter.length; i++) {

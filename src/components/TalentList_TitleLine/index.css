@@ -29,16 +29,27 @@
   align-items: center;
 }
 
+.talentList-right-block-actualTitle > div > i {
+  margin-left: 5px;
+}
 .talentList-right-block-actualCompany {
   width: 120px;
   display: flex;
   align-items: center;
 }
 
+.talentList-right-block-actualCompany > div > i {
+  margin-left: 5px;
+}
+
 .talentList-right-block-wantedTitle {
   width: 140px;
   display: flex;
   align-items: center;
+}
+
+.talentList-right-block-wantedTitle > div > i {
+  margin-left: 5px;
 }
 
 .talentList-right-block-validated {
@@ -48,11 +59,19 @@
   justify-content: center;
 }
 
+.talentList-right-block-validated > div > i {
+  margin-left: 5px;
+}
+
 .talentList-right-block-status {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60px;
+}
+
+.talentList-right-block-status > div > i {
+  margin-left: 5px;
 }
 
 .talentList-right-block-lastUpdate {
@@ -62,6 +81,10 @@
   justify-content: center;
 }
 
+.talentList-right-block-lastUpdate > div > i {
+  margin-left: 5px;
+}
+
 .fa-sort-down:hover {
   cursor: pointer;
 }
@@ -69,6 +92,7 @@
 .fa-sort-down {
   color: var(--placeholder-grey);
 }
+
 .chevron-filter {
   background-color: var(--container-background);
   max-height: 200px;
@@ -80,6 +104,9 @@
   overflow: scroll;
 }
 
+.chevron-filter:focus {
+  outline: none;
+}
 .filter-line {
   display: flex;
   margin: 10px;
@@ -107,4 +134,8 @@
   height: 35px;
   display: flex;
   align-items: center;
+}
+
+i:focus {
+  outline: none;
 }

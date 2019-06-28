@@ -2,7 +2,7 @@ import React from "react";
 import "./index.css";
 import deletecross from "../../features/icons/Group.svg";
 
-export default function tag(props) {
+export default function TagFilter(props) {
   const {
     tagInputValue,
     tagSelected,
@@ -16,7 +16,7 @@ export default function tag(props) {
     onSingleTagDeleteClick
   } = props;
 
-  // Suggestions List is the list that appears when we fill the input
+  // Suggestions List  is the list that appears when we fill the input
   let suggestionsList = null;
 
   if (tagInputValue && tagSuggestionsShown) {
@@ -26,7 +26,9 @@ export default function tag(props) {
           {tagListFiltered.map((tag, index) => {
             let className;
             if (index === tagActiveSuggestion) {
-              className = "tagList-suggestion-active";
+              className = "tagList-suggestion tagList-suggestion-active";
+            } else {
+              className = "tagList-suggestion";
             }
             return (
               <div
@@ -53,7 +55,7 @@ export default function tag(props) {
 
   return (
     <div className="tagList-filterBlock">
-      <div className="tagList-filterTitle">Filtres</div>
+      <div className="tagList-filterTitle">Filtrer par tag</div>
       <div className="tagList">
         {tagSelected.length > 0 &&
           tagSelected.map((element, index) => {

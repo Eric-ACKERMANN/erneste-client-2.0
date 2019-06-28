@@ -8,6 +8,7 @@ import TagFilter from "../../components/TalentList_TagFilter";
 import TitleLine from "../../components/TalentList_TitleLine";
 import TalentList from "../../components/TalentList_TalentList";
 import Tools from "../../components/TalentList_Tools";
+import SectorFilter from "../../components/TalentList_SectorFilter";
 
 /* Page to see the Talent List (HomePage of Admin)*/
 
@@ -30,7 +31,7 @@ export default class TalentListPage extends React.Component {
       { value: "Souhait", clicked: false, firstClicked: false },
       { value: "Validé", clicked: false, firstClicked: false },
       { value: "Statut", clicked: false, firstClicked: false },
-      { value: "Dernière modif.", clicked: false, firstClicked: false }
+      { value: "Mise à jour", clicked: false, firstClicked: false }
     ],
 
     /* Chevron Filter State */
@@ -44,7 +45,15 @@ export default class TalentListPage extends React.Component {
     tagSelected: [],
     tagSuggestionsShown: false,
     tagListFiltered: [],
-    tagActiveSuggestion: 0
+    tagActiveSuggestion: 0,
+
+    /* Sector Filter State */
+    sectorList: [],
+    sectorInputValue: "",
+    sectorSelected: [],
+    sectorSuggestionsShown: false,
+    sectorListFiltered: [],
+    sectorActiveSuggestion: 0
   };
 
   // Function to GET data from /talent
@@ -103,6 +112,17 @@ export default class TalentListPage extends React.Component {
     });
   };
 
+  getSectorList = async () => {
+    const response = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/sector",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    this.setState({
+      isLoading: false,
+      sectorList: response.data
+    });
+  };
+
   /* DELETE OF A TALENT */
 
   // Function to enable to delete a talent, also enable to display the "delete the selected profils" by changing the state delete
@@ -156,6 +176,12 @@ export default class TalentListPage extends React.Component {
 
     titleArray[position].clicked = !titleArray[position].clicked;
 
+    for (let i = 0; i < titleArray.length; i++) {
+      if (i !== position) {
+        titleArray[i].clicked = false;
+      }
+    }
+
     position === this.state.chevronClikedPosition
       ? this.setState({
           titleArray: titleArray,
@@ -165,6 +191,15 @@ export default class TalentListPage extends React.Component {
           titleArray: titleArray,
           chevronClikedPosition: position
         });
+  };
+
+  onBlurChevron = () => {
+    const titleArray = [...this.state.titleArray];
+    titleArray.forEach(e => {
+      e.clicked = false;
+      return e;
+    });
+    this.setState({ titleArray: titleArray, chevronClikedPosition: null });
   };
 
   // Function to insert the filter chosen
@@ -220,7 +255,7 @@ export default class TalentListPage extends React.Component {
     this.setState({ chevronFilter: chevronFilter });
   };
 
-  /* TAG FUNTION */
+  /* TAG FUNCTION */
 
   // Function that deals with the tag input
 
@@ -256,6 +291,13 @@ export default class TalentListPage extends React.Component {
 
   // Function that detect keyboard Key on tagInput
   onKeyDownTagInput = e => {
+    if (
+      this.state.tagListFiltered.length < 1 ||
+      this.state.tagInputValue === ""
+    ) {
+      this.setState({ tagActiveSuggestion: 0 });
+      return;
+    }
     // ENTER, it adds the tag
     if (e.keyCode === 13) {
       let tagSuggestions = [...this.state.tagSelected];
@@ -283,8 +325,8 @@ export default class TalentListPage extends React.Component {
     // DOWN ARROW
     else if (e.keyCode === 40) {
       if (
-        this.state.tagActiveSuggestion - 1 ===
-        this.state.tagListFiltered.length
+        this.state.tagActiveSuggestion ===
+        this.state.tagListFiltered.length - 1
       ) {
         return;
       }
@@ -311,6 +353,103 @@ export default class TalentListPage extends React.Component {
     this.setState({ tagSelected: tagSuggestions });
   };
 
+  /* SECTOR FUNCTION */
+
+  // Function that deals with the sector input
+
+  onChangeSectorInput = toto => {
+    let sectorListFiltered = this.state.sectorList.filter(element => {
+      return element.name.toLowerCase().indexOf(toto.toLowerCase()) > -1;
+    });
+    toto
+      ? this.setState({
+          sectorInputValue: toto,
+          sectorListFiltered: sectorListFiltered,
+          sectorSuggestionsShown: true
+        })
+      : this.setState({
+          sectorInputValue: toto,
+          sectorListFiltered: sectorListFiltered,
+          sectorSuggestionsShown: false
+        });
+  };
+
+  // Function to put sector as a filter
+  onClickSector = sector => {
+    let sectorSelected = [...this.state.sectorSelected];
+    sectorSelected.push(sector);
+
+    this.setState({
+      sectorSelected: sectorSelected,
+      sectorInputValue: "",
+      sectorActiveSuggestion: 0,
+      sectorSuggestionsShown: false
+    });
+  };
+
+  // Function that detect keyboard Key on sectorInput
+  onKeyDownSectorInput = e => {
+    if (
+      this.state.sectorListFiltered.length < 1 ||
+      this.state.sectorInputValue === ""
+    ) {
+      this.setState({ sectorActiveSuggestion: 0 });
+      return;
+    }
+    // ENTER, it adds the sector
+    if (e.keyCode === 13) {
+      let sectorSuggestions = [...this.state.sectorSelected];
+      sectorSuggestions.push(
+        this.state.sectorListFiltered[this.state.sectorActiveSuggestion]
+      );
+      this.setState({
+        sectorSelected: sectorSuggestions,
+        sectorInputValue: "",
+        sectorActiveSuggestion: 0,
+        sectorSuggestionsShown: false
+      });
+    }
+
+    // UP ARROW
+    else if (e.keyCode === 38) {
+      if (this.state.sectorActiveSuggestion === 0) {
+        return;
+      } else {
+        this.setState({
+          sectorActiveSuggestion: this.state.sectorActiveSuggestion - 1
+        });
+      }
+    }
+    // DOWN ARROW
+    else if (e.keyCode === 40) {
+      if (
+        this.state.sectorActiveSuggestion ===
+        this.state.sectorListFiltered.length - 1
+      ) {
+        return;
+      }
+      this.setState({
+        sectorActiveSuggestion: this.state.sectorActiveSuggestion + 1
+      });
+    }
+    // ESCAPE
+    else if (e.keyCode === 27) {
+      this.setState({ sectorSuggestionsShown: false });
+    }
+  };
+
+  // Function to delete all sector from the filter
+  onDeleteAllSectorClick = () => {
+    let sectorSuggestions = [...this.state.sectorSelected];
+    sectorSuggestions.splice(0, sectorSuggestions.length);
+    this.setState({ sectorSelected: sectorSuggestions });
+  };
+  // Function to delete one sector
+  onSingleSectorDeleteClick = index => {
+    let sectorSuggestions = [...this.state.sectorSelected];
+    sectorSuggestions.splice(index, 1);
+    this.setState({ sectorSelected: sectorSuggestions });
+  };
   render() {
     /* Permission test */
     if (this.props.permission !== "Admin") {
@@ -378,7 +517,7 @@ export default class TalentListPage extends React.Component {
 
       // FILTER WITH TAGS
       let tag = this.state.tagSelected;
-
+      console.log(tag);
       if (tag.length > 0) {
         talentList = talentList.filter(element => {
           // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de tag, on remplit ce tableau de true à la base
@@ -387,7 +526,41 @@ export default class TalentListPage extends React.Component {
           if (element.skills.length > 0) {
             for (let i = 0; i < tag.length; i++) {
               for (let j = 0; j < element.skills.length; j++) {
-                if (tag[i]._id === element.skills[j]) {
+                if (tag[i]._id === element.skills[j]._id) {
+                  bool[i] = true;
+                  break;
+                } else {
+                  bool[i] = false;
+                }
+              }
+            }
+            for (let i = 0; i < bool.length; i++) {
+              if (bool[i] === false) {
+                booltest = false;
+              }
+            }
+            return booltest;
+          }
+        });
+      }
+      // FILTER WITH SECTOR
+      let sector = this.state.sectorSelected;
+
+      if (sector.length > 0) {
+        talentList = talentList.filter(element => {
+          // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de sector, on remplit ce tableau de true à la base
+          let bool = Array(sector.length).fill(true);
+          let booltest = true;
+          if (element.informations.wantedSector.length > 0) {
+            for (let i = 0; i < sector.length; i++) {
+              for (
+                let j = 0;
+                j < element.informations.wantedSector.length;
+                j++
+              ) {
+                if (
+                  sector[i]._id === element.informations.wantedSector[j]._id
+                ) {
                   bool[i] = true;
                   break;
                 } else {
@@ -462,6 +635,18 @@ export default class TalentListPage extends React.Component {
           <div className="talentList-container">
             <div className="talentList-left-block">
               <Title talentList={talentList} />
+              <SectorFilter
+                sectorInputValue={this.state.sectorInputValue}
+                sectorListFiltered={this.state.sectorListFiltered}
+                sectorSelected={this.state.sectorSelected}
+                sectorSuggestionsShown={this.state.sectorSuggestionsShown}
+                onChangeSectorInput={this.onChangeSectorInput}
+                onClickSector={this.onClickSector}
+                sectorActiveSuggestion={this.state.sectorActiveSuggestion}
+                onKeyDownSectorInput={this.onKeyDownSectorInput}
+                onDeleteAllSectorClick={this.onDeleteAllSectorClick}
+                onSingleSectorDeleteClick={this.onSingleSectorDeleteClick}
+              />
               <TagFilter
                 tagInputValue={this.state.tagInputValue}
                 tagListFiltered={this.state.tagListFiltered}
@@ -493,6 +678,7 @@ export default class TalentListPage extends React.Component {
                 chevronClickedPosition={this.state.chevronClikedPosition}
                 filterCheckBox={this.filterCheckBox}
                 chevronFilter={chevronFilter}
+                onBlurChevron={this.onBlurChevron}
               />
               <TalentList
                 talentList={talentList}
@@ -509,6 +695,7 @@ export default class TalentListPage extends React.Component {
   async componentDidMount() {
     this.getTalentList();
     this.getTagList();
+    this.getSectorList();
     this.props.setPageActive("admin/talent");
   }
 }

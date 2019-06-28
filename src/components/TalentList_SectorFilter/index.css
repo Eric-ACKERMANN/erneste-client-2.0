@@ -1,4 +1,4 @@
-.tagList-filterBlock {
+.sectorList-filterBlock {
   --input-border-color: rgba(168, 176, 208, 0.3);
   --margin-left: 15px;
   --center-body: 1200px;
@@ -16,21 +16,21 @@
   border-radius: 5px;
 }
 
-.tagList {
+.sectorList {
   min-height: 50px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   border: 1px solid var(--input-border-color);
 }
-.tagList-input-block {
+.sectorList-input-block {
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
 }
 
-.tagInput {
+.sectorInput {
   border: var(--input-border-color);
   padding: 0.5rem;
   width: 200px;
@@ -39,7 +39,7 @@
   color: #333366;
 }
 
-.tagList-suggestions {
+.sectorList-suggestions {
   border: 1px solid var(--input-border-color);
   border-top-width: 0;
   border-radius: 2px;
@@ -55,7 +55,7 @@
   background-color: var(--container-background);
 }
 
-.tagList-no-suggestions {
+.sectorList-no-suggestions {
   border-top-width: 0;
   display: flex;
   flex-direction: column;
@@ -70,11 +70,11 @@
   background-color: white;
 }
 
-.tagList-suggestion {
+.sectorList-suggestion {
   padding-left: 7px;
 }
 
-.tagInput {
+.sectorInput {
   border: var(--input-border-color);
   padding: 0.5rem;
   width: 200px;
@@ -83,7 +83,7 @@
   color: #333366;
 }
 
-.tagList-tagShown {
+.sectorList-sectorShown {
   margin: 10px 6px;
   padding: 5px 10px;
   color: white;
@@ -91,25 +91,18 @@
   flex-direction: row;
   border-radius: 5px;
   font-weight: 500;
+  background-color: #c3c3d2;
 }
 
-.hardSkill {
-  background-color: #333366;
-}
-
-.softSkill {
-  background-color: #ff6666;
-}
-
-.tagList-deleteSingleTag {
+.sectorList-deleteSinglesector {
   margin-left: 10px;
 }
 
-.tagList-deleteSingleTag:hover {
+.sectorList-deleteSinglesector:hover {
   cursor: pointer;
 }
 
-.tagList-no-suggestions {
+.sectorList-no-suggestions {
   border-top-width: 0;
   display: flex;
   flex-direction: column;
@@ -123,23 +116,23 @@
   background-color: white;
 }
 
-.tagList-suggestion-active,
-.tagList-suggestions div:hover {
+.sectorList-suggestion-active,
+.sectorList-suggestions div:hover {
   background-color: var(--placeholder-grey);
   color: white;
   cursor: pointer;
   font-weight: 700;
 }
 
-.tagList-filterTitle {
+.sectorList-filterTitle {
   margin-bottom: 15px;
 }
 
-.tagList-deleteAllTag:hover {
+.sectorList-deleteAllsector:hover {
   cursor: pointer;
 }
 
-.tagList-deleteAllTag {
+.sectorList-deleteAllsector {
   margin-top: 10px;
   width: 24px;
   fill: #343365;
