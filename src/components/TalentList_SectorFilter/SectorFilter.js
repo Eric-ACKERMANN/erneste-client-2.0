@@ -15,7 +15,7 @@ export default function SectorFilter(props) {
     onDeleteAllSectorClick,
     onSingleSectorDeleteClick
   } = props;
-
+  //RAjout pour mettre à jour
   // Suggestions List is the list that appears when we fill the input
   let suggestionsList = null;
 
