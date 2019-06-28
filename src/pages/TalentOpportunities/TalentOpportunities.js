@@ -149,6 +149,12 @@ export default class TalentOpportunities extends React.Component {
 
   handleSubmitPopUp = async e => {
     if (this.state.popUpType) {
+      console.log("ce qu'on envoie", {
+        from: this.state.talentProfile.informations.email,
+        to: this.state.contactShownMail,
+        message: this.state.messageValuePopUp,
+        status: "accepted"
+      });
       await axios.post(
         "https://erneste-server-improved.herokuapp.com/user/message",
         {

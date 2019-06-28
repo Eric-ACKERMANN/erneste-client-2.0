@@ -80,16 +80,38 @@ export default class TalentListPage extends React.Component {
       }
     }
 
-    for (let i = 2; i > -1; i--) {
-      talentList.sort((a, b) => {
-        return b.lastUpdate[1][i] - a.lastUpdate[1][i]; // sort seconds > minutes > hour
+    talentList
+      .sort((a, b) => {
+        // sort seconds
+        if (a.lastUpdate[1] && b.lastUpdate[1]) {
+          return a.lastUpdate[1][2] - b.lastUpdate[1][2];
+        } else return false;
+      })
+      .sort((a, b) => {
+        // sort minutes
+        if (a.lastUpdate[1] && b.lastUpdate[1]) {
+          return b.lastUpdate[1][1] - a.lastUpdate[1][1];
+        } else return false;
+      })
+      .sort((a, b) => {
+        // sort hour
+        if (a.lastUpdate[1] && b.lastUpdate[1]) {
+          return b.lastUpdate[1][0] - a.lastUpdate[1][0];
+        } else return false;
+      })
+      .sort((a, b) => {
+        // sort day
+        return b.lastUpdate[0][0] - a.lastUpdate[0][0];
+      })
+      .sort((a, b) => {
+        // sort month
+        return b.lastUpdate[0][1] - a.lastUpdate[0][1];
+      })
+      .sort((a, b) => {
+        // sort year
+        return b.lastUpdate[0][2] - a.lastUpdate[0][2];
       });
-    }
-    for (let i = 0; i < 3; i++) {
-      talentList.sort((a, b) => {
-        return b.lastUpdate[0][i] - a.lastUpdate[0][i]; // sort day > month > year
-      });
-    }
+
     // Change lastUpdate key from [[29,05,2019],[15,05,98]] to 29/05/2019
     talentList.forEach(e => {
       return (e.lastUpdate = e.lastUpdate[0].join("."));

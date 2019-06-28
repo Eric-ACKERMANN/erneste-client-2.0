@@ -16,6 +16,7 @@ export default class ClientInformation extends React.Component {
   };
 
   render() {
+    console.log(this.props.clientUsers);
     return (
       <div className="client-information-container">
         <div className="client-information-detail-container">

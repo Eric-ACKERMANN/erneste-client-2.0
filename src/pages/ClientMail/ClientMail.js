@@ -195,8 +195,8 @@ export default class ClientMail extends React.Component {
         textAreaHeightMemory: 60,
         messageSent: true
       });
+      this.getConversations();
     }
-    this.getConversations();
   };
 
   displayConversation = (conversationShown, contactShown) => {
@@ -249,14 +249,16 @@ export default class ClientMail extends React.Component {
                       this.handleClickMessage(message);
                     }}
                   >
-                    <div className="client-mail-conversationShown-picture">
+                    <div>
                       {message.action === "received" ? (
                         <img
+                          className="client-mail-conversationShown-picture"
                           alt="portrait of talent"
                           src={this.state.contactShown.informations.photo}
                         />
                       ) : (
                         <img
+                          className="client-mail-logo-company"
                           alt="logo of company"
                           src={this.state.clientData.logo}
                         />
