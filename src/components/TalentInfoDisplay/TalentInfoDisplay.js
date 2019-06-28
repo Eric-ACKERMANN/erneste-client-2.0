@@ -57,7 +57,7 @@ export default class TalentInfoDisplay extends React.Component {
           className="talent-info-update-profile"
           onClick={this.props.setUpdate}
         >
-          <i class="fas fa-cog" />
+          <i className="fas fa-cog" />
         </div>
         <div className="talent-info-detail-display">
           <div className="talent-info-first-name">

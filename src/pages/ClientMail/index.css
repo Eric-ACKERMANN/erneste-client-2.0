@@ -215,10 +215,83 @@
   color: red;
 }
 
+/* RIGHT BLOCK - MESSAGES  */
+
 .client-mail-conversationShown-messageBlock {
+  padding: 15px 0px;
   display: flex;
-  margin-bottom: 20px;
+  align-items: center;
+  border-bottom: 1px solid var(--input-border-color);
 }
+
 .client-mail-conversationShown-picture {
   margin-right: 20px;
+  align-self: flex-start;
+}
+
+.client-mail-conversationShown-picture > img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.client-mail-conversationShown-message {
+  width: 100%;
+  max-width: 100%;
+
+  white-space: pre-line;
+  white-space: pre-wrap;
+  text-align: justify;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+  margin: 0;
+}
+
+.messageshrink {
+  height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-items: flex-start;
+  line-height: 30px;
+  margin: 0;
+  padding: 0 20px 0 0;
+}
+
+textarea {
+  resize: none;
+  width: 95%;
+  border: none;
+  font-size: 14px;
+  line-height: 20px;
+  overflow: hidden;
+  transition: height 0.1s ease-in;
+}
+
+.client-mail-conversationShown-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.client-mail-conversationShown-send {
+  color: var(--container-background);
+  background-color: var(--dark-blue);
+  padding: 10px 20px 10px 20px;
+  border-radius: 8px;
+}
+.client-mail-conversationShown-send-disabled {
+  color: var(--container-background);
+  background-color: var(--placeholder-grey);
+  padding: 10px 20px 10px 20px;
+  border-radius: 8px;
+}
+
+.client-mail-conversationShown-send:active {
+  background-color: var(--placeholder-grey);
 }

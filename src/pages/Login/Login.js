@@ -164,7 +164,6 @@ export default class Login extends React.Component {
         id: response.data.id,
         clientId: response.data.clientId
       });
-      console.log("hello");
       this.setState({ wrong: false });
     } catch (error) {
       this.setState({ wrong: true, password: "" });
@@ -173,215 +172,217 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <div className="login-container">
-        <div className="login-img">
-          <div className="login-left-side">
-            <div className="login-circle" />
-            <img
-              className="login-logo"
-              src={require("../../features/img/logo.svg")}
-              alt="ernest-logo"
-            />
-            <div className="login-special-title">
-              Soyez le <span>héros</span> de votre carrière
-              <div>Erneste donne vie à vos ambitions de carrière.</div>
+      <div className="login-body">
+        <div className="login-container">
+          <div className="login-img">
+            <div className="login-left-side">
+              <div className="login-circle" />
+              <img
+                className="login-logo"
+                src={require("../../features/img/logo.svg")}
+                alt="ernest-logo"
+              />
+              <div className="login-special-title">
+                Soyez le <span>héros</span> de votre carrière
+                <div>Erneste donne vie à vos ambitions de carrière.</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="login-input-container">
-          <div className="login-input-title">
-            <div
-              className={
-                this.state.login === "Talent"
-                  ? "login-input-connexion-clicked"
-                  : "login-input-connexion-notClicked"
-              }
-              onClick={() => {
-                this.setLogin("Talent");
-              }}
-            >
-              Talent
-            </div>
-            <div
-              className={
-                this.state.login === "Company"
-                  ? "login-input-connexion-clicked"
-                  : "login-input-connexion-notClicked"
-              }
-              onClick={() => {
-                this.setLogin("Company");
-              }}
-            >
-              Entreprise
-            </div>
-          </div>
-          <div className="login-input-body">
-            <h3 className="login-h3">Connectez vous</h3>
-            <div className="login-input-block">
+          <div className="login-input-container">
+            <div className="login-input-title">
               <div
                 className={
-                  this.state.emailInputFalse
-                    ? "login-input-block-input-blockFalse"
-                    : "login-input-block-input"
+                  this.state.login === "Talent"
+                    ? "login-input-connexion-clicked"
+                    : "login-input-connexion-notClicked"
                 }
+                onClick={() => {
+                  this.setLogin("Talent");
+                }}
               >
-                <span
-                  className={
-                    this.state.emailFocus ||
-                    (!this.state.emailFocus && this.state.email)
-                      ? "login-input-block-title-focused"
-                      : "login-input-block-title"
-                  }
-                  onClick={() => this.focusEmailMethod()}
-                >
-                  Votre email
-                </span>
-                <input
-                  id="emailInput"
-                  name="email"
-                  className={
-                    this.state.emailInputFalse
-                      ? "login-input inputFalse"
-                      : "login-input"
-                  }
-                  value={this.state.email}
-                  onChange={this.setEmail}
-                  // placeholder="Votre email"
-                  onBlur={() => this.onBlurEmail()}
-                  onFocus={() => this.onFocusEmail()}
-                />
+                Talent
               </div>
-              {this.state.emailInputFalse && (
-                <span className="login-input-block-required">Requis</span>
-              )}
-            </div>
-            <div
-              className={
-                this.state.login === "Company"
-                  ? "login-input-block companyMode"
-                  : " login-input-block talentMode"
-              }
-            >
               <div
                 className={
-                  this.state.keyInputFalse
-                    ? "login-input-block-input-blockFalse"
-                    : "login-input-block-input"
+                  this.state.login === "Company"
+                    ? "login-input-connexion-clicked"
+                    : "login-input-connexion-notClicked"
                 }
+                onClick={() => {
+                  this.setLogin("Company");
+                }}
               >
-                <span
-                  className={
-                    this.state.keyFocus ||
-                    (!this.state.keyFocus && this.state.key)
-                      ? "login-input-block-title-focused"
-                      : "login-input-block-title"
-                  }
-                  onClick={() => this.focusKeyMethod()}
-                >
-                  Clé d'activation
-                </span>
-                <input
-                  id="keyInput"
-                  name="key"
-                  className={
-                    this.state.keyInputFalse
-                      ? "login-input inputFalse"
-                      : "login-input"
-                  }
-                  value={this.state.key}
-                  onChange={this.setKey}
-                  // placeholder="Clé d'activation"
-                  onBlur={() => this.onBlurKey()}
-                  onFocus={() => this.onFocusKey()}
-                />
+                Entreprise
               </div>
-              {this.state.keyInputFalse && (
-                <span className="login-input-block-required">Requis</span>
-              )}
             </div>
-            <div className="login-input-block">
-              <div
-                className={
-                  this.state.passwordInputFalse
-                    ? "login-input-block-input-blockFalse"
-                    : "login-input-block-input"
-                }
-              >
-                <span
-                  className={
-                    this.state.passwordFocus ||
-                    (!this.state.passwordFocus && this.state.password)
-                      ? "login-input-block-title-focused"
-                      : "login-input-block-title"
-                  }
-                  onClick={() => this.focusPasswordMethod()}
-                >
-                  Mot de passe
-                </span>
+            <div className="login-input-body">
+              <h3 className="login-h3">Connectez vous</h3>
+              <div className="login-input-block">
                 <div
                   className={
-                    this.state.passwordInputFalse ? "test inputFalse" : "test"
+                    this.state.emailInputFalse
+                      ? "login-input-block-input-blockFalse"
+                      : "login-input-block-input"
                   }
                 >
-                  <input
-                    id="passwordInput"
-                    name="password"
-                    type={this.state.showPassword ? "text" : "password"}
-                    className="login-input inputPassword"
-                    value={this.state.password}
-                    onChange={this.setPassword}
-                    // placeholder="Mot de passe"
-                    onBlur={() => this.onBlurPassword()}
-                    onFocus={() => this.onFocusPassword()}
-                  />
                   <span
-                    className="login-password-eye"
-                    onMouseDown={this.showPassword}
-                    onMouseUp={this.hidePassword}
-                    onMouseLeave={this.hidePassword}
+                    className={
+                      this.state.emailFocus ||
+                      (!this.state.emailFocus && this.state.email)
+                        ? "login-input-block-title-focused"
+                        : "login-input-block-title"
+                    }
+                    onClick={() => this.focusEmailMethod()}
                   >
-                    <img
-                      src={require("../../features/icons/oeil.svg")}
-                      alt="eye-icon"
-                    />
+                    Votre email
                   </span>
+                  <input
+                    id="emailInput"
+                    name="email"
+                    className={
+                      this.state.emailInputFalse
+                        ? "login-input inputFalse"
+                        : "login-input"
+                    }
+                    value={this.state.email}
+                    onChange={this.setEmail}
+                    // placeholder="Votre email"
+                    onBlur={() => this.onBlurEmail()}
+                    onFocus={() => this.onFocusEmail()}
+                  />
                 </div>
+                {this.state.emailInputFalse && (
+                  <span className="login-input-block-required">Requis</span>
+                )}
               </div>
-              {this.state.passwordInputFalse && (
-                <span className="login-input-block-required">Requis</span>
-              )}
-            </div>
-            <div
-              className={
-                this.state.wrong ? "wrong-password" : "not-wrong-password"
-              }
-            >
-              Identification échouée, veuillez réessayer
-            </div>
-            <div
-              onClick={
-                this.state.login === "Company" ? this.clientLogin : this.login
-              }
-              className="login-button"
-            >
-              C'est parti !
-            </div>
-            <Link to="/forgotten-password">
-              <div className="login-redirect">
-                Mot de passe oublié? <div>Cliquez ici</div>
-              </div>
-            </Link>
-            <div className="link-block">
-              <a
-                className="lien"
-                href="https://erneste.hr/general-terms-of-use/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <div
+                className={
+                  this.state.login === "Company"
+                    ? "login-input-block companyMode"
+                    : " login-input-block talentMode"
+                }
               >
-                Conditions générales d'utilisation et politique de
-                confidentialité
-              </a>
+                <div
+                  className={
+                    this.state.keyInputFalse
+                      ? "login-input-block-input-blockFalse"
+                      : "login-input-block-input"
+                  }
+                >
+                  <span
+                    className={
+                      this.state.keyFocus ||
+                      (!this.state.keyFocus && this.state.key)
+                        ? "login-input-block-title-focused"
+                        : "login-input-block-title"
+                    }
+                    onClick={() => this.focusKeyMethod()}
+                  >
+                    Clé d'activation
+                  </span>
+                  <input
+                    id="keyInput"
+                    name="key"
+                    className={
+                      this.state.keyInputFalse
+                        ? "login-input inputFalse"
+                        : "login-input"
+                    }
+                    value={this.state.key}
+                    onChange={this.setKey}
+                    // placeholder="Clé d'activation"
+                    onBlur={() => this.onBlurKey()}
+                    onFocus={() => this.onFocusKey()}
+                  />
+                </div>
+                {this.state.keyInputFalse && (
+                  <span className="login-input-block-required">Requis</span>
+                )}
+              </div>
+              <div className="login-input-block">
+                <div
+                  className={
+                    this.state.passwordInputFalse
+                      ? "login-input-block-input-blockFalse"
+                      : "login-input-block-input"
+                  }
+                >
+                  <span
+                    className={
+                      this.state.passwordFocus ||
+                      (!this.state.passwordFocus && this.state.password)
+                        ? "login-input-block-title-focused"
+                        : "login-input-block-title"
+                    }
+                    onClick={() => this.focusPasswordMethod()}
+                  >
+                    Mot de passe
+                  </span>
+                  <div
+                    className={
+                      this.state.passwordInputFalse ? "test inputFalse" : "test"
+                    }
+                  >
+                    <input
+                      id="passwordInput"
+                      name="password"
+                      type={this.state.showPassword ? "text" : "password"}
+                      className="login-input inputPassword"
+                      value={this.state.password}
+                      onChange={this.setPassword}
+                      // placeholder="Mot de passe"
+                      onBlur={() => this.onBlurPassword()}
+                      onFocus={() => this.onFocusPassword()}
+                    />
+                    <span
+                      className="login-password-eye"
+                      onMouseDown={this.showPassword}
+                      onMouseUp={this.hidePassword}
+                      onMouseLeave={this.hidePassword}
+                    >
+                      <img
+                        src={require("../../features/icons/oeil.svg")}
+                        alt="eye-icon"
+                      />
+                    </span>
+                  </div>
+                </div>
+                {this.state.passwordInputFalse && (
+                  <span className="login-input-block-required">Requis</span>
+                )}
+              </div>
+              <div
+                className={
+                  this.state.wrong ? "wrong-password" : "not-wrong-password"
+                }
+              >
+                Identification échouée, veuillez réessayer
+              </div>
+              <div
+                onClick={
+                  this.state.login === "Company" ? this.clientLogin : this.login
+                }
+                className="login-button"
+              >
+                C'est parti !
+              </div>
+              <Link to="/forgotten-password">
+                <div className="login-redirect">
+                  Mot de passe oublié? <div>Cliquez ici</div>
+                </div>
+              </Link>
+              <div className="link-block">
+                <a
+                  className="lien"
+                  href="https://erneste.hr/general-terms-of-use/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Conditions générales d'utilisation et politique de
+                  confidentialité
+                </a>
+              </div>
             </div>
           </div>
         </div>

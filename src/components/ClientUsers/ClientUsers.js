@@ -6,15 +6,31 @@ export default class ClientUsers extends React.Component {
     let users = [];
     if (this.props.users.length > 0) {
       users = this.props.users.map(user => {
-        return <div key={user._id}>{user.email}</div>;
+        return (
+          <div key={user._id}>
+            <span>
+              <div>
+                {user.firstName} {user.lastName}
+              </div>
+              <div>{user.email}</div>
+            </span>
+            <span>
+              <i
+                className="fas fa-trash-alt"
+                onClick={() => this.props.handleClickDeleteUsers(user._id)}
+              />
+            </span>
+          </div>
+        );
       });
     }
     return (
       <div className="client-users-container">
         <div>
-          <div className="client-users-header">Utilisateurs autorisés</div>
-          <div className="client-users-email">email</div>
-          <div>{users}</div>
+          <div className="client-users-header">
+            Utilisateurs autorisés pour cette entreprise
+          </div>
+          <div className="client-users-list">{users}</div>
         </div>
 
         <div className="client-users-footer">

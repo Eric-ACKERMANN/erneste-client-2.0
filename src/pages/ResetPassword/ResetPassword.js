@@ -47,13 +47,13 @@ export default class ResetPassword extends React.Component {
           <input
             value={this.state.password}
             onChange={this.setPassword}
-            className={this.state.error ? "reset-password-error" : false}
+            className={this.state.error ? "reset-password-error" : "autre"}
           />
           <div>Confirmer mot de passe</div>
           <input
             value={this.state.confirmPassword}
             onChange={this.setConfirmPassword}
-            className={this.state.error ? "reset-password-error" : false}
+            className={this.state.error ? "reset-password-error" : "autre"}
           />
           {this.state.error && (
             <div className="reset-password-error-message">

@@ -15,7 +15,8 @@ export default class ClientforAdmin extends React.Component {
       size: "",
       users: [],
       activationKey: "",
-      email: ""
+      email: "",
+      logo: ""
     },
     popup: false
   };
@@ -30,6 +31,37 @@ export default class ClientforAdmin extends React.Component {
     this.setState({ users });
   };
 
+  setPhoto = async files => {
+    console.log("ce qu'on envoie", {
+      id: this.state.data._id,
+      client: { logo: files }
+    });
+    await axios.post(
+      "https://erneste-server-improved.herokuapp.com/client/update",
+      {
+        id: this.state.data._id,
+        client: { logo: files }
+      },
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    this.setState({ redirect: true });
+  };
+
+  handleClickDeleteUsers = async id => {
+    await axios.post(
+      "https://erneste-server-improved.herokuapp.com/user/delete",
+      {
+        id: id
+      },
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    const response = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/client/" +
+        this.props.match.params.id,
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    this.setState({ data: response.data });
+  };
   render() {
     return (
       <div className="client-for-admin-container">
@@ -37,11 +69,15 @@ export default class ClientforAdmin extends React.Component {
           clientName={this.state.data.name}
           clientField={this.state.data.field.name}
           clientSize={this.state.data.size}
+          setPhoto={this.setPhoto}
+          clientLogo={this.state.data.logo}
+          clientUsers={this.state.data.users}
         />
         <ClientUsers
           users={this.state.data.users}
           setPopUp={this.setPopUp}
           activationKey={this.state.data.activationKey}
+          handleClickDeleteUsers={this.handleClickDeleteUsers}
         />
         {this.state.popup && <div className="client-for-admin-overlay" />}
         {this.state.popup && (

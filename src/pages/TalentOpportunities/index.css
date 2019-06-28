@@ -267,14 +267,21 @@
   background-color: var(--dark-blue);
 }
 
+.talent-opportunities-conversationShown-declined {
+  margin-top: 40px;
+  font-weight: 600;
+  text-align: center;
+}
 .talent-opportunities-conversationShown-messageBlock {
-  padding: 10px 0px;
+  padding: 15px 0px;
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--input-border-color);
 }
+
 .talent-opportunities-conversationShown-picture {
   margin-right: 20px;
+  align-self: flex-start;
 }
 
 .talent-opportunities-conversationShown-picture > img {
@@ -285,16 +292,61 @@
 }
 
 .talent-opportunities-conversationShown-message {
+  width: 100%;
+  max-width: 100%;
+
   white-space: pre-line;
   white-space: pre-wrap;
-  background-color: red;
-  width: 100%;
+  text-align: justify;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+  margin: 0;
 }
 
-.talent-opportunities-conversationShown-message > div {
+.messageshrink {
+  height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-items: flex-start;
+  line-height: 30px;
+  margin: 0;
+  padding: 0 20px 0 0;
+}
+
+textarea {
+  resize: none;
+  width: 95%;
+  border: none;
+  font-size: 14px;
+  line-height: 20px;
+  overflow: hidden;
+  transition: height 0.1s ease-in;
+}
+
+.talent-opportunities-conversationShown-buttons {
   display: flex;
-  word-wrap: break-word;
-  word-break: break-all;
-  text-align: justify;
-  width: 100%;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.talent-opportunities-conversationShown-send {
+  color: var(--container-background);
+  background-color: var(--dark-blue);
+  padding: 10px 20px 10px 20px;
+  border-radius: 8px;
+}
+.talent-opportunities-conversationShown-send-disabled {
+  color: var(--container-background);
+  background-color: var(--placeholder-grey);
+  padding: 10px 20px 10px 20px;
+  border-radius: 8px;
+}
+
+.talent-opportunities-conversationShown-send:active {
+  background-color: var(--placeholder-grey);
 }

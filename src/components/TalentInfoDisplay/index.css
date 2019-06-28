@@ -27,13 +27,10 @@
   cursor: pointer;
   height: 220px;
   width: 220px;
-  position: relative;
 }
 
 .talent-info-picture {
-  position: absolute;
-  height: auto;
-  width: 220px;
+  height: 220px;
   object-fit: cover;
   top: 0;
 }

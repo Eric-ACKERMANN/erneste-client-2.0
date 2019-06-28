@@ -1,5 +1,6 @@
 import React from "react";
 import "./index.css";
+import ReactFileReader from "react-file-reader";
 
 export default class ClientInformation extends React.Component {
   state = {
@@ -10,11 +11,36 @@ export default class ClientInformation extends React.Component {
     this.setState({ talentSearch: e.target.value });
   };
 
+  handleFiles = files => {
+    this.props.setPhoto(files.base64);
+  };
+
   render() {
     return (
       <div className="client-information-container">
         <div className="client-information-detail-container">
-          <div className="client-information-empty-picture" />
+          <ReactFileReader
+            fileTypes={[".png", ".jpg"]}
+            base64={true}
+            multipleFiles={false}
+            handleFiles={this.handleFiles}
+          >
+            {this.props.clientLogo !== null ? (
+              <span className="client-information-picture-container">
+                <img
+                  className="client-information-picture"
+                  src={this.props.clientLogo}
+                  alt="logo of"
+                />
+              </span>
+            ) : (
+              <div className="client-information-empty-picture">
+                <div className="client-information-text-empty-picture">
+                  Cliquez pour ajouter une photo
+                </div>
+              </div>
+            )}
+          </ReactFileReader>
           <div className="client-information-detail">
             <div className="client-information-name">
               {this.props.clientName}
@@ -40,16 +66,47 @@ export default class ClientInformation extends React.Component {
             <input
               value={this.state.talentSearch}
               onChange={this.setSearch}
-              placeholder="Recherce talent, état"
+              placeholder="Recherche talent, état"
             />
           </div>
 
           <div className="client-information-talent-list-container">
-            <div className="client-information-talent-list-title">
-              <div className="client-information-talent">Talent</div>
-              <div className="client-information-state">Etat</div>
-              <div className="client-information-rating">Note</div>
-            </div>
+            <ul className="client-information-talent-list-title">
+              <li>Utilisateur</li>
+              <li>Talent contacté</li>
+              <li>Etat</li>
+              <li>Note</li>
+            </ul>
+            {this.props.clientUsers.map(user => {
+              return user.conversations.map(conversation => {
+                return (
+                  <ul
+                    className="client-information-talent-list-title"
+                    key={conversation._id}
+                  >
+                    <li>
+                      {user.firstName} {user.lastName}
+                    </li>
+                    <li>
+                      {conversation.contactFirstName}{" "}
+                      {conversation.contactLastName}
+                    </li>
+                    <li>
+                      {conversation.status === "accepted" && (
+                        <span>Contact accepté</span>
+                      )}
+                      {conversation.status === "declined" && (
+                        <span>Contact refusé</span>
+                      )}
+                      {conversation.status === "process" && (
+                        <span>Contact en cours</span>
+                      )}
+                    </li>
+                    <li>(Non disponible)</li>
+                  </ul>
+                );
+              });
+            })}
           </div>
         </div>
       </div>

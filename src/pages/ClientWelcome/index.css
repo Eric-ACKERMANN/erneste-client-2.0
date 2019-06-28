@@ -265,6 +265,8 @@
   height: auto;
   height: 100px;
   max-width: 100px;
+  object-fit: cover;
+  border-radius: 5px;
 }
 
 .client-welcome-rightBlock-header-left-comments {

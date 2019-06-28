@@ -11,7 +11,10 @@ export default class ClientMail extends React.Component {
     conversations: null,
     conversationShown: null,
     contactShown: null,
-    objectShown: true
+    objectShown: true,
+    textAreaAnswer: "",
+    textAreaHeight: 20,
+    textAreaMemory: 60
   };
 
   getConversations = async () => {
@@ -32,6 +35,15 @@ export default class ClientMail extends React.Component {
     );
     await this.setState({ talentList: response.data });
     this.setState({ isLoading: false });
+  };
+
+  getClientData = async () => {
+    const response = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/client/" +
+        this.props.match.params.id,
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    this.setState({ clientData: response.data, isLoading: false });
   };
 
   displayTitle = titleList => {
@@ -66,6 +78,18 @@ export default class ClientMail extends React.Component {
     );
   };
 
+  handleContactClick = conversation => {
+    this.setState({ conversationShown: conversation });
+    // We look for the talent in the talentList
+    let position = this.state.talentList
+      .map(element => {
+        return element.informations.email;
+      })
+      .indexOf(conversation.contactId);
+
+    this.setState({ contactShown: this.state.talentList[position] });
+  };
+
   displayContacts = conversations => {
     return conversations.map(conversation => {
       return (
@@ -88,23 +112,91 @@ export default class ClientMail extends React.Component {
             {conversation.title}
           </li>
           <li className="client-mail-leftBlock-contactBlock-list-statut">
-            Accepté
+            {conversation.status === "accepted" && <span>Accepté</span>}
+            {conversation.status === "process" && <span>En Cours</span>}
+            {conversation.status === "declined" && <span>Refusé</span>}
           </li>
         </ul>
       );
     });
   };
 
-  handleContactClick = conversation => {
-    this.setState({ conversationShown: conversation });
-    // We look for the talent in the talentList
-    let position = this.state.talentList
-      .map(element => {
-        return element.informations.email;
-      })
-      .indexOf(conversation.contactId);
+  handleChangeAnswer = e => {
+    this.setState({ textAreaAnswer: e });
+  };
 
-    this.setState({ contactShown: this.state.talentList[position] });
+  handleClickObject = () => {
+    this.setState({ objectShown: !this.state.objectShown });
+  };
+
+  handleClickAnswer = e => {
+    this.setState({
+      textAreaHeight: this.state.textAreaHeightMemory
+    });
+  };
+
+  handleBlurAnswer = e => {
+    if (this.state.textAreaAnswer !== "") {
+      this.setState(prevState => {
+        return {
+          textAreaHeightMemory: prevState.textAreaHeight,
+          textAreaHeight: 60
+        };
+      });
+    } else {
+      this.setState(prevState => {
+        return {
+          textAreaHeightMemory: prevState.textAreaHeight,
+          textAreaHeight: 20
+        };
+      });
+    }
+  };
+
+  handleKeyUpTextarea = e => {
+    if (e.clientHeight < e.scrollHeight) {
+      this.setState({ textAreaHeight: e.scrollHeight });
+    }
+  };
+
+  handleClickMessage = message => {
+    let conversations = [...this.state.conversations];
+    let posC = conversations.indexOf(this.state.conversationShown);
+    let posM = conversations[posC].messages.indexOf(message);
+    conversations[posC].messages[posM].displayedFull = !conversations[posC]
+      .messages[posM].displayedFull;
+    this.setState({ conversations: conversations });
+  };
+
+  handleSubmitAnswer = async () => {
+    // We find the mail of the sender
+    const mailSender = this.state.clientData.users[
+      this.state.clientData.users
+        .map(e => {
+          return e._id;
+        })
+        .indexOf(this.props.userData.id)
+    ].email;
+
+    const response = await axios.post(
+      "https://erneste-server-improved.herokuapp.com/user/message",
+      {
+        from: mailSender,
+        to: this.state.contactShown.informations.email,
+        message: this.state.textAreaAnswer
+      },
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
+    if (response.data === "Message sent") {
+      this.setState({
+        textAreaAnswer: "",
+        textAreaHeight: 20,
+        textAreaHeightMemory: 60,
+        messageSent: true
+      });
+    }
+    this.getConversations();
   };
 
   displayConversation = (conversationShown, contactShown) => {
@@ -143,24 +235,94 @@ export default class ClientMail extends React.Component {
             <span>(Not available - coming soon)</span>
           </div>
         </div>
-        <div className="client-mail-conversationShown-messagesBlock">
-          {conversationShown.messages.map(message => {
-            if (conversationShown.messages.indexOf(message) !== 0) {
-              return (
-                <div className="client-mail-conversationShown-messageBlock">
-                  <div className="client-mail-conversationShown-picture">
-                    {conversationShown.action === "received"
-                      ? "talentPhoto"
-                      : "clientPhoto"}
+
+        {/* Message display*/}
+        {conversationShown.status === "accepted" && (
+          <div>
+            {conversationShown.messages.map(message => {
+              if (conversationShown.messages.indexOf(message) !== 0) {
+                return (
+                  <div
+                    key={message._id}
+                    className="client-mail-conversationShown-messageBlock"
+                    onClick={() => {
+                      this.handleClickMessage(message);
+                    }}
+                  >
+                    <div className="client-mail-conversationShown-picture">
+                      {message.action === "received" ? (
+                        <img
+                          alt="portrait of talent"
+                          src={this.state.contactShown.informations.photo}
+                        />
+                      ) : (
+                        "clientPhoto"
+                      )}
+                    </div>
+                    <div
+                      className={
+                        message.displayedFull
+                          ? "client-mail-conversationShown-message"
+                          : "client-mail-conversationShown-message messageshrink"
+                      }
+                    >
+                      {message.body}
+                    </div>
+                    <i
+                      className={
+                        message.displayedFull
+                          ? "far fa-minus-square"
+                          : "far fa-plus-square"
+                      }
+                    />
                   </div>
-                  <div className="client-mail-conversationShown-message">
-                    {message.body}
-                  </div>
+                );
+              } else return false;
+            })}
+
+            <div className="client-mail-conversationShown-messageBlock">
+              <div className="client-mail-conversationShown-picture">
+                photo du client
+                {/* <img
+              alt="portrait of talent"
+              src={this.state.talentProfile.informations.photo}
+            /> */}
+              </div>
+              <div className="client-mail-conversationShown-message">
+                <textarea
+                  id="textArea"
+                  value={this.state.textAreaAnswer}
+                  onChange={event =>
+                    this.handleChangeAnswer(event.target.value)
+                  }
+                  placeholder="Ecrivez votre réponse ici..."
+                  onClick={this.handleClickAnswer}
+                  onBlur={this.handleBlurAnswer}
+                  onKeyUp={() => {
+                    this.handleKeyUpTextarea(
+                      document.getElementById("textArea")
+                    );
+                  }}
+                  style={{ height: this.state.textAreaHeight }}
+                />
+              </div>
+            </div>
+            <div className="client-mail-conversationShown-buttons">
+              {this.state.textAreaAnswer !== "" ? (
+                <div
+                  className="client-mail-conversationShown-send"
+                  onClick={() => this.handleSubmitAnswer()}
+                >
+                  Envoyer
                 </div>
-              );
-            } else return false;
-          })}
-        </div>
+              ) : (
+                <div className="client-mail-conversationShown-send-disabled">
+                  Envoyer
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     );
   };
@@ -218,5 +380,6 @@ export default class ClientMail extends React.Component {
     this.props.setPageActive("client/mail");
     this.getConversations();
     this.getTalentList();
+    this.getClientData();
   }
 }

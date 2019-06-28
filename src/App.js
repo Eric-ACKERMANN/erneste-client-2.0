@@ -250,6 +250,7 @@ class App extends React.Component {
                   permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
+                  userData={this.state.userData}
                 />
               );
             }}
