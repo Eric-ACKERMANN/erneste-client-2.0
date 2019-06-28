@@ -81,13 +81,15 @@ export default class ClientMail extends React.Component {
   handleContactClick = conversation => {
     this.setState({ conversationShown: conversation });
     // We look for the talent in the talentList
-    let position = this.state.talentList
-      .map(element => {
-        return element.informations.email;
-      })
-      .indexOf(conversation.contactId);
+    if (this.state.talentList) {
+      let position = this.state.talentList
+        .map(element => {
+          return element.informations.email;
+        })
+        .indexOf(conversation.contactId);
 
-    this.setState({ contactShown: this.state.talentList[position] });
+      this.setState({ contactShown: this.state.talentList[position] });
+    }
   };
 
   displayContacts = conversations => {
