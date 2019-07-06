@@ -1,0 +1,158 @@
+/* ------ RIGHT BLOCK ------- */
+
+.client-mail-rightBlock {
+  width: 49%;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.1);
+  background-color: var(--container-background);
+  min-height: 500px;
+}
+
+.client-mail-conversationShown-container {
+  padding: 20px;
+}
+.client-mail-conversationShown-name {
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+/* FIRST MESSAGE SENT FORM THE COMPANY */
+.client-mail-conversationShown-title-block {
+  border-top: 1px solid #a8b0d0;
+  border-bottom: 1px solid #a8b0d0;
+}
+
+.client-mail-conversationShown-object {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.client-mail-conversationShown-object > i {
+  margin-left: 15px;
+}
+
+.client-mail-conversationShown-firstMessage {
+  max-height: 500px;
+  white-space: pre-line;
+  white-space: pre-wrap;
+  -webkit-transition: all 0.5s ease-in;
+  transition: all 0.5s ease-in;
+  overflow: hidden;
+}
+
+.client-mail-conversationShown-firstMessage-shrinked {
+  max-height: 0px;
+  white-space: pre-line;
+  white-space: pre-wrap;
+  -webkit-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  overflow: hidden;
+}
+.client-mail-conversationShown-link {
+  margin-bottom: 10px;
+}
+
+.client-mail-conversationShown-link > span:nth-child(1) {
+  color: #6e78ad;
+  font-weight: 600;
+}
+.client-mail-conversationShown-link > span:nth-child(2) {
+  color: red;
+}
+
+/* RIGHT BLOCK - MESSAGES  */
+
+.client-mail-conversationShown-messageBlock {
+  padding: 15px 0px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--input-border-color);
+}
+
+.client-mail-conversationShown-picture {
+  margin-right: 20px;
+  align-self: flex-start;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.client-mail-conversationShown-picture-company {
+  margin-right: 20px;
+  align-self: flex-start;
+}
+
+.client-mail-logo-company {
+  width: 50px;
+  height: 50px;
+  object-fit: fill;
+  border-radius: 0;
+}
+.client-mail-conversationShown-message {
+  width: 100%;
+  max-width: 100%;
+
+  white-space: pre-line;
+  white-space: pre-wrap;
+  text-align: justify;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
+  margin: 0;
+}
+
+.messageshrink {
+  height: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  align-items: flex-start;
+  line-height: 30px;
+  margin: 0;
+  padding: 0 20px 0 0;
+}
+
+textarea {
+  resize: none;
+  width: 95%;
+  border: none;
+  font-size: 14px;
+  line-height: 20px;
+  overflow: hidden;
+  transition: height 0.1s ease-in;
+}
+
+.client-mail-conversationShown-buttons {
+  display: flex;
+  justify-content: flex-end;
+  padding: 8px 10px;
+  border-radius: 5px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.client-mail-conversationShown-send {
+  color: var(--container-background);
+  background-color: var(--dark-blue);
+  padding: 10px 20px 10px 20px;
+  border-radius: 8px;
+}
+.client-mail-conversationShown-send-disabled {
+  color: var(--container-background);
+  background-color: var(--placeholder-grey);
+  padding: 10px 20px 10px 20px;
+  border-radius: 8px;
+}
+
+.client-mail-conversationShown-send:active {
+  background-color: var(--placeholder-grey);
+}
+
+.client-mail-conversationShown-trash {
+  display: flex;
+  flex-direction: column;
+}
+
+.client-mail-conversationShown-trash > i:nth-child(1) {
+  margin-bottom: 10px;
+}

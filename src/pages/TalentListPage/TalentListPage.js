@@ -1,8 +1,6 @@
 import React from "react";
 import axios from "axios";
 import "./index.css";
-import { Redirect } from "react-router-dom";
-
 import Title from "../../components/TalentList_Title";
 import TagFilter from "../../components/TalentList_TagFilter";
 import TitleLine from "../../components/TalentList_TitleLine";
@@ -472,12 +470,8 @@ export default class TalentListPage extends React.Component {
     sectorSuggestions.splice(index, 1);
     this.setState({ sectorSelected: sectorSuggestions });
   };
-  render() {
-    /* Permission test */
-    if (this.props.permission !== "Admin") {
-      return <Redirect to={"/"} />;
-    }
 
+  render() {
     /* Test of Loading... */
 
     if (this.state.isLoading === true) {
@@ -562,7 +556,7 @@ export default class TalentListPage extends React.Component {
               }
             }
             return booltest;
-          }
+          } else return false;
         });
       }
       // FILTER WITH SECTOR

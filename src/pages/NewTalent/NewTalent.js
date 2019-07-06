@@ -165,10 +165,6 @@ export default class NewTalent extends React.Component {
   };
 
   render() {
-    /* Permission test */
-    if (this.props.permission !== "Admin") {
-      return <Redirect to={"/"} />;
-    }
     return (
       <div>
         <div className="content">

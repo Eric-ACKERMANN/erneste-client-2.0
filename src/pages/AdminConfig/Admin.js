@@ -4,7 +4,6 @@ import AdminTalent from "../../components/AdminTalent";
 import AdminInformation from "../../components/AdminInformation";
 
 import AdminChanges from "../../components/AdminChanges";
-import { Redirect } from "react-router-dom";
 
 export default class Admin extends React.Component {
   state = {
@@ -18,10 +17,6 @@ export default class Admin extends React.Component {
   };
 
   render() {
-    /* Permission test */
-    if (this.props.permission !== "Admin") {
-      return <Redirect to={"/"} />;
-    }
     return (
       <div>
         <AdminBar setPage={this.setPage} />

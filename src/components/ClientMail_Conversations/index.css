@@ -1,0 +1,31 @@
+/* LEFT BLOCK - CONTACT BLOCK - LIST - TALENT */
+.client-mail-leftBlock-contactBlock-list-contact {
+  display: flex;
+  flex-direction: column;
+}
+
+/* LEFT BLOCK - CONTACT BLOCK - LIST - TALENT - TALENTILNE  */
+.client-mail-leftBlock-contactBlock-list-contact > ul {
+  display: flex;
+  flex-direction: row;
+  list-style-type: none;
+  justify-content: flex-start;
+  margin: 0;
+  padding: 15px 0px;
+  border-bottom: solid 1px var(--placeholder-grey);
+  background-color: var(--container-background);
+  transition: background-color 0.5s;
+}
+.client-mail-leftBlock-contactBlock-list-contact > ul:hover {
+  background-color: #fafafc;
+  transition: background-color 0.5s;
+}
+
+/* LEFT BLOCK - CONTACT BLOCK - LIST - TALENT -TALENTLINE - ELEMENT */
+.client-mail-leftBlock-contactBlock-list-contact > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 5px;
+  padding: 0;
+}

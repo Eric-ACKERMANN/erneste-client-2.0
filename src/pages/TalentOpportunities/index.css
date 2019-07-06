@@ -357,3 +357,12 @@ textarea {
 .talent-opportunities-conversationShown-send:active {
   background-color: var(--placeholder-grey);
 }
+
+.talent-opportunities-conversationShown-delete {
+  display: flex;
+  flex-direction: column;
+}
+
+.talent-opportunities-conversationShown-delete > i:nth-child(1) {
+  margin-bottom: 10px;
+}

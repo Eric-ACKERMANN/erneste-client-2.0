@@ -1,0 +1,40 @@
+/* LEFT BLOCK - contact BLOCK - LIST - TITLE */
+.client-mail-leftBlock-contactBlock-list-title > ul {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 10px;
+  border-bottom: solid 1px #6e78ad;
+  background-color: var(--container-background);
+  transition: background-color 0.5s;
+}
+
+.client-mail-leftBlock-contactBlock-list-title > ul > li {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 5px;
+  padding: 0;
+}
+
+.client-mail-leftBlock-contactBlock-list-checkBox {
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.client-mail-leftBlock-contactBlock-list-talent {
+  min-width: 30%;
+}
+.client-mail-leftBlock-contactBlock-list-objet {
+  width: 50%;
+  font-size: 14px;
+}
+
+.client-mail-leftBlock-contactBlock-list-statut {
+  min-width: 15%;
+}

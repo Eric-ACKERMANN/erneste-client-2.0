@@ -3,36 +3,33 @@ import axios from "axios";
 import "./index.css";
 
 import TalentOpportunitiesPopUp from "../../components/TalentOpportunities_PopUp";
+import TalentOpportunitiesConversations from "../../components/TalentOpportunities_Conversations";
+import TalentOpportunitiesMessages from "../../components/TalentOpportunities_Messages";
+import TalentOpportunitiesTitles from "../../components/TalentOpportunities_Titles";
 
 export default class TalentOpportunities extends React.Component {
   state = {
     isLoading: true,
     talentProfile: null,
     titleList: ["Entreprises", "Objet", "Date de réception"],
-    conversations: null,
+    conversations: [],
     contactShownMail: null,
     conversationShown: null,
+    conversationShownPosition: 0,
     objectShown: true,
     popUpShown: null,
     popUpType: null,
     messageValuePopUp: "",
     textAreaAnswer: "",
     textAreaHeight: 20,
-    textAreaHeightMemory: 60,
-    messageSent: false
+    textAreaHeightMemory: 60
   };
 
-  getConversations = async () => {
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/user/message/get",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-
+  setDate = conversations => {
     // We sort the array of conversations by lastUpdate
     // The date we get is type "29 05 2019, 15 05 98"
     // We want to show 29/05/2019, but the sort has to be on hour minutes secondes too
     // 1. change of the 29 05 2019, 15 05 98 into [[29,05,2019],[15,05,98]]
-    let conversations = response.data;
     for (let i = 0; i < conversations.length; i++) {
       if (typeof conversations[i].messages[0].date === "string") {
         conversations[i].messages[0].date = conversations[
@@ -50,7 +47,6 @@ export default class TalentOpportunities extends React.Component {
           .split(" ");
       }
     }
-
     for (let i = 2; i > -1; i--) {
       conversations.sort((a, b) => {
         return b.messages[0].date[1][i] - a.messages[0].date[1][i]; // sort seconds > minutes > hour
@@ -65,6 +61,17 @@ export default class TalentOpportunities extends React.Component {
     conversations.forEach(e => {
       return (e.messages[0].date = e.messages[0].date[0].join("/"));
     });
+    return conversations;
+  };
+
+  getConversations = async () => {
+    const response = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/user/message/get",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
+    // Transform date type 20 05 2019, 05 45 45 into 20/05/2109, plus sort the array per last conversation
+    let conversations = this.setDate(response.data);
 
     // On enlève les conversations avec l'admin (suite aux messages refusés)
     conversations.filter(e => {
@@ -80,7 +87,6 @@ export default class TalentOpportunities extends React.Component {
 
     this.setState({
       conversations: conversations,
-      conversationShown: conversations[0],
       isLoading: false
     });
   };
@@ -95,39 +101,14 @@ export default class TalentOpportunities extends React.Component {
     this.setState({ talentProfile: response.data });
   };
 
-  displayTitle = titleList => {
-    return (
-      <ul>
-        {titleList.map(element => {
-          return <li key={element}>{element}</li>;
-        })}
-      </ul>
-    );
-  };
-
-  displayOffer = () => {
-    if (this.state.conversations) {
-      return this.state.conversations.map(conversation => {
-        return (
-          <ul
-            key={conversation._id}
-            onClick={() => {
-              this.handleClickOffer(conversation);
-            }}
-          >
-            <li>{conversation.company}</li>
-            <li>{conversation.title}</li>
-            <li>{conversation.messages[0].date}</li>
-          </ul>
-        );
-      });
-    }
-  };
-
-  handleClickOffer = conversation => {
+  handleClickConversation = conversation => {
+    // On détermine la position de la conversations
+    let position = this.state.conversations.indexOf(conversation);
+    console.log(position);
     this.setState({
       conversationShown: conversation,
-      contactShownMail: conversation.contactId
+      contactShownMail: conversation.contactId,
+      conversationShownPosition: position
     });
   };
 
@@ -233,11 +214,19 @@ export default class TalentOpportunities extends React.Component {
       this.setState({
         textAreaAnswer: "",
         textAreaHeight: 20,
-        textAreaHeightMemory: 60,
-        messageSent: true
+        textAreaHeightMemory: 60
       });
     }
-    this.getConversations();
+
+    const response2 = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/user/message/get",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
+    this.setState({
+      conversations: this.setDate(response2.data),
+      conversationShown: response2.data[this.state.conversationShownPosition]
+    });
   };
 
   handleClickMessage = message => {
@@ -249,159 +238,27 @@ export default class TalentOpportunities extends React.Component {
     this.setState({ conversations: conversations });
   };
 
-  displayConversation = conversationShown => {
-    return (
-      <div className="talent-opportunities-conversationShown-container">
-        <div className="talent-opportunities-conversationShown-name">
-          {conversationShown.company}
-        </div>
-        <div className="talent-opportunities-conversationShown-title-block">
-          <div className="talent-opportunities-conversationShown-object">
-            <span>{conversationShown.title}</span>
-            <i
-              onClick={() => {
-                this.handleClickObject();
-              }}
-              className={
-                this.state.objectShown
-                  ? "far fa-minus-square"
-                  : "far fa-plus-square"
-              }
-            />
-          </div>
-          <p
-            className={
-              this.state.objectShown
-                ? "talent-opportunities-conversationShown-firstMessage"
-                : "talent-opportunities-conversationShown-firstMessage-shrinked"
-            }
-          >
-            {conversationShown.messages[0].body}
-          </p>
-          <div className="talent-opportunities-conversationShown-link">
-            <div>
-              <span>Fiche de poste proposée</span>{" "}
-              <span>(Not available - coming soon)</span>
-            </div>
-
-            {conversationShown.status === "process" && (
-              <div>
-                <div onClick={() => this.setPopUpType(false)}>
-                  <i className="fas fa-times" />
-                </div>
-                <div onClick={() => this.setPopUpType(true)}>Répondre</div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {conversationShown.status === "declined" && (
-          <div className="talent-opportunities-conversationShown-declined">
-            Vous avez refusé cette offre, vous ne pouvez plus y répondre
-          </div>
-        )}
-        {conversationShown.status === "accepted" && (
-          <div>
-            {conversationShown.messages.map(message => {
-              if (conversationShown.messages.indexOf(message) !== 0) {
-                return (
-                  <div
-                    key={message._id}
-                    className="talent-opportunities-conversationShown-messageBlock"
-                    onClick={() => {
-                      this.handleClickMessage(message);
-                    }}
-                  >
-                    <div className="talent-opportunities-conversationShown-picture">
-                      {message.action === "received" ? (
-                        <img
-                          className="talent-opportunities-logo-company"
-                          alt="logo of company"
-                          src={conversationShown.companyLogo}
-                        />
-                      ) : (
-                        <img
-                          className="talent-opportunities-picture-talent"
-                          alt="portrait of talent"
-                          src={
-                            this.state.talentProfile
-                              ? this.state.talentProfile.informations.photo
-                              : "Photo talent"
-                          }
-                        />
-                      )}
-                    </div>
-                    <div
-                      className={
-                        message.displayedFull
-                          ? "talent-opportunities-conversationShown-message"
-                          : "talent-opportunities-conversationShown-message messageshrink"
-                      }
-                    >
-                      {message.body}
-                    </div>
-                    <i
-                      className={
-                        message.displayedFull
-                          ? "far fa-minus-square"
-                          : "far fa-plus-square"
-                      }
-                    />
-                  </div>
-                );
-              } else return false;
-            })}
-
-            <div className="talent-opportunities-conversationShown-messageBlock">
-              <div className="talent-opportunities-conversationShown-picture">
-                <img
-                  className="talent-opportunities-picture-talent"
-                  alt="portrait of talent"
-                  src={
-                    this.state.talentProfile
-                      ? this.state.talentProfile.informations.photo
-                      : "Photo talent"
-                  }
-                />
-              </div>
-              <div className="talent-opportunities-conversationShown-message">
-                <textarea
-                  id="textArea"
-                  value={this.state.textAreaAnswer}
-                  onChange={event =>
-                    this.handleChangeAnswer(event.target.value)
-                  }
-                  placeholder="Ecrivez votre réponse ici..."
-                  onClick={this.handleClickAnswer}
-                  onBlur={this.handleBlurAnswer}
-                  onKeyUp={() => {
-                    this.handleKeyUpTextarea(
-                      document.getElementById("textArea")
-                    );
-                  }}
-                  style={{ height: this.state.textAreaHeight }}
-                />
-              </div>
-            </div>
-            <div className="talent-opportunities-conversationShown-buttons">
-              {this.state.textAreaAnswer !== "" ? (
-                <div
-                  className="talent-opportunities-conversationShown-send"
-                  onClick={() => this.handleSubmitAnswer()}
-                >
-                  Envoyer
-                </div>
-              ) : (
-                <div className="talent-opportunities-conversationShown-send-disabled">
-                  Envoyer
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+  handleClickDeleteMessage = async messageDelete => {
+    await axios.post(
+      "https://erneste-server-improved.herokuapp.com/user/message/delete",
+      {
+        conversation: this.state.conversationShown._id,
+        message: messageDelete._id
+      },
+      { headers: { authorization: `Bearer ${this.props.token}` } }
     );
+
+    const response2 = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/user/message/get",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
+    this.setState({
+      conversations: this.setDate(response2.data),
+      conversationShown: response2.data[this.state.conversationShownPosition]
+    });
   };
+
   render() {
     return (
       <div className="talent-opportunities-content">
@@ -424,18 +281,33 @@ export default class TalentOpportunities extends React.Component {
                 Entreprises en contact
               </div>
               <div className="talent-opportunities-leftBlock-contactBlock-list">
-                <div className="talent-opportunities-leftBlock-contactBlock-list-title">
-                  {this.displayTitle(this.state.titleList)}
-                </div>
-                <div className="talent-opportunities-leftBlock-contactBlock-list-contact">
-                  {this.displayOffer()}
-                </div>
+                <TalentOpportunitiesTitles titleList={this.state.titleList} />
+                <TalentOpportunitiesConversations
+                  conversations={this.state.conversations}
+                  handleClickConversation={this.handleClickConversation}
+                />
               </div>
             </div>
           </div>
           <div className="talent-opportunities-rightBlock">
-            {this.state.conversationShown &&
-              this.displayConversation(this.state.conversationShown)}
+            {this.state.conversationShown && (
+              <TalentOpportunitiesMessages
+                conversationShown={this.state.conversationShown}
+                objectShown={this.state.objectShown}
+                textAreaAnswer={this.state.textAreaAnswer}
+                textAreaHeight={this.state.textAreaHeight}
+                talentProfile={this.state.talentProfile}
+                handleClickMessage={this.handleClickMessage}
+                handleClickAnswer={this.handleClickAnswer}
+                handleClickObject={this.handleClickObject}
+                handleClickDeleteMessage={this.handleClickDeleteMessage}
+                handleChangeAnswer={this.handleChangeAnswer}
+                handleKeyUpTextarea={this.handleKeyUpTextarea}
+                handleSubmitAnswer={this.handleSubmitAnswer}
+                handleBlurAnswer={this.handleBlurAnswer}
+                setPopUpType={this.setPopUpType}
+              />
+            )}
           </div>
         </div>
       </div>

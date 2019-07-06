@@ -1,84 +1,71 @@
 import React from "react";
 import axios from "axios";
-import box from "../../features/icons/check_24px.svg";
 import "./index.css";
+import ClientMailTitles from "../../components/ClientMail_Titles";
+import ClientMailConversations from "../../components/ClientMail_Conversations";
+import ClientMailMessages from "../../components/ClientMail_Messages/ClientMail_Messages";
 
 export default class ClientMail extends React.Component {
   state = {
     isLoading: true,
     titleList: ["Talent", "Objet", "Statut"],
     talentList: null,
-    conversations: null,
+    conversations: [],
+    clientData: null,
     conversationShown: null,
     contactShown: null,
+    contactShownPosition: null,
     objectShown: true,
     textAreaAnswer: "",
     textAreaHeight: 20,
     textAreaMemory: 60
   };
 
-  getConversations = async () => {
+  getList = async () => {
     this.setState({ isLoading: true });
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/user/message/get",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    await this.setState({ conversations: response.data });
-    this.setState({ isLoading: false });
-  };
-
-  getTalentList = async () => {
-    this.setState({ isLoading: true });
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/talent",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    await this.setState({ talentList: response.data });
-    this.setState({ isLoading: false });
-  };
-
-  getClientData = async () => {
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/client/" +
-        this.props.match.params.id,
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    this.setState({ clientData: response.data, isLoading: false });
-  };
-
-  displayTitle = titleList => {
-    return (
-      <ul>
-        <li className="client-mail-leftBlock-contactBlock-list-checkBox">
-          <img
-            className="client-mail-contactblock-box"
-            src={box}
-            alt="box cochée"
-          />
-        </li>
-        {titleList.map((element, index) => {
-          let columnClass = "";
-          if (titleList.indexOf(element) === 0) {
-            columnClass = "client-mail-leftBlock-contactBlock-list-talent";
+    try {
+      const getTalent = () => {
+        return axios.get(
+          `https://erneste-server-improved.herokuapp.com/talent/conversation/${
+            this.props.userData.id
+          }`,
+          {
+            headers: { authorization: `Bearer ${this.props.token}` }
           }
-          if (titleList.indexOf(element) === 1) {
-            columnClass = "client-mail-leftBlock-contactBlock-list-objet";
-          }
-          if (titleList.indexOf(element) === 2) {
-            columnClass = "client-mail-leftBlock-contactBlock-list-statut";
-          }
+        );
+      };
 
-          return (
-            <li key={index} className={columnClass}>
-              {element}
-            </li>
-          );
-        })}
-      </ul>
-    );
+      const getMessage = () => {
+        return axios.get(
+          "https://erneste-server-improved.herokuapp.com/user/message/get",
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+      };
+
+      const getClient = () => {
+        return axios.get(
+          "https://erneste-server-improved.herokuapp.com/client/" +
+            this.props.match.params.id,
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+      };
+
+      axios.all([getTalent(), getMessage(), getClient()]).then(
+        axios.spread((talents, messages, client) => {
+          this.setState({
+            talentList: talents.data,
+            conversations: messages.data,
+            clientData: client.data,
+            isLoading: false
+          });
+        })
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  handleContactClick = conversation => {
+  handleClickConversation = conversation => {
     this.setState({ conversationShown: conversation });
     // We look for the talent in the talentList
     if (this.state.talentList) {
@@ -88,42 +75,14 @@ export default class ClientMail extends React.Component {
         })
         .indexOf(conversation.contactId);
 
-      this.setState({ contactShown: this.state.talentList[position] });
+      this.setState({
+        contactShown: this.state.talentList[position],
+        contactShownPosition: position
+      });
     }
   };
 
-  displayContacts = conversations => {
-    return conversations.map(conversation => {
-      return (
-        <ul
-          onClick={() => {
-            this.handleContactClick(conversation);
-          }}
-        >
-          <li className="client-mail-leftBlock-contactBlock-list-checkBox">
-            <img
-              className="client-mail-contactblock-box"
-              src={box}
-              alt="box cochée"
-            />
-          </li>
-          <li className="client-mail-leftBlock-contactBlock-list-talent">{`${
-            conversation.contactFirstName
-          } ${conversation.contactLastName}`}</li>
-          <li className="client-mail-leftBlock-contactBlock-list-objet">
-            {conversation.title}
-          </li>
-          <li className="client-mail-leftBlock-contactBlock-list-statut">
-            {conversation.status === "accepted" && <span>Accepté</span>}
-            {conversation.status === "process" && <span>En Cours</span>}
-            {conversation.status === "declined" && <span>Refusé</span>}
-          </li>
-        </ul>
-      );
-    });
-  };
-
-  handleChangeAnswer = e => {
+  handleChangeMessageAnswer = e => {
     this.setState({ textAreaAnswer: e });
   };
 
@@ -170,6 +129,26 @@ export default class ClientMail extends React.Component {
     this.setState({ conversations: conversations });
   };
 
+  handleClickDeleteMessage = async messageDelete => {
+    await axios.post(
+      "https://erneste-server-improved.herokuapp.com/user/message/delete",
+      {
+        conversation: this.state.conversationShown._id,
+        message: messageDelete._id
+      },
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
+    const response2 = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/user/message/get",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    this.setState({
+      conversations: response2.data,
+      conversationShown: response2.data[this.state.contactShownPosition]
+    });
+  };
+
   handleSubmitAnswer = async () => {
     // We find the mail of the sender
     const mailSender = this.state.clientData.users[
@@ -194,144 +173,17 @@ export default class ClientMail extends React.Component {
       this.setState({
         textAreaAnswer: "",
         textAreaHeight: 20,
-        textAreaHeightMemory: 60,
-        messageSent: true
+        textAreaHeightMemory: 60
       });
-      this.getConversations();
     }
-  };
-
-  displayConversation = (conversationShown, contactShown) => {
-    return (
-      <div className="client-mail-conversationShown-container">
-        <div className="client-mail-conversationShown-name">
-          {`${contactShown.informations.firstName} ${
-            contactShown.informations.lastName
-          }`}
-        </div>
-        <div className="client-mail-conversationShown-title-block">
-          <div className="client-mail-conversationShown-object">
-            <span>{conversationShown.title}</span>
-            <i
-              onClick={() => {
-                this.handleClickObject();
-              }}
-              className={
-                this.state.objectShown
-                  ? "far fa-minus-square"
-                  : "far fa-plus-square"
-              }
-            />
-          </div>
-          <p
-            className={
-              this.state.objectShown
-                ? "client-mail-conversationShown-firstMessage"
-                : "client-mail-conversationShown-firstMessage-shrinked"
-            }
-          >
-            {conversationShown.messages[0].body}
-          </p>
-          <div className="client-mail-conversationShown-link">
-            <span>Fiche de poste proposée</span>{" "}
-            <span>(Not available - coming soon)</span>
-          </div>
-        </div>
-
-        {/* Message display*/}
-        {conversationShown.status === "accepted" && (
-          <div>
-            {conversationShown.messages.map(message => {
-              if (conversationShown.messages.indexOf(message) !== 0) {
-                return (
-                  <div
-                    key={message._id}
-                    className="client-mail-conversationShown-messageBlock"
-                    onClick={() => {
-                      this.handleClickMessage(message);
-                    }}
-                  >
-                    <div>
-                      {message.action === "received" ? (
-                        <img
-                          className="client-mail-conversationShown-picture"
-                          alt="portrait of talent"
-                          src={this.state.contactShown.informations.photo}
-                        />
-                      ) : (
-                        <img
-                          className="client-mail-logo-company"
-                          alt="logo of company"
-                          src={this.state.clientData.logo}
-                        />
-                      )}
-                    </div>
-                    <div
-                      className={
-                        message.displayedFull
-                          ? "client-mail-conversationShown-message"
-                          : "client-mail-conversationShown-message messageshrink"
-                      }
-                    >
-                      {message.body}
-                    </div>
-                    <i
-                      className={
-                        message.displayedFull
-                          ? "far fa-minus-square"
-                          : "far fa-plus-square"
-                      }
-                    />
-                  </div>
-                );
-              } else return false;
-            })}
-
-            <div className="client-mail-conversationShown-messageBlock">
-              <div className="client-mail-conversationShown-picture-company">
-                <img
-                  className="client-mail-logo-company"
-                  alt="logo of company"
-                  src={this.state.clientData.logo}
-                />
-              </div>
-              <div className="client-mail-conversationShown-message">
-                <textarea
-                  id="textArea"
-                  value={this.state.textAreaAnswer}
-                  onChange={event =>
-                    this.handleChangeAnswer(event.target.value)
-                  }
-                  placeholder="Ecrivez votre réponse ici..."
-                  onClick={this.handleClickAnswer}
-                  onBlur={this.handleBlurAnswer}
-                  onKeyUp={() => {
-                    this.handleKeyUpTextarea(
-                      document.getElementById("textArea")
-                    );
-                  }}
-                  style={{ height: this.state.textAreaHeight }}
-                />
-              </div>
-            </div>
-            <div className="client-mail-conversationShown-buttons">
-              {this.state.textAreaAnswer !== "" ? (
-                <div
-                  className="client-mail-conversationShown-send"
-                  onClick={() => this.handleSubmitAnswer()}
-                >
-                  Envoyer
-                </div>
-              ) : (
-                <div className="client-mail-conversationShown-send-disabled">
-                  Envoyer
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+    const response2 = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/user/message/get",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
     );
+    this.setState({
+      conversations: response2.data,
+      conversationShown: response2.data[this.state.contactShownPosition]
+    });
   };
 
   handleClickObject = () => {
@@ -340,7 +192,6 @@ export default class ClientMail extends React.Component {
 
   render() {
     /* Test of Loading... */
-
     if (this.state.isLoading === true) {
       return "En cours de chargement....";
     }
@@ -361,32 +212,36 @@ export default class ClientMail extends React.Component {
                 </div>
               </div>
               <div className="client-mail-leftBlock-contactBlock-list">
-                <div className="client-mail-leftBlock-contactBlock-list-title">
-                  {this.displayTitle(this.state.titleList)}
-                </div>
-                <div className="client-mail-leftBlock-contactBlock-list-contact">
-                  {this.state.conversations &&
-                    this.displayContacts(this.state.conversations)}
-                </div>
+                <ClientMailTitles titleList={this.state.titleList} />
+                <ClientMailConversations
+                  conversations={this.state.conversations}
+                  handleClickConversation={this.handleClickConversation}
+                />
               </div>
             </div>
           </div>
-          <div className="client-mail-rightBlock">
-            {this.state.contactShown &&
-              this.state.conversationShown &&
-              this.displayConversation(
-                this.state.conversationShown,
-                this.state.contactShown
-              )}
-          </div>
+          <ClientMailMessages
+            contactShown={this.state.contactShown}
+            conversationShown={this.state.conversationShown}
+            objectShown={this.state.objectShown}
+            clientData={this.state.clientData}
+            textAreaAnswer={this.state.textAreaAnswer}
+            textAreaHeight={this.state.textAreaHeight}
+            handleClickObject={this.handleClickObject}
+            handleClickMessage={this.handleClickMessage}
+            handleClickDeleteMessage={this.handleClickDeleteMessage}
+            handleClickAnswer={this.handleClickAnswer}
+            handleBlurAnswer={this.handleBlurAnswer}
+            handleChangeMessageAnswer={this.handleChangeMessageAnswer}
+            handleKeyUpTextarea={this.handleKeyUpTextarea}
+            handleSubmitAnswer={this.handleSubmitAnswer}
+          />
         </div>
       </div>
     );
   }
   async componentDidMount() {
     this.props.setPageActive("client/mail");
-    this.getConversations();
-    this.getTalentList();
-    this.getClientData();
+    this.getList();
   }
 }

@@ -3,42 +3,38 @@ import axios from "axios";
 import TalentInformations from "../../components/TalentInformations/index";
 import TalentInfoDisplay from "../../components/TalentInfoDisplay/index";
 import TalentDescription from "../../components/TalentDescription/index";
-import { Redirect } from "react-router-dom";
 import "./index.css";
 
 /* Fiche qui apparait pour le Talent : il ne peut modifier que certains éléments de la description */
 
 class TalentforTalent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      informations: {
-        photo: null,
-        firstName: "",
-        lastName: "",
-        linkedIn: "",
-        email: "",
-        phoneNumber: "",
-        salary: "",
-        actualCompany: "",
-        wantedSector: [],
-        wantedSize: "",
-        actualTitle: "",
-        wantedTitle: [],
-        status: ""
-      },
-      description: {
-        idealCompany: "",
-        idealRole: "",
-        workingEnvironment: "",
-        development: ""
-      },
-      skills: null,
-      validated: false,
-      lastUpdate: null,
-      isUpdating: false
-    };
-  }
+  state = {
+    informations: {
+      photo: null,
+      firstName: "",
+      lastName: "",
+      linkedIn: "",
+      email: "",
+      phoneNumber: "",
+      salary: "",
+      actualCompany: "",
+      wantedSector: [],
+      wantedSize: "",
+      actualTitle: "",
+      wantedTitle: [],
+      status: ""
+    },
+    description: {
+      idealCompany: "",
+      idealRole: "",
+      workingEnvironment: "",
+      development: ""
+    },
+    skills: null,
+    validated: false,
+    lastUpdate: null,
+    isUpdating: false
+  };
   /* ** INTERRUPTERS ** */
   setUpdate = () => {
     this.setState({ isUpdating: !this.state.isUpdating });
@@ -121,15 +117,9 @@ class TalentforTalent extends React.Component {
   };
 
   render() {
-    /* Permission test */
-    if (this.props.permission !== "Talent") {
-      return <Redirect to={"/"} />;
-    }
     return (
       <div className="talent-for-talent-content">
-        {this.state.validated ? (
-          false
-        ) : (
+        {!this.state.validated && (
           <div className="talent-for-talent-body-container">
             <p className="talent-for-talent-text-validation">
               C'est votre première connexion ? Prenez le temps de lire les

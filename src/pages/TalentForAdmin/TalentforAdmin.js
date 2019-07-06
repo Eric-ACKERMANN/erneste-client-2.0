@@ -3,7 +3,6 @@ import TalentInformations from "../../components/TalentInformations/index";
 import TalentInfoDisplay from "../../components/TalentInfoDisplay/index";
 import TalentDescription from "../../components/TalentDescription/index";
 import axios from "axios";
-import { Redirect } from "react-router-dom";
 
 /* *** Page for Admin. Everything can be modified *** */
 
@@ -126,10 +125,6 @@ export default class TalentforAdmin extends React.Component {
   };
 
   render() {
-    /* Permission test */
-    if (this.props.permission !== "Admin") {
-      return <Redirect to={"/"} />;
-    }
     return (
       <div className="content">
         <div className="body-container">

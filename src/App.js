@@ -91,7 +91,10 @@ class App extends React.Component {
             exact={true}
             path="/admin/talent-create"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Admin"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
@@ -107,7 +110,10 @@ class App extends React.Component {
             exact={true}
             path="/admin/talent/:id"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Admin"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
@@ -123,12 +129,14 @@ class App extends React.Component {
           <Route
             path="/admin/talent-list"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Admin"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <TalentListPage
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                 />
@@ -138,13 +146,15 @@ class App extends React.Component {
           <Route
             path="/admin/client-list"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Admin"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <ClientList
                   match={props.match}
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                 />
@@ -154,13 +164,15 @@ class App extends React.Component {
           <Route
             path="/admin/client/:id"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Admin"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <ClientforAdmin
                   match={props.match}
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                 />
@@ -170,12 +182,14 @@ class App extends React.Component {
           <Route
             path="/admin/config/"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Admin"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <Admin
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                 />
@@ -187,13 +201,15 @@ class App extends React.Component {
             exact={true}
             path="/talent/:id"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Talent"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <TalentforTalent
                   match={props.match}
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                 />
@@ -204,13 +220,15 @@ class App extends React.Component {
             exact={true}
             path="/talent/opportunities/:id"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Talent"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <TalentOpportunities
                   match={props.match}
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                   talentProfile={this.state.userData.profile}
@@ -223,13 +241,15 @@ class App extends React.Component {
             exact={true}
             path="/client/:id"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Client"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <ClientWelcome
                   match={props.match}
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                   userData={this.state.userData}
@@ -241,13 +261,15 @@ class App extends React.Component {
             exact={true}
             path="/client/mail/:id"
             render={props => {
-              if (!this.state.userData) {
+              if (
+                !this.state.userData ||
+                this.state.userData.permission !== "Client"
+              ) {
                 return <Redirect to={"/"} />;
               }
               return (
                 <ClientMail
                   match={props.match}
-                  permission={this.state.userData.permission}
                   setPageActive={this.setPageActive}
                   token={this.state.userData.token}
                   userData={this.state.userData}
