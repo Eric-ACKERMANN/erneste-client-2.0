@@ -124,10 +124,48 @@ button:focus {
   cursor: pointer;
 }
 
-.button-and-note {
+.clientArrayEntries li {
+  list-style-type: none;
+  width: 160px;
+  height: 38px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  position: relative;
 }
+
+.clientArrayEntries > li > div > i {
+  margin-left: 10px;
+}
+
+.fa-sort {
+  color: #a8afcf;
+  transform: rotate(0deg);
+  -webkit-transition: all 0.4s;
+}
+
+.clientList-titleSortedUp {
+  font-weight: 600;
+  cursor: pointer;
+  color: #31313c;
+  transform: rotate(360deg);
+  -webkit-transition: all 0.4s;
+}
+
+.clientList-titleSortedDown {
+  font-weight: 600;
+  cursor: pointer;
+  color: #31313c;
+  transform: rotate(180deg);
+  -webkit-transition: all 0.4s;
+}
+
+.clientList-titleFiltered {
+  font-weight: 600;
+  cursor: pointer;
+  color: #31313c;
+}
+
 .deleteOne {
   width: 24px;
   height: 24px;
@@ -144,20 +182,6 @@ button:focus {
   margin: 0 20px 0 0;
 }
 
-.clientArrayEntries li {
-  list-style-type: none;
-  width: 160px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.clientArrayEntries span {
-  margin-left: 10px;
-  color: #a8b0d0;
-}
-
 /* clientList array item*/
 
 /* .hover-clientList-right-block {
@@ -166,6 +190,7 @@ button:focus {
   text-decoration: none;
   color: #333366;
 }
+
 .hover-clientList-right-block:hover {
   /* background: #3a87be; */
   /* background: #687ec779; */
@@ -191,18 +216,13 @@ button:focus {
   height: 38px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
   margin: 15px 0;
 }
 
 .clientListItem a {
   text-decoration: none;
   color: #31313c;
-}
-
-.clientArrayEntries li {
-  position: relative;
 }
 
 .clientList-chevronBox {

@@ -15,17 +15,21 @@ export default function TalentOpportunities_Messages({
   handleKeyUpTextarea,
   handleSubmitAnswer,
   handleBlurAnswer,
-  setPopUpType
+  setPopUpType,
+  renderStars
 }) {
   return (
     <div className="client-mail-leftBlock-contactBlock-list-contact">
       <div className="talent-opportunities-conversationShown-container">
         <div className="talent-opportunities-conversationShown-name">
-          {conversationShown.company}
+          {conversationShown.companyName}
         </div>
         <div className="talent-opportunities-conversationShown-title-block">
           <div className="talent-opportunities-conversationShown-object">
             <span>{conversationShown.title}</span>
+            <span>
+              {conversationShown.rating && renderStars(conversationShown)}
+            </span>
             <i
               onClick={() => {
                 handleClickObject();
@@ -75,7 +79,7 @@ export default function TalentOpportunities_Messages({
                     key={message._id}
                     className="talent-opportunities-conversationShown-messageBlock"
                   >
-                    <div className="talent-opportunities-conversationShown-picture">
+                    <div>
                       {message.action === "received" ? (
                         <img
                           className="talent-opportunities-logo-company"

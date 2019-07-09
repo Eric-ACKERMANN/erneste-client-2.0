@@ -208,12 +208,10 @@ export default class NewTalent extends React.Component {
       "https://erneste-server-improved.herokuapp.com/sector/",
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
-    console.log("response", response.data);
     const response2 = await axios.get(
       "https://erneste-server-improved.herokuapp.com/title",
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
-    console.log("response2", response2.data);
     this.setState({
       arrayOfSectors: response.data,
       arrayOfTitles: response2.data,

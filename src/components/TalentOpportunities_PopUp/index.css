@@ -76,6 +76,22 @@
   color: var(--dark-blue);
 }
 
+.opportunitiesPopUp-note {
+  font-weight: 500;
+  color: var(--dark-blue);
+  font-size: 11px;
+}
+
+/* OPPORTUNITIES POP UP - BODY - STARS - BLOCK */
+
+.opportunitiesPopUp-body-stars {
+  margin: 10px 0px;
+}
+
+.opportunitiesPopUp-body-stars > i {
+  margin-right: 5px;
+}
+
 /* OPPORTUNITIES POP UP - BODY - INPUT */
 .opportunitiesPopUp-input {
   margin: 0;
@@ -129,6 +145,13 @@
   color: var(--dark-blue);
 }
 
+.opportunitiesPopUp-errorValue {
+  border: 1px solid red;
+}
+
+.opportunitiesPopUp-errorRating {
+  border: 1px solid red;
+}
 .opportunitiesPopUp-add-attachment {
   margin: 0;
   margin-right: 10px;

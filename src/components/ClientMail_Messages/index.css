@@ -68,8 +68,17 @@
   border-bottom: 1px solid var(--input-border-color);
 }
 
-.client-mail-conversationShown-picture {
+.client-mail-conversationShown-messageBlock > div:nth-child(1) {
+  width: 50px;
   margin-right: 20px;
+  align-self: flex-start;
+}
+
+.client-mail-conversationShown-messageBlock > div:nth-child(3) {
+  align-self: flex-start;
+  margin-top: 10px;
+}
+.client-mail-conversationShown-picture {
   align-self: flex-start;
   width: 50px;
   height: 50px;
@@ -78,11 +87,11 @@
 }
 
 .client-mail-conversationShown-picture-company {
-  margin-right: 20px;
   align-self: flex-start;
 }
 
 .client-mail-logo-company {
+  align-self: flex-start;
   width: 50px;
   height: 50px;
   object-fit: fill;

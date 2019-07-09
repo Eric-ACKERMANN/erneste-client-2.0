@@ -58,7 +58,7 @@ export default class TalentListPage extends React.Component {
   getTalentList = async toto => {
     this.setState({ isLoading: true });
     const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/talent/",
+      "https://erneste-server-improved.herokuapp.com/talent?picture=none",
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
     // We sort the array of talent by lastUpdate
@@ -533,7 +533,6 @@ export default class TalentListPage extends React.Component {
 
       // FILTER WITH TAGS
       let tag = this.state.tagSelected;
-      console.log(tag);
       if (tag.length > 0) {
         talentList = talentList.filter(element => {
           // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de tag, on remplit ce tableau de true à la base

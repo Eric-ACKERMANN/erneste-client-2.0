@@ -32,10 +32,6 @@ export default class ClientforAdmin extends React.Component {
   };
 
   setPhoto = async files => {
-    console.log("ce qu'on envoie", {
-      id: this.state.data._id,
-      client: { logo: files }
-    });
     await axios.post(
       "https://erneste-server-improved.herokuapp.com/client/update",
       {
@@ -62,6 +58,7 @@ export default class ClientforAdmin extends React.Component {
     );
     this.setState({ data: response.data });
   };
+
   render() {
     return (
       <div className="client-for-admin-container">

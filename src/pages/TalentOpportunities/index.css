@@ -27,7 +27,6 @@
 /* ------ LEFT BLOCK ------- */
 .talent-opportunities-leftBlock {
   width: 49%;
-  overflow: scroll;
 }
 
 /* LEFT BLOCK - TITLE */
@@ -182,11 +181,17 @@
 }
 
 .talent-opportunities-conversationShown-object {
+  display: flex;
+  align-items: center;
   margin-top: 10px;
   margin-bottom: 20px;
   font-weight: 600;
 }
 .talent-opportunities-conversationShown-object > i {
+  margin-left: 15px;
+}
+
+.talent-opportunities-conversationShown-object > span:nth-child(2) {
   margin-left: 15px;
 }
 
@@ -279,15 +284,21 @@
   border-bottom: 1px solid var(--input-border-color);
 }
 
-.talent-opportunities-conversationShown-picture {
+.talent-opportunities-conversationShown-messageBlock > div:nth-child(1) {
+  width: 50px;
   margin-right: 20px;
   align-self: flex-start;
 }
 
+.talent-opportunities-conversationShown-messageBlock > div:nth-child(3) {
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
 .talent-opportunities-logo-company {
-  width: 50px;
   height: 50px;
-  object-fit: cover;
+  width: 50px;
+  object-fit: fill;
   border-radius: 0;
 }
 

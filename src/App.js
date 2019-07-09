@@ -7,22 +7,26 @@ import {
   Switch,
   Redirect
 } from "react-router-dom";
+import Cookies from "js-cookie";
+
+import Login from "../src/pages/Login";
+import ResetPassword from "./pages/ResetPassword";
+import ForgottenPassword from "./pages/ForgottenPassword";
 
 import TalentforAdmin from "./pages/TalentForAdmin";
 import TalentListPage from "./pages/TalentListPage";
-import ClientList from "./components/ClientList";
-import TalentforTalent from "./pages/TalentPage";
-import Login from "../src/pages/Login";
-import NewTalent from "./pages/NewTalent";
+import ClientList from "./pages/ClientList";
 import ClientforAdmin from "./pages/ClientForAdmin";
-import Cookies from "js-cookie";
-import Header from "./components/Header";
 import Admin from "./pages/AdminConfig";
+import NewTalent from "./pages/NewTalent";
+
+import TalentforTalent from "./pages/TalentPage";
+import TalentOpportunities from "./pages/TalentOpportunities";
+
 import ClientWelcome from "./pages/ClientWelcome";
 import ClientMail from "./pages/ClientMail";
-import ResetPassword from "./pages/ResetPassword";
-import ForgottenPassword from "./pages/ForgottenPassword";
-import TalentOpportunities from "./pages/TalentOpportunities";
+
+import Header from "./components/Header";
 
 class App extends React.Component {
   constructor(props) {

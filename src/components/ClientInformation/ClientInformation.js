@@ -15,6 +15,20 @@ export default class ClientInformation extends React.Component {
     this.props.setPhoto(files.base64);
   };
 
+  renderStars(item) {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < item.rating) {
+        stars.push(<i key={i} className="fas fa-star" />);
+      } else {
+        stars.push(<i key={i} className="far fa-star" />);
+      }
+    }
+    return (
+      <div style={{ flexDirection: "row", alignItems: "center" }}>{stars}</div>
+    );
+  }
+
   render() {
     console.log(this.props.clientUsers);
     return (
@@ -79,34 +93,36 @@ export default class ClientInformation extends React.Component {
               <li>Note</li>
             </ul>
             {this.props.clientUsers.map(user => {
-              return user.conversations.map(conversation => {
-                return (
-                  <ul
-                    className="client-information-talent-list-title"
-                    key={conversation._id}
-                  >
-                    <li>
-                      {user.firstName} {user.lastName}
-                    </li>
-                    <li>
-                      {conversation.contactFirstName}{" "}
-                      {conversation.contactLastName}
-                    </li>
-                    <li>
-                      {conversation.status === "accepted" && (
-                        <span>Contact accepté</span>
-                      )}
-                      {conversation.status === "declined" && (
-                        <span>Contact refusé</span>
-                      )}
-                      {conversation.status === "process" && (
-                        <span>Contact en cours</span>
-                      )}
-                    </li>
-                    <li>(Non disponible)</li>
-                  </ul>
-                );
-              });
+              if (user.conversations) {
+                return user.conversations.map(conversation => {
+                  return (
+                    <ul
+                      className="client-information-talent-list-title"
+                      key={conversation._id}
+                    >
+                      <li>
+                        {user.firstName} {user.lastName}
+                      </li>
+                      <li>
+                        {conversation.contactFirstName}{" "}
+                        {conversation.contactLastName}
+                      </li>
+                      <li>
+                        {conversation.status === "accepted" && (
+                          <span>Contact accepté</span>
+                        )}
+                        {conversation.status === "declined" && (
+                          <span>Contact refusé</span>
+                        )}
+                        {conversation.status === "process" && (
+                          <span>Contact en cours</span>
+                        )}
+                      </li>
+                      <li>{this.renderStars(conversation)}</li>
+                    </ul>
+                  );
+                });
+              } else return false;
             })}
           </div>
         </div>

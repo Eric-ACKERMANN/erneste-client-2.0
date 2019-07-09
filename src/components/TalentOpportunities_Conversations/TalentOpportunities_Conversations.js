@@ -13,7 +13,7 @@ export default function TalentOpportunities_Conversations({
             key={conversation._id}
             onClick={() => handleClickConversation(conversation)}
           >
-            <li>{conversation.company}</li>
+            <li>{conversation.companyName}</li>
             <li>{conversation.title}</li>
             <li>{conversation.messages[0].date}</li>
           </ul>

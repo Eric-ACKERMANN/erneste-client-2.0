@@ -73,7 +73,7 @@ export default class ClientMail extends React.Component {
         .map(element => {
           return element.informations.email;
         })
-        .indexOf(conversation.contactId);
+        .indexOf(conversation.contactMail);
 
       this.setState({
         contactShown: this.state.talentList[position],

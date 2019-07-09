@@ -19,10 +19,35 @@ export default class TalentOpportunities extends React.Component {
     objectShown: true,
     popUpShown: null,
     popUpType: null,
+    popUpError: { rating: false, value: false },
     messageValuePopUp: "",
     textAreaAnswer: "",
     textAreaHeight: 20,
-    textAreaHeightMemory: 60
+    textAreaHeightMemory: 60,
+    offerRate: { rating: 0, type: "temp" }
+  };
+
+  offerRating = (index, type) => {
+    if (
+      (this.state.offerRate.type === "temp" ||
+        this.state.offerRate.type === "leave") &&
+      type === "temp"
+    ) {
+      this.setState({ offerRate: { rating: index, type: type } });
+      return;
+    }
+    if (this.state.offerRate.type === "temp" && type === "leave") {
+      this.setState({ offerRate: { rating: index, type: type } });
+      return;
+    }
+    if (type === "set") {
+      this.setState({ offerRate: { rating: index, type: type } });
+      let popUpError = { ...this.state.popUpError };
+      if (index !== 0) {
+        popUpError.rating = false;
+      }
+      this.setState({ popUpError: popUpError });
+    }
   };
 
   setDate = conversations => {
@@ -101,13 +126,22 @@ export default class TalentOpportunities extends React.Component {
     this.setState({ talentProfile: response.data });
   };
 
-  handleClickConversation = conversation => {
+  handleClickConversation = async conversation => {
     // On détermine la position de la conversations
     let position = this.state.conversations.indexOf(conversation);
-    console.log(position);
+
+    const response = await axios.get(
+      `https://erneste-server-improved.herokuapp.com/client/${
+        conversation.company
+      }`,
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
+    conversation.companyLogo = response.data.logo;
+
     this.setState({
       conversationShown: conversation,
-      contactShownMail: conversation.contactId,
+      contactShownMail: conversation.contactMail,
       conversationShownPosition: position
     });
   };
@@ -126,42 +160,107 @@ export default class TalentOpportunities extends React.Component {
 
   handleChangePopUp = e => {
     this.setState({ messageValuePopUp: e });
+    let popUpError = { ...this.state.popUpError };
+    if (e !== "") {
+      popUpError.value = false;
+    }
+    this.setState({ popUpError: popUpError });
   };
 
   handleSubmitPopUp = async e => {
-    if (this.state.popUpType) {
-      console.log("ce qu'on envoie", {
-        from: this.state.talentProfile.informations.email,
-        to: this.state.contactShownMail,
-        message: this.state.messageValuePopUp,
-        status: "accepted"
-      });
-      await axios.post(
-        "https://erneste-server-improved.herokuapp.com/user/message",
-        {
-          from: this.state.talentProfile.informations.email,
-          to: this.state.contactShownMail,
-          message: this.state.messageValuePopUp,
-          status: "accepted"
-        },
-        { headers: { authorization: `Bearer ${this.props.token}` } }
-      );
-      this.setState({ popUpShown: false });
-      this.getConversations();
+    if (
+      this.state.messageValuePopUp !== "" &&
+      this.state.offerRate.rating !== 0
+    ) {
+      if (this.state.popUpType) {
+        await axios.post(
+          "https://erneste-server-improved.herokuapp.com/user/message",
+          {
+            from: this.state.talentProfile.informations.email,
+            to: this.state.contactShownMail,
+            message: this.state.messageValuePopUp,
+            status: "accepted",
+            rating: this.state.offerRate.rating.toString()
+          },
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+        this.setState({ popUpShown: false });
+
+        const response2 = await axios.get(
+          "https://erneste-server-improved.herokuapp.com/user/message/get",
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+
+        this.setState({
+          conversations: this.setDate(response2.data),
+          conversationShown:
+            response2.data[this.state.conversationShownPosition]
+        });
+
+        await axios.post(
+          "https://erneste-server-improved.herokuapp.com/client/update/rating",
+          {
+            id: this.state.conversationShown.company
+          },
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+      } else {
+        // The status of the conversation need to be updated for the receiver and the sender into negativ
+        await axios.post(
+          "https://erneste-server-improved.herokuapp.com/user/message",
+          {
+            from: this.state.talentProfile.informations.email,
+            to: this.state.contactShownMail,
+            message: this.state.messageValuePopUp,
+            status: "declined",
+            rating: this.state.offerRate.rating.toString()
+          },
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+        this.setState({ popUpShown: false });
+
+        const response2 = await axios.get(
+          "https://erneste-server-improved.herokuapp.com/user/message/get",
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+
+        await axios.post(
+          "https://erneste-server-improved.herokuapp.com/client/update/rating",
+          {
+            id: this.state.conversationShown.company
+          },
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+
+        this.setState({
+          conversations: this.setDate(response2.data),
+          conversationShown:
+            response2.data[this.state.conversationShownPosition]
+        });
+
+        await axios.post(
+          "https://erneste-server-improved.herokuapp.com/client/update",
+          {
+            id: this.state.conversationShown.company
+          },
+          { headers: { authorization: `Bearer ${this.props.token}` } }
+        );
+      }
     } else {
-      // The status of the conversation need to be updated for the receiver and the sender into negativ
-      await axios.post(
-        "https://erneste-server-improved.herokuapp.com/user/message",
-        {
-          from: this.state.talentProfile.informations.email,
-          to: this.state.contactShownMail,
-          message: this.state.messageValuePopUp,
-          status: "declined"
-        },
-        { headers: { authorization: `Bearer ${this.props.token}` } }
-      );
-      this.setState({ popUpShown: false });
-      this.getConversations();
+      let popUpError = { ...this.state.popUpError };
+      if (this.state.messageValuePopUp === "") {
+        popUpError.value = true;
+      } else {
+        popUpError.value = false;
+      }
+      if (this.state.offerRate.rating === 0) {
+        popUpError.rating = true;
+      } else {
+        popUpError.rating = false;
+      }
+      this.setState({
+        popUpError: popUpError
+      });
     }
   };
 
@@ -259,6 +358,20 @@ export default class TalentOpportunities extends React.Component {
     });
   };
 
+  renderStars(item) {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < item.rating) {
+        stars.push(<i key={i} className="fas fa-star" />);
+      } else {
+        stars.push(<i key={i} className="far fa-star" />);
+      }
+    }
+    return (
+      <div style={{ flexDirection: "row", alignItems: "center" }}>{stars}</div>
+    );
+  }
+
   render() {
     return (
       <div className="talent-opportunities-content">
@@ -267,9 +380,12 @@ export default class TalentOpportunities extends React.Component {
             <TalentOpportunitiesPopUp
               type={this.state.popUpType}
               cancelPopUp={this.cancelPopUp}
+              error={this.state.popUpError}
               setMessage={this.handleChangePopUp}
               sendMessage={this.handleSubmitPopUp}
               messageValue={this.state.messageValuePopUp}
+              offerRating={this.offerRating}
+              offerRate={this.state.offerRate}
             />
           )}
           <div className="talent-opportunities-leftBlock">
@@ -306,6 +422,7 @@ export default class TalentOpportunities extends React.Component {
                 handleSubmitAnswer={this.handleSubmitAnswer}
                 handleBlurAnswer={this.handleBlurAnswer}
                 setPopUpType={this.setPopUpType}
+                renderStars={this.renderStars}
               />
             )}
           </div>
