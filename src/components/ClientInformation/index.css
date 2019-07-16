@@ -93,8 +93,6 @@
   padding-left: 10px;
 }
 
-.client-information-talent-list-container {
-}
 .client-information-talent-list-title {
   display: flex;
   flex-direction: row;
@@ -104,6 +102,13 @@
   list-style: none;
   margin: 0;
   padding: 8px 0 8px 0;
+  position: relative;
+}
+
+.client-information-contact-refused-hover {
+  position: absolute;
+  background-color: blue;
+  z-index: 1;
 }
 
 .client-information-talent-list-container > ul:nth-child(1) {

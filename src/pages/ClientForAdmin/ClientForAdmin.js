@@ -18,7 +18,10 @@ export default class ClientforAdmin extends React.Component {
       email: "",
       logo: ""
     },
-    popup: false
+    popup: false,
+    talentSearch: "",
+    hoverContact: false,
+    hoverMessage: null
   };
 
   setPopUp = () => {
@@ -43,6 +46,10 @@ export default class ClientforAdmin extends React.Component {
     this.setState({ redirect: true });
   };
 
+  setSearch = e => {
+    this.setState({ talentSearch: e.target.value });
+  };
+
   handleClickDeleteUsers = async id => {
     await axios.post(
       "https://erneste-server-improved.herokuapp.com/user/delete",
@@ -59,6 +66,28 @@ export default class ClientforAdmin extends React.Component {
     this.setState({ data: response.data });
   };
 
+  renderStars(item) {
+    const stars = [];
+    for (let i = 0; i < 5; i++) {
+      if (i < item.rating) {
+        stars.push(<i key={i} className="fas fa-star" />);
+      } else {
+        stars.push(<i key={i} className="far fa-star" />);
+      }
+    }
+    return (
+      <div style={{ flexDirection: "row", alignItems: "center" }}>{stars}</div>
+    );
+  }
+
+  hoverOn = message => {
+    this.setState({ hoverContact: true, hoverMessage: message });
+  };
+
+  hoverOff = () => {
+    this.setState({ hoverContact: false, hoverMessage: null });
+  };
+
   render() {
     return (
       <div className="client-for-admin-container">
@@ -69,6 +98,13 @@ export default class ClientforAdmin extends React.Component {
           setPhoto={this.setPhoto}
           clientLogo={this.state.data.logo}
           clientUsers={this.state.data.users}
+          hoverOn={this.hoverOn}
+          hoverOff={this.hoverOff}
+          renderStars={this.renderStars}
+          talentSearch={this.state.talentSearch}
+          setSearch={this.setSearch}
+          hoverContact={this.state.hoverContact}
+          hoverMessage={this.state.hoverMessage}
         />
         <ClientUsers
           users={this.state.data.users}
