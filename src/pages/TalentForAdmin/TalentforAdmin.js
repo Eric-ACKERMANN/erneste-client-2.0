@@ -34,7 +34,8 @@ export default class TalentforAdmin extends React.Component {
       skills: null,
       validated: null,
       lastUpdate: null,
-      isUpdating: false
+      isUpdating: false,
+      conversations: []
     };
   }
   /* ** INTERRUPTERS ** */
@@ -149,6 +150,7 @@ export default class TalentforAdmin extends React.Component {
               informations={this.state.informations}
               lastUpdate={this.state.lastUpdate}
               isUpdating={this.state.isUpdating}
+              conversations={this.state.conversations}
             />
           )}
 
@@ -175,12 +177,20 @@ export default class TalentforAdmin extends React.Component {
         this.props.match.params.id,
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
+    const response2 = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/user/" +
+        this.props.match.params.id +
+        "?profil=true",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+
     this.setState({
       informations: response.data.informations,
       description: response.data.description,
       skills: response.data.skills,
       validated: response.data.validated,
-      lastUpdate: response.data.lastUpdate
+      lastUpdate: response.data.lastUpdate,
+      conversations: response2.data.conversations
     });
   }
 }

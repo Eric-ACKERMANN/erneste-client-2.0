@@ -81,6 +81,12 @@ export default class ClientforAdmin extends React.Component {
   }
 
   hoverOn = message => {
+    message.date = message.date.split(",");
+    message.date = message.date[0]
+      .trim()
+      .split(" ")
+      .join("/");
+
     this.setState({ hoverContact: true, hoverMessage: message });
   };
 

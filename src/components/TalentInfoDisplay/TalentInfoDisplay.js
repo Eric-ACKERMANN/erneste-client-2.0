@@ -15,6 +15,7 @@ export default class TalentInfoDisplay extends React.Component {
     } */
     const informations = this.props.informations;
     const lastUpdate = this.props.lastUpdate;
+    const conversations = this.props.conversations;
     let formatUpdate = null;
     if (lastUpdate !== null) {
       formatUpdate = lastUpdate
@@ -111,9 +112,28 @@ export default class TalentInfoDisplay extends React.Component {
               return <div key={index}>{item.name}</div>;
             })}
           </div>
+          <div className="talent-info-display-div">
+            {conversations.map(conversation => {
+              let status = "";
+              if (conversation.status === "accepted") {
+                status = "Contact accepté";
+              }
+              if (conversation.status === "declined") {
+                status = "Contact refusé";
+              }
+              if (conversation.status === "process") {
+                status = "Contact en cours";
+              }
+              return (
+                <div key={conversation._id}>
+                  {conversation.companyName} - {status}
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div className="talent-info-display-update">
-          Modifé le {formatUpdate}
+          Mis à jour le {formatUpdate}
         </div>
       </div>
     );

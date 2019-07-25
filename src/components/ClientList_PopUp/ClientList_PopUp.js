@@ -20,7 +20,7 @@ export default class ClientListPopUp extends React.Component {
     valid: false,
     isLoading: false
   };
-  // fonction pour changer les states des inputs
+
   handleChange = event => {
     const name = event.target.name;
     const value = event.target.value;
@@ -29,10 +29,6 @@ export default class ClientListPopUp extends React.Component {
     this.setState(statesToUpdate);
   };
 
-  // fonction apparation gestion select secteur
-  sectorSelect = () => {
-    this.setState({ sectorSelect: !this.state.sectorSelect });
-  };
   // fonction apparation gestion select Taille
   sizeSelect = () => {
     this.setState({ sizeSelect: !this.state.sizeSelect });
@@ -54,14 +50,21 @@ export default class ClientListPopUp extends React.Component {
   };
 
   /* Function to handle company size */
-
-  handleSize = e => {
+  setSize = e => {
     const id = e.target.id;
     this.setState({ taille: id, sizeSelect: false });
   };
 
-  // fonction pour valider le formulaire en envoyant les params en requette post
-  // et un message (d'erreur ou validé) à la soumission du formulaire
+  // fonction apparation gestion select secteur
+  sectorSelect = () => {
+    this.setState({ sectorSelect: !this.state.sectorSelect });
+  };
+
+  // fonction apparation gestion select Taille
+  sizeSelect = () => {
+    this.setState({ sizeSelect: !this.state.sizeSelect });
+  };
+
   handleSubmit = async event => {
     if (this.state.addNewSectorDiv && this.state.addNewSector !== "") {
       const response = await axios.post(
@@ -110,114 +113,237 @@ export default class ClientListPopUp extends React.Component {
     });
   };
 
+  handleMouseEnterItem = item => {
+    let sectorList = [...this.state.sectorList];
+    sectorList.forEach(e => (e.selected = false));
+    let position = this.state.sectorList
+      .map(e => {
+        return e._id;
+      })
+      .indexOf(item._id);
+
+    sectorList[position].selected = true;
+    this.setState({ sectorList: sectorList });
+  };
+
+  handleMouseLeaveItem = item => {
+    let sectorList = [...this.state.sectorList];
+    sectorList.forEach(e => (e.selected = false));
+    this.setState({ sectorList: sectorList });
+  };
+
+  handleKeyDownItem = e => {
+    if (this.state.sectorSelect) {
+      let sectorList = [...this.state.sectorList];
+      let position = sectorList
+        .map(e => {
+          return e.selected;
+        })
+        .indexOf(true);
+
+      // Arrow Down
+      if (e.keyCode === 40) {
+        if (position === -1) {
+          sectorList[0].selected = true;
+        } else {
+          sectorList[position].selected = false;
+          if (position === sectorList.length - 1) {
+            sectorList[0].selected = true;
+          } else {
+            sectorList[position + 1].selected = true;
+          }
+        }
+        position = sectorList
+          .map(e => {
+            return e.selected;
+          })
+          .indexOf(true);
+        let itemId = sectorList[position]._id;
+        let element = document.getElementById(itemId);
+        element.scrollIntoView(false);
+        this.setState({ sectorList: sectorList });
+        return;
+      }
+      // Arrow Up
+      if (e.keyCode === 38) {
+        if (position !== -1) {
+          sectorList[position].selected = false;
+          if (position === 0) {
+            sectorList[sectorList.length - 1].selected = true;
+          } else {
+            sectorList[position - 1].selected = true;
+          }
+        }
+        position = sectorList
+          .map(e => {
+            return e.selected;
+          })
+          .indexOf(true);
+        let itemId = sectorList[position]._id;
+        let element = document.getElementById(itemId);
+        element.scrollIntoView(true);
+        this.setState({ sectorList: sectorList });
+        return;
+      }
+
+      // Enter
+      if (e.keyCode === 13) {
+        let secteur = sectorList[position];
+        sectorList[position].selected = false;
+        this.setState({ secteur });
+        this.sectorSelect();
+        this.setState({ sectorList: sectorList });
+        return;
+      }
+
+      // Escape
+      if (e.keyCode === 27) {
+        sectorList.forEach(e => (e.selected = false));
+        this.sectorSelect();
+      }
+      // Backspace
+      if (e.keyCode === 8) {
+        sectorList.forEach(e => (e.selected = false));
+        this.setState({ secteur: "" });
+      }
+    }
+  };
+
+  handleBlurItem = () => {
+    let sectorList = [...this.state.sectorList];
+    sectorList.forEach(e => (e.selected = false));
+    this.sectorSelect();
+    this.setState({ sectorList: sectorList });
+  };
+
   render() {
     if (this.state.isLoading === true) {
       return false;
     }
 
-    const sectorArray = this.state.sectorList.map((item, index) => {
-      return (
-        <div
-          id={item._id}
-          key={item._id}
-          onClick={this.setSector}
-          className="clientlist-popup-sector-item"
-        >
-          {item.name}
-        </div>
-      );
-    });
-
     return (
-      <div className="clientlist-popup-container">
-        <div className="clientlist-popup-header">
-          <div className="clientlist-popup-title">
-            Ajouter un nouveau client
-          </div>
-          <div
-            className="clientlist-popup-close"
-            onClick={this.props.closePopup}
-          >
-            <i className="fas fa-times" />
-          </div>
-        </div>
-        <div className="clientlist-popup-input-container">
-          <div>Entreprise</div>
-          <input
-            value={this.state.entreprise}
-            onChange={this.handleChange}
-            placeholder="Entreprise"
-            type="text"
-            name="entreprise"
-            id="name"
-            required
-          />
-          <div>
-            <div>Secteur</div>
+      <div className="clientlist-popup-background">
+        <div className="clientlist-popup-container">
+          <div className="clientlist-popup-header">
+            <div className="clientlist-popup-header-title">
+              Ajouter un nouveau client
+            </div>
             <div
-              className="clientlist-popup-sector"
-              onClick={this.sectorSelect}
+              className="clientlist-popup-header-close"
+              onClick={this.props.closePopup}
             >
-              {this.state.secteur
-                ? this.state.secteur.name
-                : "Sélectionnez un secteur"}
+              <i className="fas fa-times" />
             </div>
-            {this.state.sectorSelect && (
-              <div className="clientlist-popup-sector-list">{sectorArray}</div>
-            )}
           </div>
-          <div>Taille de l'entreprise</div>
-          <div className="clientlist-popup-sector" onClick={this.sizeSelect}>
-            {this.state.taille ? this.state.taille : "Sélectionnez une taille"}
-          </div>
-          {this.state.sizeSelect && (
-            <div className="clientlist-popup-size-list">
-              <div
-                className="clientlist-popup-size-item"
-                id="Petite"
-                onClick={this.handleSize}
-              >
-                Petite
-              </div>
-              <div
-                className="clientlist-popup-size-item"
-                id="Grande"
-                onClick={this.handleSize}
-              >
-                Grande
-              </div>
-            </div>
-          )}
-          <div>Email</div>
-          <input
-            value={this.state.email}
-            onChange={this.handleChange}
-            placeholder="Email"
-            type="text"
-            name="email"
-            id="name"
-            required
-          />
-        </div>
-        <div className="clientlist-popup-buttons">
-          <div
-            onClick={this.props.closePopup}
-            className="clientlist-popup-cancel"
-          >
-            Annuler
-          </div>
-          <div
-            onClick={this.handleSubmit}
-            className="clientlist-popup-validate"
-          >
-            Ajouter
-          </div>
-        </div>
 
-        {/* affichage de l'état de la validation du formulaire */}
-        <div>
-          {this.state.error === true ? <p>error</p> : this.state.error}
-          {this.state.valid === true ? <p>validate</p> : this.state.valid}
+          <div className="clientlist-popup-body">
+            <span>Entreprise</span>
+            <input
+              value={this.state.entreprise}
+              onChange={this.handleChange}
+              placeholder="Nom de l'entreprise..."
+              type="text"
+              name="entreprise"
+              id="name"
+              required
+              autoFocus
+            />
+
+            <span>Secteur</span>
+            <input
+              value={this.state.secteur ? this.state.secteur.name : ""}
+              placeholder="Cliquer pour sélectionner un secteur..."
+              className="clientlist-popup-block-select"
+              onClick={this.sectorSelect}
+              onKeyDown={this.handleKeyDownItem}
+              readOnly
+            />
+
+            {this.state.sectorSelect && (
+              <div className="clientlist-popup-block-select-list">
+                {this.state.sectorList.map((item, index) => {
+                  return (
+                    <div
+                      style={{
+                        backgroundColor: item.selected
+                          ? "rgb(220,220,220)"
+                          : "#FEFEFE"
+                      }}
+                      id={item._id}
+                      key={item._id}
+                      onClick={this.setSector}
+                      className="clientlist-popup-select-list-item"
+                      onMouseEnter={() => this.handleMouseEnterItem(item)}
+                      onMouseLeave={() => this.handleMouseLeaveItem(item)}
+                    >
+                      {item.name}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <span>Taille de l'entreprise</span>
+            <div
+              className="clientlist-popup-block-select"
+              onClick={this.sizeSelect}
+            >
+              {this.state.taille ? (
+                this.state.taille
+              ) : (
+                <span>Cliquer pour sélectionner une taille</span>
+              )}
+            </div>
+            {this.state.sizeSelect && (
+              <div className="clientlist-popup-block-select-list listsize">
+                <div
+                  className="clientlist-popup-select-list-item"
+                  id="Petite"
+                  onClick={this.setSize}
+                >
+                  Petite
+                </div>
+                <div
+                  className="clientlist-popup-select-list-item"
+                  id="Grande"
+                  onClick={this.setSize}
+                >
+                  Grande
+                </div>
+              </div>
+            )}
+
+            <span>Email</span>
+            <input
+              value={this.state.email}
+              onChange={this.handleChange}
+              placeholder="Email de contact de l'entreprise..."
+              type="text"
+              name="email"
+              id="name"
+              required
+            />
+
+            <div className="clientlist-popup-buttons">
+              <div
+                onClick={this.props.closePopup}
+                className="clientlist-popup-cancel"
+              >
+                Annuler
+              </div>
+              <div
+                onClick={this.handleSubmit}
+                className="clientlist-popup-validate"
+              >
+                Ajouter
+              </div>
+            </div>
+          </div>
+          {/* affichage de l'état de la validation du formulaire */}
+          <div>
+            {this.state.error === true ? <p>error</p> : this.state.error}
+            {this.state.valid === true ? <p>validate</p> : this.state.valid}
+          </div>
         </div>
       </div>
     );
@@ -229,6 +355,9 @@ export default class ClientListPopUp extends React.Component {
       "https://erneste-server-improved.herokuapp.com/sector/",
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
+    response.data.forEach(e => {
+      e.selected = false;
+    });
     this.setState({
       isLoading: false,
       sectorList: response.data

@@ -90,6 +90,10 @@ input {
   border-radius: 5px;
   width: 200px;
   height: var(--input-height);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 .all-button-add-client div {
@@ -275,4 +279,29 @@ button:focus {
 
 .fa-sort {
   color: #a8afcf;
+}
+
+.client-list-renderStars {
+  display: flex;
+  flex-direction: row;
+}
+
+.blockStar {
+  background-color: red;
+  margin-right: 20px;
+  padding: 0;
+  position: relative;
+}
+
+.leftStar {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+}
+
+.rightStar {
+  margin: 0;
+  padding: 0;
+  transform: scaleX(-1);
+  position: absolute;
 }

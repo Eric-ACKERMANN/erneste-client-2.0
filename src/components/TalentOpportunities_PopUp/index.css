@@ -29,13 +29,13 @@
 .opportunitiesPopUp {
   background-color: var(--container-background);
   width: 500px;
-
   position: absolute;
   z-index: 2;
   margin: auto;
   display: flex;
   flex-direction: column;
   border-radius: 5px;
+  box-shadow: 0 6px 12px rgba(28, 28, 28, 0.3);
 }
 
 /* OPPORTUNITIES POP UP - HEADER */
@@ -61,6 +61,7 @@
   margin-left: auto;
   font-size: 20px;
   color: var(--dark-blue);
+  cursor: pointer;
 }
 
 /* OPPORTUNITIES POP UP - BODY */

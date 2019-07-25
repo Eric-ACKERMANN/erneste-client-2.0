@@ -120,7 +120,8 @@ export default function ClientInformation({
                               onMouseEnter={() => {
                                 hoverOn({
                                   body: conversation.messages[1].body,
-                                  date: conversation.messages[1].date
+                                  date: conversation.messages[1].date,
+                                  id: conversation._id
                                 });
                               }}
                               onMouseLeave={hoverOff}
@@ -128,12 +129,14 @@ export default function ClientInformation({
                               Contact refusé
                             </span>
 
-                            {hoverContact && (
-                              <div className="client-information-contact-refused-hover">
-                                <span>{hoverMessage.body}</span>
-                                <span>{hoverMessage.date}</span>
-                              </div>
-                            )}
+                            {hoverContact &&
+                              hoverMessage.id === conversation._id && (
+                                <div className="client-information-contact-refused-hover">
+                                  <span>Message de refus :</span>
+                                  <span>{hoverMessage.body}</span>
+                                  <span>Date : {hoverMessage.date}</span>
+                                </div>
+                              )}
                           </div>
                         )}
                         {conversation.status === "process" && (

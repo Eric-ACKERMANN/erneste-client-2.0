@@ -102,13 +102,6 @@
   list-style: none;
   margin: 0;
   padding: 8px 0 8px 0;
-  position: relative;
-}
-
-.client-information-contact-refused-hover {
-  position: absolute;
-  background-color: blue;
-  z-index: 1;
 }
 
 .client-information-talent-list-container > ul:nth-child(1) {
@@ -127,10 +120,46 @@
 }
 .client-information-talent-list-title > li:nth-child(3) {
   flex: 2;
+  display: flex;
 }
 .client-information-talent-list-title > li:nth-child(4) {
   width: 120px;
   display: flex;
   justify-content: flex-start;
   justify-self: flex-end;
+}
+
+.client-information-talent-list-title > li:nth-child(3) > div {
+  position: relative;
+}
+
+.client-information-contact-refused-hover {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  white-space: pre-line;
+  white-space: pre-wrap;
+  background-color: white;
+  text-align: justify;
+  border: 1px solid var(--dark-blue);
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 1;
+  bottom: 40px;
+  left: -100%;
+  width: 350%;
+  cursor: pointer;
+}
+
+.client-information-contact-refused-hover > span:nth-child(1) {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.client-information-contact-refused-hover > span:nth-child(2) {
+  margin-bottom: 5px;
+}
+
+.client-information-contact-refused-hover > span:nth-child(3) {
+  font-weight: 500;
 }
