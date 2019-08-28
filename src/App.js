@@ -12,20 +12,16 @@ import Cookies from "js-cookie";
 import Login from "../src/pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import ForgottenPassword from "./pages/ForgottenPassword";
-
 import TalentforAdmin from "./pages/TalentForAdmin";
 import TalentListPage from "./pages/TalentListPage";
 import ClientList from "./pages/ClientList";
 import ClientforAdmin from "./pages/ClientForAdmin";
 import Admin from "./pages/AdminConfig";
 import NewTalent from "./pages/NewTalent";
-
 import TalentforTalent from "./pages/TalentPage";
 import TalentOpportunities from "./pages/TalentOpportunities";
-
 import ClientWelcome from "./pages/ClientWelcome";
 import ClientMail from "./pages/ClientMail";
-
 import Header from "./components/Header";
 
 class App extends React.Component {

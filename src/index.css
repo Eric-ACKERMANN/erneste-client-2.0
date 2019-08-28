@@ -1,12 +1,25 @@
-/* Variable for speacial title font */
-html {
+:root {
+  /* FONT */
   --title-font: "Playfair Display", serif;
+  --title-color: #31313c;
+  /*FONT-SIZE */
+  --fs-text: 14px;
+  /* COLOR OF SITE */
+  --main-bg-color: #fafafc;
+  --primary-1: #a8b0d0;
+  --primary-2: #6e78ad;
+  --primary-3: #474d8b;
+  --primary-4: #333366;
+  --secondary-1: #ff9d9d;
+  --secondary-2: #ff6666;
+  --black: #31313c;
+  --grey: #c3c3d2;
   --placeholder-grey: #a8b0d0;
-  font-size: 14px;
+  /* BUTTON */
+  --btn-border-radius: 5px;
+  --btn-padding: 8px 10px;
 }
 
-/* Font-family "Montserrat" put in first font-family (used everywhere except special title) */
-/* Font-size put to 14px for "body text", most used, color to #31313C for all text except title*/
 body {
   margin: 0;
   font-family: "Montserrat", sans-serif, "Playfair Display", -apple-system,
@@ -14,15 +27,15 @@ body {
     "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #31313c;
-  font-size: 14px;
-  background-color: #fafafc;
+  color: var(--black);
+  font-size: var(--fs-text);
+  background-color: var(--main-bg-color);
 }
-
+/* 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
-}
+} */
 
 /********* GENERAL ********/
 
@@ -41,34 +54,64 @@ code {
   margin: auto;
 }
 
-/********** FONTS ********/
+/***** BUTTON *****/
 
-/* Special Title */
-.specialTitle {
-  font-family: var(--title-font);
-  font-size: 60px;
-  color: #333366;
-}
-
-/* CTA */
-.CTA {
-  font-size: 30px;
-  color: #333366;
-  font-weight: medium;
-}
-
-/* Dropdown Button */
-.dropbtn {
-  background-color: #4caf50;
-  color: white;
-  padding: 16px;
-  font-size: 16px;
+/* BLUE BUTTON */
+.btn-primary {
+  background-color: var(--primary-4);
+  padding: var(--btn-padding);
   border: none;
+  color: var(--main-bg-color);
+  font-size: var(--fs-text);
   cursor: pointer;
+  border-radius: var(--btn-border-radius);
+  height: var(--input-height);
+  font-size: var(--fs-text);
+  transition: color, background-color 0.2s;
 }
 
-/* Dropdown button on hover & focus */
-.dropbtn:hover,
-.dropbtn:focus {
-  background-color: #3e8e41;
+.btn-primary:hover {
+  background-color: var(--primary-2);
+}
+
+/* BUTTON ORANGE */
+.btn-secondary {
+  background-color: var(--secondary-2);
+  padding: var(--btn-padding);
+  border: none;
+  color: var(--main-bg-color);
+  cursor: pointer;
+  border-radius: var(--btn-border-radius);
+  height: var(--input-height);
+  font-size: var(--fs-text);
+  transition: color, background-color 0.2s;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-1);
+}
+
+/* BUTTON CANCEL */
+.btn-cancel {
+  background-color: transparent;
+  padding: var(--btn-padding);
+  border: 1px solid var(--grey);
+  cursor: pointer;
+  border-radius: var(--btn-border-radius);
+  height: var(--input-height);
+  font-size: var(--fs-text);
+  transition: color, background-color 0.2s;
+}
+
+.btn-cancel:hover {
+  background-color: var(--grey);
+  color: var(--main-bg-color);
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
 }

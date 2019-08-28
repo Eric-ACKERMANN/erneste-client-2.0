@@ -1,37 +1,58 @@
 import React from "react";
 import Search from "../TalentList_Search";
-import AddTalent from "../TalentList_AddTalent";
-import DeleteButton from "../TalentList_DeleteButton";
+import Button from "../../reactComponent/Button";
+import { Link } from "react-router-dom";
 
 import "./index.css";
 
-export default function Tools(props) {
-  const { handleClickDeleteButton } = props;
+export default function Tools({
+  searchInput,
+  searchType,
+  handleClickDeleteButton,
+  onClickClearSearch,
+  deleteFilter,
+  chevronFilter,
+  onDeleteChevronFilterClick
+}) {
   return (
-    <div className="talentList-right-block-researchLine">
+    <div className="talentList-tools">
       <Search
-        searchInput={props.searchInput}
+        searchInput={searchInput}
         searchType={event => {
-          props.searchType(event);
+          searchType(event);
         }}
-        onClickClearSearch={props.onClickClearSearch}
+        onClickClearSearch={onClickClearSearch}
       />
-      <AddTalent />
-
-      {/* Button that appears when a talent is clicked to be deleted*/}
-      {props.delete === true && (
-        <DeleteButton handleClickDeleteButton={handleClickDeleteButton} />
-      )}
-
-      {/* Button that appears when a chevron is selected as filter */}
-      {props.chevronFilter.length > 0 && (
-        <div
-          className="tools-deleteFilter"
-          onClick={props.onDeleteChevronFilterClick}
+      {/* This button links to the create talent page */}
+      <Link to={`/admin/talent-create`}>
+        <Button
+          className="btn-primary"
+          logoPosition={-1}
+          logo={<i className="fas fa-plus" />}
         >
-          Supprimer les filtres
-        </div>
-      )}
+          Ajouter un talent
+        </Button>
+      </Link>
+      {/* This button appears when a chevron is selected as filter */}
+      <Button
+        className={
+          chevronFilter.length > 0
+            ? "btn-secondary visible"
+            : "btn-secondary invisible"
+        }
+        onClick={onDeleteChevronFilterClick}
+      >
+        Supprimer les filtres
+      </Button>
+      {/* This button appears when a talent is clicked to be deleted*/}
+      <Button
+        className={deleteFilter ? "btn-cancel visible" : "btn-cancel invisible"}
+        logoPosition={-1}
+        logo={<i className="fa fa-trash-alt" />}
+        onClick={handleClickDeleteButton}
+      >
+        Supprimer les profils selectionnés
+      </Button>
     </div>
   );
 }

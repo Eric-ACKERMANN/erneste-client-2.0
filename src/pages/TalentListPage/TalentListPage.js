@@ -677,7 +677,7 @@ export default class TalentListPage extends React.Component {
             </div>
             <div className="talentList-right-block">
               <Tools
-                delete={this.state.ShowDeleteButton}
+                deleteFilter={this.state.ShowDeleteButton}
                 searchInput={this.state.searchInput}
                 handleClickDeleteButton={this.handleClickDeleteButton}
                 searchType={this.searchType}
