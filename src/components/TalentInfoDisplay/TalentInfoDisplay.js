@@ -113,23 +113,24 @@ export default class TalentInfoDisplay extends React.Component {
             })}
           </div>
           <div className="talent-info-display-div">
-            {conversations.map(conversation => {
-              let status = "";
-              if (conversation.status === "accepted") {
-                status = "Contact accepté";
-              }
-              if (conversation.status === "declined") {
-                status = "Contact refusé";
-              }
-              if (conversation.status === "process") {
-                status = "Contact en cours";
-              }
-              return (
-                <div key={conversation._id}>
-                  {conversation.companyName} - {status}
-                </div>
-              );
-            })}
+            {conversations &&
+              conversations.map(conversation => {
+                let status = "";
+                if (conversation.status === "accepted") {
+                  status = "Contact accepté";
+                }
+                if (conversation.status === "declined") {
+                  status = "Contact refusé";
+                }
+                if (conversation.status === "process") {
+                  status = "Contact en cours";
+                }
+                return (
+                  <div key={conversation._id}>
+                    {conversation.companyName} - {status}
+                  </div>
+                );
+              })}
           </div>
         </div>
         <div className="talent-info-display-update">

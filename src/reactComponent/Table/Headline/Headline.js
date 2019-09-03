@@ -1,0 +1,95 @@
+import React from "react";
+
+export default function Headline({
+  array,
+  className,
+  handleClickSort,
+  handleClickFilter,
+  box,
+  filterBox,
+  lists,
+  filterSelectedList,
+  sortSelectedList,
+  deleteFilterButton
+}) {
+  let sortAndFiltertList = [...filterSelectedList, ...sortSelectedList];
+  let arrayCopie = [...array];
+  for (let i = 0; i < array.length; i++) {
+    arrayCopie[i] = { ...array[i] };
+  }
+  arrayCopie.forEach(function(title) {
+    let sortIconClass = setSortIconClass(title.back, sortSelectedList);
+
+    if (title.filter === "sort") {
+      title.filter = <i className={sortIconClass} />;
+      title.func = handleClickSort;
+    } else if (title.filter === "filter") {
+      title.filter = <i className={"fas fa-caret-down"} />;
+      title.box = box(
+        title.back,
+        lists,
+        filterSelectedList,
+        deleteFilterButton
+      );
+      title.func = handleClickFilter;
+    }
+    return title;
+  });
+
+  return (
+    <ul className={className}>
+      {arrayCopie.map(function(title, index) {
+        let divClass = setDivClass(title.back, sortAndFiltertList);
+
+        return (
+          <li key={index}>
+            <div className={divClass} onClick={() => title.func(title.back)}>
+              {title.front}
+              {title.filter}
+            </div>
+            {filterBox === title.back && title.box}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
+Headline.defaultProps = {
+  array: [],
+  className: ""
+};
+
+const setSortIconClass = function(title, sortSelectedList) {
+  let className = "fas fa-caret-down";
+  let sortSelectedListTitle = sortSelectedList.map(e => {
+    return e.title;
+  });
+  let position = sortSelectedListTitle.indexOf(title);
+
+  if (position !== -1) {
+    if (sortSelectedList[position].order === "descending") {
+      className = className + " sorted-up";
+    } else if (sortSelectedList[position].order === "ascending") {
+      className = className + " sorted-down";
+    } else {
+      className = className + " notSorted";
+    }
+  }
+
+  return className;
+};
+
+const setDivClass = function(title, filterSortList) {
+  let className = "";
+
+  let filterSortListTitle = filterSortList.map(e => {
+    return e.title;
+  });
+  let position = filterSortListTitle.indexOf(title);
+
+  if (position !== -1) {
+    className = "sorted";
+  }
+  return className;
+};

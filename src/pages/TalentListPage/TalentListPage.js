@@ -8,8 +8,6 @@ import TalentList from "../../components/TalentList_TalentList";
 import Tools from "../../components/TalentList_Tools";
 import SectorFilter from "../../components/TalentList_SectorFilter";
 
-/* Page to see the Talent List (HomePage of Admin)*/
-
 export default class TalentListPage extends React.Component {
   state = {
     /* State updated from the GET in ComponentDiMount*/
@@ -472,6 +470,9 @@ export default class TalentListPage extends React.Component {
   };
 
   render() {
+    // console.log("tagSelected", this.state.tagSelected);
+    // console.log("talentList", this.state.talentList);
+
     /* Test of Loading... */
 
     if (this.state.isLoading === true) {
@@ -537,7 +538,6 @@ export default class TalentListPage extends React.Component {
         talentList = talentList.filter(element => {
           // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de tag, on remplit ce tableau de true à la base
           let bool = Array(tag.length).fill(true);
-          let booltest = true;
           if (element.skills.length > 0) {
             for (let i = 0; i < tag.length; i++) {
               for (let j = 0; j < element.skills.length; j++) {
@@ -551,10 +551,10 @@ export default class TalentListPage extends React.Component {
             }
             for (let i = 0; i < bool.length; i++) {
               if (bool[i] === false) {
-                booltest = false;
+                return false;
               }
             }
-            return booltest;
+            return true;
           } else return false;
         });
       }
@@ -644,6 +644,7 @@ export default class TalentListPage extends React.Component {
         }
       }
     }
+
     return (
       <div className="content">
         <div className="container">

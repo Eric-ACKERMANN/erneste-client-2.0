@@ -1,63 +1,52 @@
 import React from "react";
-import "./index.css";
 
 import ClientListPopUp from "../ClientList_PopUp";
+import Search from "../../reactComponent/Search";
+import Button from "../../reactComponent/Button";
 
 export default function ClientList_Tools({
-  searchFilter,
-  handleChange,
+  searchInput,
+  setSearchInput,
   togglePopup,
   deleteFilter,
   handleClickDeleteFilter,
-  popUpAdd,
-  token
+  popUp,
+  token,
+  clearSearchInput
 }) {
   return (
     <div className="boxSearchBarAndButton">
-      {/* 1-Search bar */}
       <div className="all-searchbar">
-        <div className="research">
-          <div className="loupe">
-            <i className="fas fa-search" />
-          </div>
-          <input
-            type="search"
-            name="searchFilter"
-            placeholder="rechercher client, secteur, taille"
-            className="searchbar"
-            value={searchFilter}
-            onChange={event => {
-              handleChange(event);
-            }}
-          />
-        </div>
+        <Search
+          input={searchInput}
+          setInput={setSearchInput}
+          clearInput={clearSearchInput}
+          placeholder="rechercher client, secteur, taille"
+        />
+        <Button
+          className="btn-primary"
+          logoPosition={-1}
+          logo={<i className="fas fa-plus" />}
+          onClick={togglePopup}
+        >
+          Ajouter un client
+        </Button>
 
-        {/* 2-button */}
-        <div onClick={togglePopup} className="all-button-add-client">
-          <div>
-            <i className="fas fa-plus" />
-          </div>
-          <button className="addClientButton">Ajouter un client</button>
-        </div>
-
-        {/* 3-Delete Filter */}
-        <div className="deleteFilter">
-          {deleteFilter ? (
-            <div
-              onClick={() => {
-                handleClickDeleteFilter();
-              }}
-              className="clientList-deleteFilter"
-            >
-              Supprimer les filtres
-            </div>
-          ) : null}
-        </div>
+        {deleteFilter && (
+          <Button
+            className={
+              deleteFilter ? "btn-secondary visible" : "btn-secondary invisible"
+            }
+            onClick={handleClickDeleteFilter}
+          >
+            Supprimer les filtres
+          </Button>
+        )}
       </div>
 
       {/* 2-1 page ajout client */}
       <div className="addClientPage">
-        {popUpAdd && (
+        {popUp && (
           <ClientListPopUp
             className="popUpWindow"
             text="Close Me"

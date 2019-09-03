@@ -1,5 +1,5 @@
 import React from "react";
-import Search from "../TalentList_Search";
+import Search from "../../reactComponent/Search";
 import Button from "../../reactComponent/Button";
 import { Link } from "react-router-dom";
 
@@ -17,11 +17,12 @@ export default function Tools({
   return (
     <div className="talentList-tools">
       <Search
-        searchInput={searchInput}
-        searchType={event => {
+        input={searchInput}
+        setInput={event => {
           searchType(event);
         }}
-        onClickClearSearch={onClickClearSearch}
+        clearInput={onClickClearSearch}
+        placeholder="Rechercher un talent.."
       />
       {/* This button links to the create talent page */}
       <Link to={`/admin/talent-create`}>

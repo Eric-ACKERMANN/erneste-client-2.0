@@ -5,7 +5,8 @@ export default function Button({
   logoPosition,
   logo,
   children,
-  onClick
+  onClick,
+  condition
 }) {
   return (
     <button className={`${className}`} onClick={() => onClick()}>
