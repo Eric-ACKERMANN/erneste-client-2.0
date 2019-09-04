@@ -4,6 +4,7 @@ import Headline from "./Headline";
 import Tools from "../Tool";
 
 import selectedBox from "../../features/icons/check_24px.svg";
+import { searchFilter } from "../../functions/functions.js";
 
 export default class Table extends React.Component {
   state = {
@@ -12,7 +13,16 @@ export default class Table extends React.Component {
     filters: [],
     lists: [],
     deleteFilterButton: false,
-    searchInput: "",
+    searchInput: ""
+  };
+
+  /******** SEARCH FILTER *********/
+  setSearchInput = event => {
+    this.setState({ searchInput: event });
+  };
+
+  handleClickClearSearch = () => {
+    this.setState({ searchInput: "" });
   };
 
   /**** Delete Filter Button condition *****/
@@ -49,8 +59,6 @@ export default class Table extends React.Component {
     return arrayOfMemorizedList;
   };
 
-  
-
   handleClickItem = async (title, item, filters, deleteFilterButton) => {
     let itemsTitle = filters.map(e => {
       return e.title;
@@ -81,7 +89,7 @@ export default class Table extends React.Component {
     }
 
     this.setState({ filters: filters });
-    deleteFilterButton(filters);
+    this.deleteFilterButton(filters);
     return;
   };
 
@@ -111,6 +119,10 @@ export default class Table extends React.Component {
     } else {
       await this.setState({ filterBox: null });
     }
+  };
+
+  handleClickFilterOrBox = () => {
+    this.setState({ filterBox: !this.state.filterBox });
   };
 
   filterItems = (title, lists, filters) => {
@@ -171,18 +183,20 @@ export default class Table extends React.Component {
                 this.handleClickItem(title, item, filters, deleteFilterButton);
               }}
             >
+              {item}
               {clicked ? (
                 <img
                   className={"selectItem itemSelected"}
                   src={selectedBox}
                   alt={"box cochée"}
+                  id={`${this.props.idItem}_headline_img`}
                 />
               ) : (
                 <div
-                  className={clicked ? "selectItem itemSelected" : "selectItem"}
+                  className="selectItem"
+                  id={`${this.props.idItem}_headline_img`}
                 />
               )}
-              {item}
             </div>
           );
         })}
@@ -198,8 +212,26 @@ export default class Table extends React.Component {
       lineClass,
       sortList,
       deleteFilterButton,
-      tools
+      tools,
+      idItem
     } = this.props;
+
+    /*********** SEARCH FILTER ************/
+    let headlineSearchParameter = headlineArray
+      .filter(function(e) {
+        return e.search;
+      })
+      .map(e => {
+        return e.back;
+      });
+
+    if (this.state.searchInput) {
+      lineArray = searchFilter(
+        lineArray,
+        this.state.searchInput,
+        headlineSearchParameter
+      );
+    }
 
     if (lineArray.length > 0) {
       lineArray = sortList(lineArray, this.state.sortSelectedList);
@@ -220,32 +252,38 @@ export default class Table extends React.Component {
     // TRANSFORM PROP TOOLS
     let toolsCopie = { ...tools };
     // On injecte les fonctions search dedans
-    if(toolsCopie.search === "true") {
+    if (toolsCopie.search) {
       toolsCopie.search = {
-        search : true,
-        input : this.state.
-      }
+        search: true,
+        input: this.state.searchInput,
+        setInput: this.setSearchInput,
+        clearInput: this.clearInput,
+        placeholder: tools.searchPlaceholder
+      };
     }
+    // On paramètre les boutons
     if (tools.button.length > 0) {
-      for (let i = 0; i < tools.length; i++) {
+      for (let i = 0; i < tools.button.length; i++) {
         toolsCopie.button[i] = tools.button[i];
-        if (toolsCopie.button[i].condition === "filter")
+        if (toolsCopie.button[i].condition === "filter") {
           toolsCopie.button[i].condition = this.state.filters;
+        }
+        if (toolsCopie.button[i].onClick === "clearFilter") {
+          toolsCopie.button[i].onClick = this.handleClickDeleteFilter;
+        }
       }
     }
 
     return (
-      <div>
-        <Tools
-          search={toolsCopie.search}
-          searchFactor={toolsCopie.searchFactor}
-          button={toolsCopie.button}
-        />
+      <div className="table">
+        <Tools search={toolsCopie.search} button={toolsCopie.button} />
         <Headline
+          idItem={`${idItem}_headline`}
           array={headlineArrayFront}
           className={headlineClass}
           handleClickSort={this.handleClickSort}
           handleClickFilter={this.handleClickFilter}
+          handleClickFilterOrBox={this.handleClickFilterOrBox}
           box={this.filterBox}
           filterBox={this.state.filterBox}
           lists={lists}

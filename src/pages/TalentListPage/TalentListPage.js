@@ -7,9 +7,11 @@ import TitleLine from "../../components/TalentList_TitleLine";
 import TalentList from "../../components/TalentList_TalentList";
 import Tools from "../../components/TalentList_Tools";
 import SectorFilter from "../../components/TalentList_SectorFilter";
+import Table from "../../reactComponent/Table";
 
 export default class TalentListPage extends React.Component {
   state = {
+    id: "talentList",
     /* State updated from the GET in ComponentDiMount*/
     talentList: [],
     titleList: [],
@@ -20,14 +22,55 @@ export default class TalentListPage extends React.Component {
     deleteArray: [],
 
     searchInput: "",
-    titleArray: [
-      { value: "Nom", clicked: false, firstClicked: false },
-      { value: "Fonction", clicked: false, firstClicked: false },
-      { value: "Entreprise", clicked: false, firstClicked: false },
-      { value: "Souhait", clicked: false, firstClicked: false },
-      { value: "Validé", clicked: false, firstClicked: false },
-      { value: "Statut", clicked: false, firstClicked: false },
-      { value: "Mise à jour", clicked: false, firstClicked: false }
+    // titleArray: [
+    //   { value: "Nom", clicked: false, firstClicked: false },
+    //   { value: "Fonction", clicked: false, firstClicked: false },
+    //   { value: "Entreprise", clicked: false, firstClicked: false },
+    //   { value: "Souhait", clicked: false, firstClicked: false },
+    //   { value: "Validé", clicked: false, firstClicked: false },
+    //   { value: "Statut", clicked: false, firstClicked: false },
+    //   { value: "Mise à jour", clicked: false, firstClicked: false }
+    // ],
+    titles: [
+      { front: "", back: "", filter: null, search: false },
+      {
+        front: "Nom",
+        back: "informations.name",
+        link: `/admin/client/`,
+        filter: null,
+        search: true
+      },
+      {
+        front: "Fonction",
+        back: "informations.actualTitle",
+        filter: "filter",
+        search: true
+      },
+      {
+        front: "Entreprise",
+        back: "informations.actualCompany",
+        filter: "filter",
+        search: true
+      },
+      {
+        front: "Souhait",
+        back: "informations.wantedTitle",
+        filter: "filter",
+        search: true
+      },
+      { front: "Validé", back: "validated", filter: "filter", search: false },
+      {
+        front: "Statut",
+        back: "informations.status",
+        filter: "filter",
+        search: false
+      },
+      {
+        front: "Mise à jour",
+        back: "lastUpdate",
+        filter: "sort",
+        search: false
+      }
     ],
 
     /* Chevron Filter State */
@@ -52,7 +95,8 @@ export default class TalentListPage extends React.Component {
     sectorActiveSuggestion: 0
   };
 
-  // Function to GET data from /talent
+  /********* GET INFORMATION FROM DATABASE **************/
+
   getTalentList = async toto => {
     this.setState({ isLoading: true });
     const response = await axios.get(
@@ -140,6 +184,8 @@ export default class TalentListPage extends React.Component {
       sectorList: response.data
     });
   };
+
+  /********* END OF GET INFORMATION FROM DATABASE **************/
 
   /* DELETE OF A TALENT */
 
@@ -273,10 +319,7 @@ export default class TalentListPage extends React.Component {
     this.setState({ chevronFilter: chevronFilter });
   };
 
-  /* TAG FUNCTION */
-
-  // Function that deals with the tag input
-
+  /************** TAG FUNCTION **********************/
   onChangeTagInput = toto => {
     let tagListFiltered = this.state.tagList.filter(element => {
       return element.name.toLowerCase().indexOf(toto.toLowerCase()) > -1;
@@ -371,7 +414,7 @@ export default class TalentListPage extends React.Component {
     this.setState({ tagSelected: tagSuggestions });
   };
 
-  /* SECTOR FUNCTION */
+  /************** SECTOR FUNCTION ***********************/
 
   // Function that deals with the sector input
 
@@ -470,9 +513,6 @@ export default class TalentListPage extends React.Component {
   };
 
   render() {
-    // console.log("tagSelected", this.state.tagSelected);
-    // console.log("talentList", this.state.talentList);
-
     /* Test of Loading... */
 
     if (this.state.isLoading === true) {
@@ -677,6 +717,43 @@ export default class TalentListPage extends React.Component {
               />
             </div>
             <div className="talentList-right-block">
+              <Table
+                idItem={`${this.state.id}_table`}
+                tools={{
+                  search: true,
+                  searchPlaceholder: "Rechercher un talent...",
+                  button: [
+                    {
+                      condition: "fixed",
+                      type: "btn-primary",
+                      text: "Ajouter un talent",
+                      logo: <i className="fas fa-plus" />,
+                      logoPosition: -1,
+                      link: "/admin/talent-create"
+                    },
+                    {
+                      condition: "filter",
+                      type: "btn-secondary",
+                      text: "Supprimer les filtres",
+                      logo: false,
+                      onClick: "clearFilter"
+                    },
+                    {
+                      condition: "delete",
+                      type: "btn-cancel",
+                      text: "Supprimer les filtres",
+                      logoPosition: -1,
+                      logo: <i className="fa fa-trash-alt" />,
+                      onClick: "deleteAll"
+                    }
+                  ]
+                }}
+                headlineArray={this.state.titles}
+                headlineClass="line headline"
+                lineArray={talentList}
+                lineClass="line"
+                sortList={this.sortList}
+              />
               <Tools
                 deleteFilter={this.state.ShowDeleteButton}
                 searchInput={this.state.searchInput}

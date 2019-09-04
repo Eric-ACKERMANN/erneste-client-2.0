@@ -3,7 +3,7 @@ import "../../index.css";
 
 export default function Search({ input, setInput, clearInput, placeholder }) {
   return (
-    <div className="tools-search">
+    <div className="search">
       <i className="fas fa-search" />
       <input
         value={input}

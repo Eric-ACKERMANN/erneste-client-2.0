@@ -1,16 +1,19 @@
 import React from "react";
+import ClickListener from "./ClickListener.js";
 
 export default function Headline({
   array,
   className,
   handleClickSort,
   handleClickFilter,
+  handleClickFilterOrBox,
   box,
   filterBox,
   lists,
   filterSelectedList,
   sortSelectedList,
-  deleteFilterButton
+  deleteFilterButton,
+  idItem
 }) {
   let sortAndFiltertList = [...filterSelectedList, ...sortSelectedList];
   let arrayCopie = [...array];
@@ -43,11 +46,24 @@ export default function Headline({
 
         return (
           <li key={index}>
-            <div className={divClass} onClick={() => title.func(title.back)}>
+            <div
+              className={divClass}
+              onClick={() => title.func(title.back)}
+              id={`${idItem}_selector`}
+            >
               {title.front}
               {title.filter}
             </div>
-            {filterBox === title.back && title.box}
+            {filterBox === title.back && (
+              <ClickListener
+                onClick={handleClickFilterOrBox}
+                listenInside={false}
+                idItem={idItem}
+                className="filter-clickListener"
+              >
+                {title.box}
+              </ClickListener>
+            )}
           </li>
         );
       })}

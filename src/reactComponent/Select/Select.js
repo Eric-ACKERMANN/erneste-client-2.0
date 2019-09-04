@@ -52,11 +52,16 @@ export default class Select extends Component {
       valueFocus: false,
       placeholder: "Select...",
       valueInput: "",
-      mounted: false
+      mounted: false,
+      blockFocus: false,
+      blockHover: false
     };
   }
 
   onKeyDownInput = e => {
+    if ([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+      e.preventDefault();
+    }
     // BACKSPACE
     if (e.keyCode === 8) {
       if (!this.props.searchable || this.state.valueInput === "") {
@@ -157,9 +162,12 @@ export default class Select extends Component {
 
   handleClickInputBox = e => {
     this.input.focus();
+    this.setState({ blockFocus: true });
     if (
-      e.target.id.includes(`${this.props.id}multiDeleteBox`) ||
-      e.target.id.includes(`${this.props.id}multiDelete`)
+      (this.props.optionsTools.multi &&
+        e.target.id.includes(`${this.props.id}multiDeleteBox`)) ||
+      (this.props.optionsTools.multi &&
+        e.target.id.includes(`${this.props.id}multiDelete`))
     ) {
       return;
     } else {
@@ -290,6 +298,32 @@ export default class Select extends Component {
     return array;
   };
 
+  styleInputbox = (style, styleFocus, styleHov) => {
+    if (this.state.blockFocus) {
+      return this.inputBoxFocus(style, styleFocus);
+    } else if (this.state.blockHover) {
+      return this.inputBoxHover(style, styleHov);
+    } else {
+      return style;
+    }
+  };
+
+  inputBoxHover = function(style, styleHov) {
+    const keysHov = Object.keys(styleHov);
+    keysHov.forEach(key => {
+      style[key] = styleHov[key];
+    });
+    return style;
+  };
+
+  inputBoxFocus = function(style, styleFocus) {
+    const keysFocus = Object.keys(styleFocus);
+    keysFocus.forEach(key => {
+      style[key] = styleFocus[key];
+    });
+    return style;
+  };
+
   render() {
     const containerStyle = {
       position: "relative",
@@ -298,9 +332,17 @@ export default class Select extends Component {
     };
 
     const inputBoxStyle = {
-      display: "flex",
-      alignItems: "center",
-      ...this.props.style.inputBox
+      normal: {
+        display: "flex",
+        alignItems: "center",
+        ...this.props.style.inputBox.normal
+      },
+      hover: {
+        ...this.props.style.inputBox.hover
+      },
+      focus: {
+        ...this.props.style.inputBox.focus
+      }
     };
 
     const valueBlockStyle = {
@@ -405,7 +447,16 @@ export default class Select extends Component {
 
     return (
       <div style={containerStyle}>
-        <div style={inputBoxStyle} onClick={e => this.handleClickInputBox(e)}>
+        <div
+          style={this.styleInputbox(
+            inputBoxStyle.normal,
+            inputBoxStyle.focus,
+            inputBoxStyle.hover
+          )}
+          onClick={e => this.handleClickInputBox(e)}
+          onMouseEnter={e => this.setState({ blockHover: true })}
+          onMouseLeave={e => this.setState({ blockHover: false })}
+        >
           {/* DIV DU LOGO */}
           {this.props.logo && this.props.logo.position === -1 && (
             <Logo style={this.props.style.logo} value={this.props.logo.body} />
@@ -427,7 +478,8 @@ export default class Select extends Component {
                 onChange: this.props.searchable
                   ? this.handleChangeInput
                   : false,
-                onKeyDown: this.onKeyDownInput,
+                onKeyDown:
+                  this.props.options.length > 0 ? this.onKeyDownInput : null,
                 onBlur: this.props.searchable ? this.onBlurInput : undefined
               }}
               multiValueProps={{
@@ -452,6 +504,7 @@ export default class Select extends Component {
 
             {!this.props.valueTools.multi && (
               <Input
+                multi={this.props.optionsTools.multi}
                 readOnly={this.props.searchable ? false : true}
                 id={`${this.props.id}_input`}
                 myRef={ref => (this.input = ref)}
@@ -460,7 +513,9 @@ export default class Select extends Component {
                 onChange={
                   this.props.searchable ? this.handleChangeInput : false
                 }
-                onKeyDown={this.onKeyDownInput}
+                onKeyDown={
+                  this.props.options.length > 0 ? this.onKeyDownInput : null
+                }
                 onBlur={this.props.searchable ? this.onBlurInput : undefined}
               />
             )}
@@ -519,6 +574,38 @@ export default class Select extends Component {
         )}
       </div>
     );
+  }
+
+  componentDidMount() {
+    let self = this;
+    let input = document.getElementById(`${this.props.id}_input`);
+    document.addEventListener("click", function() {
+      if (input && document.activeElement !== input && self.state.blockFocus) {
+        self.setState({ blockFocus: false });
+      } else if (
+        input &&
+        document.activeElement === input &&
+        !self.state.blockFocus
+      ) {
+        self.setState({ blockFocus: true });
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    let self = this;
+    let input = document.getElementById(`${this.props.id}_input`);
+    document.removeEventListener("click", function() {
+      if (input && document.activeElement !== input && self.state.blockFocus) {
+        self.setState({ blockFocus: false });
+      } else if (
+        input &&
+        document.activeElement === input &&
+        !self.state.blockFocus
+      ) {
+        self.setState({ blockFocus: true });
+      }
+    });
   }
 }
 
