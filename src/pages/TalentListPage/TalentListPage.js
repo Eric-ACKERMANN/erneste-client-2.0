@@ -3,65 +3,51 @@ import axios from "axios";
 import "./index.css";
 import Title from "../../components/TalentList_Title";
 import TagFilter from "../../components/TalentList_TagFilter";
-import TitleLine from "../../components/TalentList_TitleLine";
-import TalentList from "../../components/TalentList_TalentList";
-import Tools from "../../components/TalentList_Tools";
+// import TitleLine from "../../components/TalentList_TitleLine";
+// import TalentList from "../../components/TalentList_TalentList";
+// import Tools from "../../components/TalentList_Tools";
 import SectorFilter from "../../components/TalentList_SectorFilter";
 import Table from "../../reactComponent/Table";
+import selectedBox from "../../features/icons/check_24px.svg";
 
 export default class TalentListPage extends React.Component {
   state = {
-    id: "talentList",
     /* State updated from the GET in ComponentDiMount*/
-    talentList: [],
     titleList: [],
     isLoading: true,
-
-    /* State for delete a line of talent */
-    ShowDeleteButton: false,
-    deleteArray: [],
-
-    searchInput: "",
-    // titleArray: [
-    //   { value: "Nom", clicked: false, firstClicked: false },
-    //   { value: "Fonction", clicked: false, firstClicked: false },
-    //   { value: "Entreprise", clicked: false, firstClicked: false },
-    //   { value: "Souhait", clicked: false, firstClicked: false },
-    //   { value: "Validé", clicked: false, firstClicked: false },
-    //   { value: "Statut", clicked: false, firstClicked: false },
-    //   { value: "Mise à jour", clicked: false, firstClicked: false }
-    // ],
+    id: "talentList",
+    talentList: null,
     titles: [
-      { front: "", back: "", filter: null, search: false },
+      { front: "", back: "delete", filter: null, search: false },
       {
         front: "Nom",
-        back: "informations.name",
-        link: `/admin/client/`,
+        back: "name",
+        link: `/admin/talent/`,
         filter: null,
         search: true
       },
       {
         front: "Fonction",
-        back: "informations.actualTitle",
+        back: "actualTitle",
         filter: "filter",
         search: true
       },
       {
         front: "Entreprise",
-        back: "informations.actualCompany",
+        back: "actualCompany",
         filter: "filter",
         search: true
       },
       {
         front: "Souhait",
-        back: "informations.wantedTitle",
+        back: "wantedTitle",
         filter: "filter",
         search: true
       },
       { front: "Validé", back: "validated", filter: "filter", search: false },
       {
         front: "Statut",
-        back: "informations.status",
+        back: "status",
         filter: "filter",
         search: false
       },
@@ -73,10 +59,8 @@ export default class TalentListPage extends React.Component {
       }
     ],
 
-    /* Chevron Filter State */
-    chevronClikedPosition: null,
-    chevronFilter: [],
-    filterOrder: 0,
+    deleteInLineArray: [],
+    ShowDeleteButton: null,
 
     /* Tag Filter State */
     tagList: [],
@@ -95,117 +79,121 @@ export default class TalentListPage extends React.Component {
     sectorActiveSuggestion: 0
   };
 
-  /********* GET INFORMATION FROM DATABASE **************/
+  handleClickDeleteInLine = id => {
+    let deleteInLineArray = this.state.deleteInLineArray;
 
-  getTalentList = async toto => {
-    this.setState({ isLoading: true });
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/talent?picture=none",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    // We sort the array of talent by lastUpdate
-    // The date we get is type "29 05 2019, 15 05 98"
-    // We want to show 29/05/2019, but the sort has to be on hour minutes secondes too
-    // 1. change of the 29 05 2019, 15 05 98 into [[29,05,2019],[15,05,98]]
-    let talentList = response.data;
-    for (let i = 0; i < talentList.length; i++) {
-      if (typeof talentList[i].lastUpdate === "string") {
-        talentList[i].lastUpdate = talentList[i].lastUpdate.split(",");
-        talentList[i].lastUpdate[0] = talentList[i].lastUpdate[0]
-          .trim()
-          .split(" ");
-        talentList[i].lastUpdate[1] = talentList[i].lastUpdate[1]
-          .trim()
-          .split(" ");
-      }
+    if (deleteInLineArray.indexOf(id) === -1) {
+      deleteInLineArray.push(id);
+    } else {
+      deleteInLineArray.splice(deleteInLineArray.indexOf(id), 1);
     }
-
-    talentList
-      .sort((a, b) => {
-        // sort seconds
-        if (a.lastUpdate[1] && b.lastUpdate[1]) {
-          return a.lastUpdate[1][2] - b.lastUpdate[1][2];
-        } else return false;
-      })
-      .sort((a, b) => {
-        // sort minutes
-        if (a.lastUpdate[1] && b.lastUpdate[1]) {
-          return b.lastUpdate[1][1] - a.lastUpdate[1][1];
-        } else return false;
-      })
-      .sort((a, b) => {
-        // sort hour
-        if (a.lastUpdate[1] && b.lastUpdate[1]) {
-          return b.lastUpdate[1][0] - a.lastUpdate[1][0];
-        } else return false;
-      })
-      .sort((a, b) => {
-        // sort day
-        return b.lastUpdate[0][0] - a.lastUpdate[0][0];
-      })
-      .sort((a, b) => {
-        // sort month
-        return b.lastUpdate[0][1] - a.lastUpdate[0][1];
-      })
-      .sort((a, b) => {
-        // sort year
-        return b.lastUpdate[0][2] - a.lastUpdate[0][2];
+    if (deleteInLineArray.length > 0) {
+      this.setState({
+        deleteInLineArray: deleteInLineArray,
+        ShowDeleteButton: true
       });
-
-    // Change lastUpdate key from [[29,05,2019],[15,05,98]] to 29/05/2019
-    talentList.forEach(e => {
-      return (e.lastUpdate = e.lastUpdate[0].join("."));
-    });
-
-    this.setState({
-      isLoading: false,
-      talentList: response.data
-    });
+    } else {
+      this.setState({
+        deleteInLineArray: deleteInLineArray,
+        ShowDeleteButton: false
+      });
+    }
   };
 
-  getTagList = async () => {
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/tag",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    this.setState({
-      isLoading: false,
-      tagList: response.data
-    });
-  };
+  /********* GET INFORMATION FROM DATABASE **************/
+  getData = async () => {
+    const getTalents = () => {
+      return axios.get(
+        "https://erneste-server-improved.herokuapp.com/talent?picture=none",
+        { headers: { authorization: `Bearer ${this.props.token}` } }
+      );
+    };
 
-  getSectorList = async () => {
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/sector",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
+    const getTags = () => {
+      return axios.get("https://erneste-server-improved.herokuapp.com/tag", {
+        headers: { authorization: `Bearer ${this.props.token}` }
+      });
+    };
+
+    const getSectors = () => {
+      return axios.get("https://erneste-server-improved.herokuapp.com/sector", {
+        headers: { authorization: `Bearer ${this.props.token}` }
+      });
+    };
+
+    axios.all([getTalents(), getTags(), getSectors()]).then(
+      axios.spread((talents, tags, sectors) => {
+        let talentList = talents.data;
+        for (let i = 0; i < talentList.length; i++) {
+          if (typeof talentList[i].lastUpdate === "string") {
+            talentList[i].lastUpdate = talentList[i].lastUpdate.split(",");
+            talentList[i].lastUpdate[0] = talentList[i].lastUpdate[0]
+              .trim()
+              .split(" ");
+            talentList[i].lastUpdate[1] = talentList[i].lastUpdate[1]
+              .trim()
+              .split(" ");
+          }
+        }
+        talentList
+          .sort((a, b) => {
+            // sort seconds
+            if (a.lastUpdate[1] && b.lastUpdate[1]) {
+              return a.lastUpdate[1][2] - b.lastUpdate[1][2];
+            } else return false;
+          })
+          .sort((a, b) => {
+            // sort minutes
+            if (a.lastUpdate[1] && b.lastUpdate[1]) {
+              return b.lastUpdate[1][1] - a.lastUpdate[1][1];
+            } else return false;
+          })
+          .sort((a, b) => {
+            // sort hour
+            if (a.lastUpdate[1] && b.lastUpdate[1]) {
+              return b.lastUpdate[1][0] - a.lastUpdate[1][0];
+            } else return false;
+          })
+          .sort((a, b) => {
+            // sort day
+            return b.lastUpdate[0][0] - a.lastUpdate[0][0];
+          })
+          .sort((a, b) => {
+            // sort month
+            return b.lastUpdate[0][1] - a.lastUpdate[0][1];
+          })
+          .sort((a, b) => {
+            // sort year
+            return b.lastUpdate[0][2] - a.lastUpdate[0][2];
+          });
+
+        // Change lastUpdate key from [[29,05,2019],[15,05,98]] to 29/05/2019 , and remove the informations key
+        talentList.forEach(e => {
+          return (e.lastUpdate = e.lastUpdate[0].join("."));
+        });
+
+        talentList.forEach(talent => {
+          talent.name = `${talent.informations.firstName} ${talent.informations.lastName}`;
+          talent.actualCompany = talent.informations.actualCompany;
+          talent.actualTitle = talent.informations.actualTitle;
+          talent.status = talent.informations.status;
+          talent.wantedSector = [...talent.informations.wantedSector];
+          talent.wantedSize = talent.informations.wantedSize;
+          talent.wantedTitle = [...talent.informations.wantedTitle];
+          delete talent.informations;
+        });
+
+        this.setState({
+          talentList: talents.data,
+          tagList: tags.data,
+          sectorList: sectors.data,
+          isLoading: false
+        });
+      })
     );
-    this.setState({
-      isLoading: false,
-      sectorList: response.data
-    });
   };
 
   /********* END OF GET INFORMATION FROM DATABASE **************/
-
-  /* DELETE OF A TALENT */
-
-  // Function to enable to delete a talent, also enable to display the "delete the selected profils" by changing the state delete
-  deleteCheckBox = async id => {
-    const deleteArray = [...this.state.deleteArray];
-
-    if (deleteArray.indexOf(id) === -1) {
-      deleteArray.push(id);
-    } else {
-      deleteArray.splice(deleteArray.indexOf(id), 1);
-    }
-    if (deleteArray.length > 0) {
-      this.setState({ deleteArray: deleteArray, ShowDeleteButton: true });
-    } else {
-      this.setState({ deleteArray: deleteArray, ShowDeleteButton: false });
-    }
-  };
-
-  // Function that enable to delete element which are checked
   handleClickDeleteButton = async toto => {
     await axios.post(
       "https://erneste-server-improved.herokuapp.com/talent/delete",
@@ -216,109 +204,6 @@ export default class TalentListPage extends React.Component {
     );
     this.getTalentList();
   };
-
-  /* SEARCH INPUT FUNCTION */
-
-  searchType = event => {
-    this.setState({ searchInput: event });
-  };
-  // Function to empty the input on click X
-  onClickClearSearch = () => {
-    this.setState({ searchInput: "" });
-  };
-
-  /* CHEVRON FILTER FUNCTION*/
-
-  // Function to detect click on a chevron
-  chevronClick = toto => {
-    const titleArray = [...this.state.titleArray];
-    let position = titleArray
-      .map(e => {
-        return e.value;
-      })
-      .indexOf(toto);
-
-    titleArray[position].clicked = !titleArray[position].clicked;
-
-    for (let i = 0; i < titleArray.length; i++) {
-      if (i !== position) {
-        titleArray[i].clicked = false;
-      }
-    }
-
-    position === this.state.chevronClikedPosition
-      ? this.setState({
-          titleArray: titleArray,
-          chevronClikedPosition: null
-        })
-      : this.setState({
-          titleArray: titleArray,
-          chevronClikedPosition: position
-        });
-  };
-
-  onBlurChevron = () => {
-    const titleArray = [...this.state.titleArray];
-    titleArray.forEach(e => {
-      e.clicked = false;
-      return e;
-    });
-    this.setState({ titleArray: titleArray, chevronClikedPosition: null });
-  };
-
-  // Function to insert the filter chosen
-  filterCheckBox = async (title, filter) => {
-    const chevronFilter = [...this.state.chevronFilter];
-    let filterOrder = this.state.filterOrder;
-    let position = chevronFilter
-      .map(e => {
-        return e.title;
-      })
-      .indexOf(title);
-    if (position === -1) {
-      this.setState({ filterOrder: this.state.filterOrder + 1 });
-      chevronFilter.push({
-        title: title,
-        filter: [filter],
-        filterOrder: filterOrder + 1
-      });
-    } else {
-      if (chevronFilter[position].filter.indexOf(filter) === -1) {
-        chevronFilter[position].filter.push(filter);
-      } else {
-        chevronFilter[position].filter.splice(
-          chevronFilter[position].filter.indexOf(filter),
-          1
-        );
-      }
-      // If we remove all elements of the filter, we splice the element from the array et we reduce the order of 1
-      if (chevronFilter[position].filter.length < 1) {
-        let FilterRemovedOrder = chevronFilter[position].filterOrder;
-        chevronFilter.splice(position, 1);
-        // On réduit le numéro du filterOrder
-        await this.setState({ filterOrder: this.state.filterOrder - 1 });
-        // On réduit le filterOrder de tous les autres filtres qui ont un order plus grand
-        for (let i = 0; i < chevronFilter.length; i++) {
-          if (chevronFilter[i].filterOrder > FilterRemovedOrder) {
-            chevronFilter[i].filterOrder = chevronFilter[i].filterOrder - 1;
-          }
-        }
-      }
-    }
-    // sort chevronFilter by filterOrder
-    chevronFilter.sort((a, b) => {
-      return a.filterOrder - b.filterOrder;
-    });
-    await this.setState({ chevronFilter: chevronFilter });
-  };
-
-  // Function to clear all filters from chevron
-  onDeleteChevronFilterClick = () => {
-    let chevronFilter = [...this.state.chevronFilter];
-    chevronFilter.splice(0, chevronFilter.length);
-    this.setState({ chevronFilter: chevronFilter });
-  };
-
   /************** TAG FUNCTION **********************/
   onChangeTagInput = toto => {
     let tagListFiltered = this.state.tagList.filter(element => {
@@ -512,179 +397,165 @@ export default class TalentListPage extends React.Component {
     this.setState({ sectorSelected: sectorSuggestions });
   };
 
-  render() {
-    /* Test of Loading... */
+  /**********************************************************************************************************/
+  /********************************************** RENDER ****************************************************/
+  /**********************************************************************************************************/
 
+  sectorFilter = (talentList, sector) => {
+    if (sector.length > 0) {
+      talentList = talentList.filter(element => {
+        // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de sector, on remplit ce tableau de true à la base
+        let bool = Array(sector.length).fill(true);
+        let booltest = true;
+        if (element.informations.wantedSector.length > 0) {
+          for (let i = 0; i < sector.length; i++) {
+            for (let j = 0; j < element.informations.wantedSector.length; j++) {
+              if (sector[i]._id === element.informations.wantedSector[j]._id) {
+                bool[i] = true;
+                break;
+              } else {
+                bool[i] = false;
+              }
+            }
+          }
+          for (let i = 0; i < bool.length; i++) {
+            if (bool[i] === false) {
+              booltest = false;
+            }
+          }
+          return booltest;
+        } else return false;
+      });
+    }
+    return talentList;
+  };
+
+  tagFilter = (talentList, tag) => {
+    if (tag.length > 0) {
+      talentList = talentList.filter(element => {
+        // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de tag, on remplit ce tableau de true à la base
+        let bool = Array(tag.length).fill(true);
+        if (element.skills.length > 0) {
+          for (let i = 0; i < tag.length; i++) {
+            for (let j = 0; j < element.skills.length; j++) {
+              if (tag[i]._id === element.skills[j]._id) {
+                bool[i] = true;
+                break;
+              } else {
+                bool[i] = false;
+              }
+            }
+          }
+          for (let i = 0; i < bool.length; i++) {
+            if (bool[i] === false) {
+              return false;
+            }
+          }
+          return true;
+        } else return false;
+      });
+    }
+    return talentList;
+  };
+
+  /******** SORT FILTER *********/
+  sortList = (talentList, sortSelectedList) => {
+    let talentListCopie = [...talentList];
+    for (let i = 0; i < talentListCopie.length; i++) {
+      talentListCopie[i].lastUpdate = talentListCopie[i].lastUpdate.split(".");
+    }
+
+    for (let i = 0; i < sortSelectedList.length; i++) {
+      let title = sortSelectedList[i].title;
+      if (title === "lastUpdate") {
+        if (sortSelectedList[i].order === "descending") {
+          talentListCopie
+            .sort((a, b) => {
+              return a.lastUpdate[0] - b[0];
+            })
+            .sort((a, b) => {
+              return a.lastUpdate[1] - b.lastUpdate[1];
+            })
+            .sort((a, b) => {
+              return a.lastUpdate[2] - b.lastUpdate[2];
+            });
+        } else if (sortSelectedList[i].order === "ascending") {
+          talentListCopie
+            .sort((a, b) => {
+              return b.lastUpdate[0] - a.lastUpdate[0];
+            })
+            .sort((a, b) => {
+              return b.lastUpdate[1] - a.lastUpdate[1];
+            })
+            .sort((a, b) => {
+              return b.lastUpdate[2] - a.lastUpdate[2];
+            });
+        }
+      }
+    }
+
+    for (let i = 0; i < talentListCopie.length; i++) {
+      talentListCopie[i].lastUpdate = talentListCopie[i].lastUpdate.join(".");
+    }
+    return talentListCopie;
+  };
+
+  render() {
+    let self = this;
+    /* Test of Loading... */
     if (this.state.isLoading === true) {
       return "Loading....";
     }
-    let talentList = [];
-    let ArrayOfFilteredTalentList = [];
-    let chevronFilter = this.state.chevronFilter;
 
-    // Copie of TalentList state
-    if (this.state.talentList.length > 0) {
-      talentList = [...this.state.talentList];
-
-      // FILTER THE LIST WITH THE SEARCH INPUT
-
-      const filter = this.state.searchInput.toLowerCase();
-      talentList = talentList.filter(element => {
-        let bool = false;
-        if (
-          element.informations.firstName &&
-          element.informations.firstName.toLowerCase().includes(filter)
-        ) {
-          bool = true;
-        }
-        if (
-          element.informations.lastName &&
-          element.informations.lastName.toLowerCase().includes(filter)
-        ) {
-          bool = true;
-        }
-        if (
-          element.informations.actualCompany &&
-          element.informations.actualCompany.toLowerCase().includes(filter)
-        ) {
-          bool = true;
-        }
-        if (
-          element.informations.actualTitle &&
-          element.informations.actualTitle.toLowerCase().includes(filter)
-        ) {
-          bool = true;
-        }
-        if (
-          element.informations.wantedTitle &&
-          element.informations.wantedTitle.length > 0
-        ) {
-          for (let i = 0; i < element.informations.wantedTitle.length; i++) {
-            if (
-              element.informations.wantedTitle[i].name
-                .toLowerCase()
-                .includes(filter)
-            ) {
-              bool = true;
-            }
-          }
-        }
-        return bool;
-      });
-
-      // FILTER WITH TAGS
-      let tag = this.state.tagSelected;
-      if (tag.length > 0) {
-        talentList = talentList.filter(element => {
-          // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de tag, on remplit ce tableau de true à la base
-          let bool = Array(tag.length).fill(true);
-          if (element.skills.length > 0) {
-            for (let i = 0; i < tag.length; i++) {
-              for (let j = 0; j < element.skills.length; j++) {
-                if (tag[i]._id === element.skills[j]._id) {
-                  bool[i] = true;
-                  break;
-                } else {
-                  bool[i] = false;
-                }
-              }
-            }
-            for (let i = 0; i < bool.length; i++) {
-              if (bool[i] === false) {
-                return false;
-              }
-            }
-            return true;
-          } else return false;
-        });
-      }
-      // FILTER WITH SECTOR
-      let sector = this.state.sectorSelected;
-
-      if (sector.length > 0) {
-        talentList = talentList.filter(element => {
-          // On crée un tableau de booléen,La longueur du tableau de booléen doit être celle de sector, on remplit ce tableau de true à la base
-          let bool = Array(sector.length).fill(true);
-          let booltest = true;
-          if (element.informations.wantedSector.length > 0) {
-            for (let i = 0; i < sector.length; i++) {
-              for (
-                let j = 0;
-                j < element.informations.wantedSector.length;
-                j++
-              ) {
-                if (
-                  sector[i]._id === element.informations.wantedSector[j]._id
-                ) {
-                  bool[i] = true;
-                  break;
-                } else {
-                  bool[i] = false;
-                }
-              }
-            }
-            for (let i = 0; i < bool.length; i++) {
-              if (bool[i] === false) {
-                booltest = false;
-              }
-            }
-            return booltest;
-          } else return false;
-        });
-      }
-      //  FILTER BY CLICKING ON CHEVRON
-      // On crée un tableau qui stock les différentes listes filtrées
-      //A la base il a la première liste filtrée par le research
-      ArrayOfFilteredTalentList = [talentList];
-
-      //1. On applique les filtres, et on enregistre la nouvelle liste filtrée à chaque fois
-      if (chevronFilter) {
-        for (let i = 0; i < chevronFilter.length; i++) {
-          let title = chevronFilter[i].title;
-          talentList = talentList.filter(element => {
-            let bool = false;
-            // cas wantedTitle
-            if (title === "wantedTitle") {
-              for (let j = 0; j < element.informations[title].length; j++) {
-                for (let k = 0; k < chevronFilter[i].filter.length; k++) {
-                  if (
-                    element.informations[title][j] ===
-                    chevronFilter[i].filter[k]
-                  ) {
-                    bool = true;
-                  }
-                }
-              }
-              return bool;
-            } else if (
-              // cas validated et lastUpdate
-              title === "validated" ||
-              title === "lastUpdate"
-            ) {
-              for (let j = 0; j < chevronFilter[i].filter.length; j++) {
-                if (element[title].toString() === chevronFilter[i].filter[j]) {
-                  bool = true;
-                }
-              }
-              return bool;
-            } else {
-              // cas actualTitle,actualCompany,status
-              for (let j = 0; j < chevronFilter[i].filter.length; j++) {
-                if (
-                  element.informations[title] === chevronFilter[i].filter[j]
-                ) {
-                  bool = true;
-                }
-              }
-              return bool;
-            }
-          });
-          // On push la listefiltrée dans le tableau des listes filtrées
-          ArrayOfFilteredTalentList.push(talentList);
-        }
-      }
+    let talentList = [...this.state.talentList];
+    for (let i = 0; i < this.state.talentList.length; i++) {
+      talentList[i] = { ...this.state.talentList[i] };
     }
 
+    // FILTER WITH SECTOR
+    let sector = this.state.sectorSelected;
+    talentList = this.sectorFilter(talentList, sector);
+    // FILTER WITH TAG
+    let tag = this.state.tagSelected;
+    talentList = this.tagFilter(talentList, tag);
+
+    // On tranforme le tableau de clients suivant les cas particuliers avant de le donner au composant Table
+    const headLineArrayBack = this.state.titles.map(function(e) {
+      return e.back;
+    });
+
+    talentList.forEach(function(talent) {
+      headLineArrayBack.forEach(function(title) {
+        if (title === "delete") {
+          let clicked = false;
+          let talentPos = self.state.deleteInLineArray.indexOf(talent._id);
+          if (talentPos !== -1) {
+            clicked = true;
+          }
+          if (clicked) {
+            talent[title] = (
+              <img
+                className={"selectItem itemSelected"}
+                src={selectedBox}
+                alt={"box cochée"}
+              />
+            );
+          } else {
+            talent[title] = <div className="selectItem" />;
+          }
+        } else if (title === "wantedSector" || title === "wantedTitle") {
+          if (typeof talent[title] === "object") {
+            talent[title] = talent[title].map(function(e) {
+              return e.name;
+            });
+          } else if (talent[title].name) {
+            talent[title] = talent[title].name;
+          }
+        }
+      });
+    });
+
+    let className = { line_Li: `${this.state.id}-line-li` };
     return (
       <div className="content">
         <div className="container">
@@ -716,69 +587,55 @@ export default class TalentListPage extends React.Component {
                 onSingleTagDeleteClick={this.onSingleTagDeleteClick}
               />
             </div>
-            <div className="talentList-right-block">
-              <Table
-                idItem={`${this.state.id}_table`}
-                tools={{
-                  search: true,
-                  searchPlaceholder: "Rechercher un talent...",
-                  button: [
-                    {
-                      condition: "fixed",
-                      type: "btn-primary",
-                      text: "Ajouter un talent",
-                      logo: <i className="fas fa-plus" />,
-                      logoPosition: -1,
-                      link: "/admin/talent-create"
-                    },
-                    {
-                      condition: "filter",
-                      type: "btn-secondary",
-                      text: "Supprimer les filtres",
-                      logo: false,
-                      onClick: "clearFilter"
-                    },
-                    {
-                      condition: "delete",
-                      type: "btn-cancel",
-                      text: "Supprimer les filtres",
-                      logoPosition: -1,
-                      logo: <i className="fa fa-trash-alt" />,
-                      onClick: "deleteAll"
-                    }
-                  ]
-                }}
-                headlineArray={this.state.titles}
-                headlineClass="line headline"
-                lineArray={talentList}
-                lineClass="line"
-                sortList={this.sortList}
-              />
-              <Tools
-                deleteFilter={this.state.ShowDeleteButton}
-                searchInput={this.state.searchInput}
-                handleClickDeleteButton={this.handleClickDeleteButton}
-                searchType={this.searchType}
-                onClickClearSearch={this.onClickClearSearch}
-                chevronFilter={chevronFilter}
-                onDeleteChevronFilterClick={this.onDeleteChevronFilterClick}
-              />
-              <TitleLine
-                talentListNonFiltered={this.state.talentList}
-                ArrayOfFilteredTalentList={ArrayOfFilteredTalentList}
-                titleArray={this.state.titleArray}
-                chevronClick={this.chevronClick}
-                chevronClickedPosition={this.state.chevronClikedPosition}
-                filterCheckBox={this.filterCheckBox}
-                chevronFilter={chevronFilter}
-                onBlurChevron={this.onBlurChevron}
-              />
-              <TalentList
-                talentList={talentList}
-                deleteCheckBox={this.deleteCheckBox}
-                deleteArray={this.state.deleteArray}
-              />
-            </div>
+            <Table
+              idItem={`${this.state.id}_table`}
+              style={{
+                line_li: { width: "100px" },
+                line_li_first: { width: "40px" },
+                box: { width: "200%" },
+                line: { padding: "2px 0px" }
+              }}
+              SpecificClassName={className}
+              deleteInLine={{
+                exist: true,
+                position: 0,
+                func: this.handleClickDeleteInLine
+              }}
+              tools={{
+                search: true,
+                searchPlaceholder: "Rechercher un talent...",
+                button: [
+                  {
+                    condition: "fixed",
+                    type: "btn-primary",
+                    text: "Ajouter un talent",
+                    logo: <i className="fas fa-plus" />,
+                    logoPosition: -1,
+                    link: "/admin/talent-create"
+                  },
+                  {
+                    condition: "filter",
+                    type: "btn-secondary",
+                    text: "Supprimer les filtres",
+                    logo: false,
+                    onClick: "clearFilter"
+                  },
+                  {
+                    condition: this.state.deleteInLineArray,
+                    type: "btn-cancel",
+                    text: "Supprimer les talents sélectionnés",
+                    logoPosition: -1,
+                    logo: <i className="fa fa-trash-alt" />,
+                    onClick: this.handleClickDeleteButton
+                  }
+                ]
+              }}
+              headlineArray={this.state.titles}
+              headlineClass="line headline"
+              lineArray={talentList}
+              lineClass="line"
+              sortList={this.sortList}
+            />
           </div>
         </div>
       </div>
@@ -786,9 +643,7 @@ export default class TalentListPage extends React.Component {
   }
 
   async componentDidMount() {
-    this.getTalentList();
-    this.getTagList();
-    this.getSectorList();
+    this.getData();
     this.props.setPageActive("admin/talent");
   }
 }

@@ -172,25 +172,33 @@ export default class TalentforAdmin extends React.Component {
   async componentDidMount() {
     this.props.setPageActive("admin/talent");
 
-    const response = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/talent/" +
-        this.props.match.params.id,
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
-    const response2 = await axios.get(
-      "https://erneste-server-improved.herokuapp.com/user/" +
-        this.props.match.params.id +
-        "?profil=true",
-      { headers: { authorization: `Bearer ${this.props.token}` } }
-    );
+    const getTalents = () => {
+      return axios.get(
+        "https://erneste-server-improved.herokuapp.com/talent/" +
+          this.props.match.params.id,
+        { headers: { authorization: `Bearer ${this.props.token}` } }
+      );
+    };
+    const getUser = () => {
+      return axios.get(
+        "https://erneste-server-improved.herokuapp.com/user/" +
+          this.props.match.params.id +
+          "?profil=true",
+        { headers: { authorization: `Bearer ${this.props.token}` } }
+      );
+    };
 
-    this.setState({
-      informations: response.data.informations,
-      description: response.data.description,
-      skills: response.data.skills,
-      validated: response.data.validated,
-      lastUpdate: response.data.lastUpdate,
-      conversations: response2.data.conversations
-    });
+    axios.all([getTalents(), getUser()]).then(
+      axios.spread((talents, users) => {
+        this.setState({
+          informations: talents.data.informations,
+          description: talents.data.description,
+          skills: talents.data.skills,
+          validated: talents.data.validated,
+          lastUpdate: talents.data.lastUpdate,
+          conversations: users.data.conversations
+        });
+      })
+    );
   }
 }

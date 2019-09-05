@@ -13,7 +13,8 @@ export default function Headline({
   filterSelectedList,
   sortSelectedList,
   deleteFilterButton,
-  idItem
+  idItem,
+  style
 }) {
   let sortAndFiltertList = [...filterSelectedList, ...sortSelectedList];
   let arrayCopie = [...array];
@@ -45,7 +46,10 @@ export default function Headline({
         let divClass = setDivClass(title.back, sortAndFiltertList);
 
         return (
-          <li key={index}>
+          <li
+            key={index}
+            style={index === 0 ? style.line_li_first : style.line_li}
+          >
             <div
               className={divClass}
               onClick={() => title.func(title.back)}
@@ -73,7 +77,8 @@ export default function Headline({
 
 Headline.defaultProps = {
   array: [],
-  className: ""
+  className: "",
+  style: {}
 };
 
 const setSortIconClass = function(title, sortSelectedList) {

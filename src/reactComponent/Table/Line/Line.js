@@ -1,25 +1,45 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Line({ array, className, headlineArray }) {
+export default function Line({
+  array,
+  className,
+  headlineArray,
+  deleteInLine,
+  style
+}) {
   return (
-    <ul className={className}>
+    <ul className={className} style={style.line}>
       {headlineArray.map(function(element, index) {
         let result = null;
-
         // ****** SI on a un tableau en entrée, on le map ******
-        if (array[element.back] && array[element.back].isArray) {
+        if (array[element.back] && Array.isArray(array[element.back])) {
           result = (
-            <li key={index}>
+            <li
+              key={index}
+              style={index === 0 ? style.line_li_first : style.line_li}
+            >
               {array[element.back].map(function(e) {
-                return e;
+                return <span>{e}</span>;
               })}
             </li>
           );
 
           // ****** Si ce n'est pas un tableau
         } else {
-          result = <li key={index}>{array[element.back]}</li>;
+          result = (
+            <li
+              style={index === 0 ? style.line_li_first : style.line_li}
+              key={index}
+              onClick={
+                index === deleteInLine.position
+                  ? () => deleteInLine.func(array._id)
+                  : null
+              }
+            >
+              {array[element.back]}
+            </li>
+          );
         }
 
         if (element.link) {
@@ -38,5 +58,16 @@ export default function Line({ array, className, headlineArray }) {
 Line.defaultProps = {
   array: [],
   className: "",
-  headlineArray: []
+  headlineArray: [],
+  deleteInLine: {
+    exist: false,
+    position: null,
+    func: () => {
+      return null;
+    }
+  },
+  handleClickDeleteInLine: () => {
+    return null;
+  },
+  style: {}
 };

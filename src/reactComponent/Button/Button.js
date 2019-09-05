@@ -23,5 +23,7 @@ Button.defaultProps = {
   className: "btn-primary",
   logoPosition: 0,
   logo: <span>Logo</span>,
-  onClick: null
+  onClick: () => {
+    return null;
+  }
 };

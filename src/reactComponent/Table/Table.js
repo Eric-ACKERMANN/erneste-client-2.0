@@ -13,7 +13,32 @@ export default class Table extends React.Component {
     filters: [],
     lists: [],
     deleteFilterButton: false,
-    searchInput: ""
+    searchInput: "",
+    deleteInLineArray: [],
+    ShowDeleteButton: this.props.deleteInLine.exist ? false : null
+  };
+
+  /********** Delete in line Button  *********/
+
+  handleClickDeleteInLine = id => {
+    let deleteInLineArray = this.state.deleteInLineArray;
+
+    if (deleteInLineArray.indexOf(id) === -1) {
+      deleteInLineArray.push(id);
+    } else {
+      deleteInLineArray.splice(deleteInLineArray.indexOf(id), 1);
+    }
+    if (deleteInLineArray.length > 0) {
+      this.setState({
+        deleteInLineArray: deleteInLineArray,
+        ShowDeleteButton: true
+      });
+    } else {
+      this.setState({
+        deleteInLineArray: deleteInLineArray,
+        ShowDeleteButton: false
+      });
+    }
   };
 
   /******** SEARCH FILTER *********/
@@ -167,7 +192,7 @@ export default class Table extends React.Component {
       return e.title;
     });
     return (
-      <div className="filter-box">
+      <div className="filter-box" style={this.props.style.box}>
         {items.map((item, index) => {
           let clicked = false;
           let titlePos = filtersTitle.indexOf(title);
@@ -213,9 +238,10 @@ export default class Table extends React.Component {
       sortList,
       deleteFilterButton,
       tools,
-      idItem
+      idItem,
+      deleteInLine,
+      style
     } = this.props;
-
     /*********** SEARCH FILTER ************/
     let headlineSearchParameter = headlineArray
       .filter(function(e) {
@@ -232,7 +258,6 @@ export default class Table extends React.Component {
         headlineSearchParameter
       );
     }
-
     if (lineArray.length > 0) {
       lineArray = sortList(lineArray, this.state.sortSelectedList);
     }
@@ -261,22 +286,29 @@ export default class Table extends React.Component {
         placeholder: tools.searchPlaceholder
       };
     }
-    // On paramètre les boutons
+
     if (tools.button.length > 0) {
       for (let i = 0; i < tools.button.length; i++) {
         toolsCopie.button[i] = tools.button[i];
         if (toolsCopie.button[i].condition === "filter") {
           toolsCopie.button[i].condition = this.state.filters;
         }
+        if (toolsCopie.button[i].condition === "deleteInLine") {
+          toolsCopie.button[i].condition = this.state.deleteInLineArray;
+        }
         if (toolsCopie.button[i].onClick === "clearFilter") {
           toolsCopie.button[i].onClick = this.handleClickDeleteFilter;
         }
       }
     }
-
+    let self = this;
     return (
       <div className="table">
-        <Tools search={toolsCopie.search} button={toolsCopie.button} />
+        <Tools
+          search={toolsCopie.search}
+          button={toolsCopie.button}
+          style={style}
+        />
         <Headline
           idItem={`${idItem}_headline`}
           array={headlineArrayFront}
@@ -290,6 +322,7 @@ export default class Table extends React.Component {
           filterSelectedList={this.state.filters}
           sortSelectedList={this.state.sortSelectedList}
           deleteFilterButton={deleteFilterButton}
+          style={style}
         />
         {lists[lists.length - 1].map(function(element, index) {
           return (
@@ -298,6 +331,8 @@ export default class Table extends React.Component {
               array={element}
               className={lineClass}
               headlineArray={headlineArrayBack}
+              deleteInLine={deleteInLine}
+              style={style}
             />
           );
         })}
@@ -313,5 +348,13 @@ Table.defaultProps = {
   lineClass: "",
   sortList: function(array, string) {
     return array;
-  }
+  },
+  deleteInLine: {
+    exist: false,
+    position: null,
+    func: () => {
+      return null;
+    }
+  },
+  style: {}
 };

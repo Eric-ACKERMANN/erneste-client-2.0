@@ -185,8 +185,10 @@ code {
 /**** TABLE ****/
 .table {
   width: var(--center-body);
+  min-height: 90vh;
   margin: auto;
-  background-color: var(--second-bg-color);
+  /* background-color: var(--second-bg-color); */
+  align-self: flex-start;
   border-radius: 2px;
   box-shadow: var(--box-shadow);
   padding: 25px 25px 0px 25px;
@@ -198,7 +200,7 @@ code {
   justify-content: flex-start;
   list-style: none;
   padding: 0;
-  margin-bottom: 20px;
+  margin: 0px 0px 0px 0px;
 }
 
 /**** TABLE - TOOL - SEARCH ****/
@@ -237,6 +239,10 @@ code {
   padding: 20px 0px;
 }
 
+.headline {
+  padding: 10px 0px;
+}
+
 .line:hover {
   background-color: var(--hover-bg-color);
   font-weight: 500;
@@ -246,12 +252,13 @@ code {
   background-color: var(--second-bg-color);
   font-weight: 400;
 }
-
+/* line_li */
 .line li {
   list-style: none;
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   position: relative;
   width: 200px;
 }
@@ -260,9 +267,16 @@ code {
   margin-left: 10px;
 }
 
+.line li > span {
+  padding: 1px 0px;
+}
+
 .line a {
   text-decoration: none;
   color: var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 /***** TABLE - HEADLINE - BOX ******/
 .filter-clickListener {

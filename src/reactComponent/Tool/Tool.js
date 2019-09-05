@@ -30,7 +30,6 @@ export default function Tool({ search, button }) {
                   }
                   logoPosition={element.logoPosition}
                   logo={element.logo}
-                  onClick={() => element.onClick()}
                   children={element.text}
                 />
               </Link>
