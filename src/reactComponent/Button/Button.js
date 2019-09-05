@@ -5,7 +5,8 @@ export default function Button({
   logoPosition,
   logo,
   children,
-  onClick
+  onClick,
+  condition
 }) {
   return (
     <button className={`${className}`} onClick={() => onClick()}>
@@ -22,5 +23,7 @@ Button.defaultProps = {
   className: "btn-primary",
   logoPosition: 0,
   logo: <span>Logo</span>,
-  onClick: null
+  onClick: () => {
+    return null;
+  }
 };

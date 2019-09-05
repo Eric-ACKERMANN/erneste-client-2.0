@@ -1,18 +1,28 @@
 export const selectStyle = {
   container: {
-    width: "250px" // INPUT WIDTH
+    width: "100%"
   },
   inputBox: {
-    border: "1px solid black", // INPUT BORDER COLOR
-    backgroundColor: "white", // INPUT BACKGROUND COLOR
-    borderRadius: 5, // INPUT BORDER RADIUS
-    padding: "5px 5px 5px 5px" // INPUT PADDING
-    // INPUT OUTLINE
+    normal: {
+      border: "1px solid rgba(168, 176, 208, 0.3)",
+      backgroundColor: "#fefefe", // INPUT BACKGROUND COLOR
+      borderRadius: 5, // INPUT BORDER RADIUS
+      padding: "5px 5px 5px 5px" // INPUT PADDING
+    },
+    hover: {
+      border: "1px solid #a8b0d0"
+    },
+    focus: {
+      border: "1px solid #333366"
+    }
   },
   input: {
     fontSize: 14, // INPUT FONT SIZE
     fontWeight: 500, // INPUT FONT WEIGHT
-    backgroundColor: "white" // INPUT BAKCGROUND COLOR
+    backgroundColor: "#fefefe",
+    // backgroundColor: "#fefefe", // INPUT BAKCGROUND COLOR,
+    border: "none",
+    outline: "none"
   },
   value: {
     single: {
@@ -42,7 +52,7 @@ export const selectStyle = {
   },
 
   placeholder: {
-    color: "#808080" // PLACEHOLDER COLOR
+    color: "#a8b0d0" // PLACEHOLDER COLOR
   },
   options: {
     backgroundColor: "white", // OPTIONS BACKGROUND COLOR
@@ -59,7 +69,7 @@ export const selectStyle = {
     hover: {
       fontSize: 14, // ITEMS HOVER FONTSIZE
       color: "black", // ITEMS HOVER COLOR
-      backgroundColor: "cyan" // ITEMS HOVER BAKCHORUNDCOLOR
+      backgroundColor: "#f5f5f5" // ITEMS HOVER BAKCHORUNDCOLOR
     },
     selected: {
       fontSize: 14, // ITEMS SELECTED FONT SIZE

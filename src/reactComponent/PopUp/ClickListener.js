@@ -18,14 +18,6 @@ export default class NativeClickListener extends React.Component {
   globalClickHandler = nativeEvent => {
     const { onClick, listenInside } = this.props;
     if (
-      nativeEvent.target.id.includes(`${this.props.idItem}_input`) ||
-      nativeEvent.target.id.includes(`${this.props.idItem}multiDelete`)
-    ) {
-      return;
-    }
-    console.log("container", this._container);
-    console.log("nativeEvent", nativeEvent.target);
-    if (
       this._container &&
       this._container.contains(nativeEvent.target) &&
       !listenInside
@@ -36,8 +28,11 @@ export default class NativeClickListener extends React.Component {
   };
 
   render() {
+    const { className } = this.props;
     return (
-      <div ref={ref => (this._container = ref)}>{this.props.children}</div>
+      <div className={className} ref={ref => (this._container = ref)}>
+        {this.props.children}
+      </div>
     );
   }
 }

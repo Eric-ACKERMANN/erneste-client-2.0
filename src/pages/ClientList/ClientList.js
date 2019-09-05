@@ -1,402 +1,273 @@
 import React from "react";
 import axios from "axios";
 
-import box from "../../features/icons/check_24px.svg";
-import checkedbox from "../../features/icons/check_24px copy.svg";
+import Table from "../../reactComponent/Table";
+import PopUp from "../../reactComponent/PopUp";
 
-import "./index.css";
-import ClientListTitles from "../../components/ClientList_Titles";
-import ClientListTools from "../../components/ClientList_Tools";
-import ClientListList from "../../components/ClientList_List/ClientList_List";
+import { renderStars } from "../../functions/functions.js";
 
 export default class ClientList extends React.Component {
   state = {
-    clientList: null,
-    searchFilter: "",
-    popUpAdd: false,
-    isLoading: true,
-    /* ----- State for the chevrons filter ----- */
+    id: "clientList",
     titles: [
-      "Note",
-      "Entreprise",
-      "Secteur",
-      "Taille",
-      "Comptes",
-      "Recrutement"
+      { front: "Note", back: "rating", filter: null, search: false },
+      {
+        front: "Entreprise",
+        back: "name",
+        link: `/admin/client/`,
+        filter: "filter",
+        search: true
+      },
+      { front: "Secteur", back: "field", filter: "filter", search: true },
+      { front: "Taille", back: "size", filter: "filter", search: true },
+      { front: "Comptes", back: "users", filter: "sort", search: false },
+      { front: "Recrutement", back: "recruited", filter: "sort", search: false }
     ],
-    filterBoxShown: false,
-    filterOrder: 0,
-    filters: [],
-    /* ----- State for sort lists ----- */
-    sortOrder: null,
-    sortList: [],
-    deleteFilter: false
+    clientList: null,
+    sectorList: null,
+    popUp: false,
+    isLoading: true,
+    /******POP UP ******/
+    companyName: "",
+    sector: null,
+    size: null,
+    email: "",
+    secteurId: "",
+
+    error: false,
+    valid: false,
+    optionsSize: ["Petite", "Grande"]
   };
 
-  /* Search filter */
-  handleChange = event => {
-    this.setState({ searchFilter: event.target.value });
-  };
-
-  /* POP UP */
-  togglePopup = () => {
-    this.setState({
-      popUpAdd: !this.state.popUpAdd
-    });
-  };
-
-  /* ------ CHEVRONS FILTER METHODS ------ */
-
-  handleClickFilter = async toto => {
-    if (toto !== this.state.filterBoxShown) {
-      await this.setState({ filterBoxShown: toto });
+  /************ POP UP **********/
+  togglePopUp = () => {
+    if (this.state.popUp) {
+      this.setState({ popUp: false });
+      document.body.classList.remove("fixedScreen");
     } else {
-      await this.setState({ filterBoxShown: null });
+      this.setState({ popUp: true });
+      document.body.classList.add("fixedScreen");
     }
   };
 
-  /* ------ Function for list we want to sort ------ */
-  handleClickSort = async title => {
-    if (title === "Comptes") {
-      title = "users";
-    } else if (title === "Recrutement") {
-      title = "recruits";
-    } else if (title === "Note") {
-      title = "rating";
-    }
-    let sortList = [...this.state.sortList];
-    let position = sortList
-      .map(e => {
-        return e.title;
-      })
-      .indexOf(title);
+  setCompanyName = e => this.setState({ companyName: e });
 
-    if (position === -1) {
-      sortList.push({ title: title, order: "descending" });
-    } else {
-      if (sortList[position].order === "descending") {
-        sortList[position].order = "ascending";
-      } else if (sortList[position].order === "ascending") {
-        sortList.splice(position, 1);
-      }
-    }
-    await this.setState({ sortList: sortList });
-  };
+  setSector = e => this.setState({ sector: e });
 
-  /* ----- Box that appears/unappears when chevron clicked ----- */
-  filterBox = (title, arrayOfList) => {
-    if (title === "Entreprise") {
-      title = "name";
-    } else if (title === "Secteur") {
-      title = "field";
-    } else if (title === "Taille") {
-      title = "size";
-    }
-    return (
-      <div className="clientList-chevronBox">
-        {this.filterItems(title, arrayOfList).map((item, index) => {
-          if (item) {
-            let clicked = false;
-            let titlePosition = this.state.filters
+  setSize = e => this.setState({ size: e });
+
+  setEmail = e => this.setState({ email: e });
+
+  handleSubmit = async event => {
+    if (this.state.addNewSectorDiv && this.state.addNewSector !== "") {
+      const response = await axios.post(
+        "https://erneste-server-improved.herokuapp.com/sector/create",
+        { name: this.state.addNewSector },
+        {
+          headers: {
+            authorization: `Bearer ${this.props.token}`
+          }
+        }
+      );
+
+      await this.setState({
+        secteurId:
+          response.data[
+            response.data
               .map(e => {
-                return e.title;
+                return e.name;
               })
-              .indexOf(title);
-            if (titlePosition !== -1) {
-              let elementPosition = this.state.filters[
-                titlePosition
-              ].filter.indexOf(item);
-              if (elementPosition !== -1) {
-                clicked = true;
-              }
-            }
-            return (
-              <div key={index} className="clientList-chevronBox-element">
-                <div
-                  onClick={() => {
-                    this.handleClickItem(title, item);
-                  }}
-                >
-                  {clicked ? (
-                    <img className="deleteCheck " src={box} alt="box cochée" />
-                  ) : (
-                    <img
-                      className="deleteUncheck "
-                      src={checkedbox}
-                      alt="box non cochée"
-                    />
-                  )}
-                </div>
-                {item}
-              </div>
-            );
-          } else return false;
-        })}
-      </div>
-    );
-  };
-
-  /* ----- Array displayed in box ----- */
-  filterItems = (title, arrayOfList) => {
-    // items is an array of all the item for this title that are displayed
-    let items = [];
-
-    // We look for the position of the filter type
-    let position = this.state.filters
-      .map(e => {
-        return e.title;
-      })
-      .indexOf(title);
-
-    // listOfReference is the list on which the filter applies
-    let listOfReference = [];
-    if (position === -1) {
-      listOfReference = arrayOfList[arrayOfList.length - 1];
-    } else {
-      listOfReference = arrayOfList[position];
-    }
-    let titleItems = listOfReference.map(e => {
-      return e[title];
-    });
-
-    for (let i = 0; i < titleItems.length; i++) {
-      if (typeof titleItems[i] !== "object") {
-        if (items.indexOf(titleItems[i]) === -1) {
-          items.push(titleItems[i]);
-        }
-      } else {
-        if (items.indexOf(titleItems[i].name) === -1) {
-          items.push(titleItems[i].name);
-        }
-      }
-    }
-    return items;
-  };
-
-  handleClickItem = async (title, item) => {
-    let items = [...this.state.filters];
-
-    let itemsTitle = items.map(e => {
-      return e.title;
-    });
-    let titlePosition = itemsTitle.indexOf(title);
-
-    if (titlePosition === -1) {
-      items.push({
-        title: title,
-        filter: [item]
+              .indexOf(this.state.addNewSector)
+          ]._id
       });
-      itemsTitle.push(title);
-    } else {
-      let itemPosition = items[titlePosition].filter.indexOf(item);
-      if (itemPosition === -1) {
-        items[titlePosition].filter.push(item);
-      } else {
-        items[titlePosition].filter.splice(itemPosition, 1);
-        if (items[titlePosition].filter.length < 1) {
-          items.splice(titlePosition, 1);
+    }
+    await axios.post(
+      "https://erneste-server-improved.herokuapp.com/client/create",
+
+      {
+        name: this.state.entreprise,
+        field: this.state.secteur._id,
+        size: this.state.taille,
+        email: this.state.email
+      },
+      {
+        headers: {
+          authorization: `Bearer ${this.props.token}`
         }
       }
-    }
-    if (items.length > 0) {
-      this.setState({ deleteFilter: true });
-    } else {
-      this.setState({ deleteFilter: false });
-    }
-
-    this.setState({ filters: items });
-    return;
+    );
+    this.props.closePopup();
+    return this.setState({ valid: true });
   };
 
-  handleClickDeleteFilter = () => {
-    let chevronFilter = [...this.state.filters];
-    chevronFilter.splice(0, chevronFilter.length);
-    this.setState({ filters: chevronFilter });
-  };
-
-  renderStars(item, index) {
-    const stars = [];
-    if (item.rating) {
-      const rating = Math.round(2 * Number(item.rating));
-      const bool = rating % 2;
-      for (let i = 0; i < 10; i = i + 2) {
-        // Cas rating = 6
-        if (bool === 0 && (i % 2 === 0 || i === 0)) {
-          // ON ne prend que les chiffres paires 0,2,4,6
-          if (i < rating) {
-            stars.push(
-              <div className="blockStar">
-                <i className="fas fa-star leftStar" />
-                <i className="fas fa-star rightStar" />
-              </div>
-            );
-          } else {
-            stars.push(
-              <div className="blockStar">
-                <i className="far fa-star-half leftStar" />
-                <i className="far fa-star-half rightStar" />
-              </div>
-            );
-          }
+  /******** SORT FILTER *********/
+  sortList = (clientList, sortSelectedList) => {
+    for (let i = 0; i < sortSelectedList.length; i++) {
+      let title = sortSelectedList[i].title;
+      clientList = clientList.sort((a, b) => {
+        if (sortSelectedList[i].order === "ascending") {
+          return a[title] - b[title];
+        } else {
+          return b[title] - a[title];
         }
-        // On prend les chiffres impaires 1,3,5,7,9
-        if (bool === 1 && (i % 2 === 0 || i === 0)) {
-          if (i < rating - 1) {
-            stars.push(
-              <div className="blockStar">
-                <i className="fas fa-star leftStar" />
-                <i className="fas fa-star rightStar" />
-              </div>
-            );
-          } else if (i === rating - 1) {
-            stars.push(
-              <div className="blockStar">
-                <i className="fas fa-star-half leftStar" />
-                <i className="far fa-star-half rightStar" />
-              </div>
-            );
-          } else {
-            stars.push(
-              <div className="blockStar">
-                <i className="far fa-star-half leftStar" />
-                <i className="far fa-star-half rightStar" />
-              </div>
-            );
-          }
-        }
-      }
+      });
     }
-    return <div className="client-list-renderStars">{stars}</div>;
-  }
+    return clientList;
+  };
 
   render() {
     if (this.state.isLoading === true) {
       return <p>En cours de chargement ...</p>;
     }
 
-    // ----------filtre-----------------
-
-    /* copie des données pour filtre */
     let clientList = [...this.state.clientList];
+    for (let i = 0; i < this.state.clientList.length; i++) {
+      clientList[i] = { ...this.state.clientList[i] };
+    }
 
-    /* SEARCH FILTER ON SIZE, NAME and FIELD */
-    clientList = clientList.filter(search => {
-      return (
-        search.size
-          .toLowerCase()
-          .indexOf(this.state.searchFilter.toLowerCase()) !== -1 ||
-        search.name
-          .toLowerCase()
-          .indexOf(this.state.searchFilter.toLowerCase()) !== -1 ||
-        search.field.name
-          .toLowerCase()
-          .indexOf(this.state.searchFilter.toLowerCase()) !== -1
-      );
+    // On tranforme le tableau de clients suivant les cas particuliers avant de le donner au composant Table
+    const headLineArrayBack = this.state.titles.map(function(e) {
+      return e.back;
     });
 
-    // *------ SORT LIST ------* //
-    if (this.state.sortList.length > 0) {
-      let sortList = this.state.sortList;
-      for (let i = 0; i < sortList.length; i++) {
-        let title = sortList[i].title;
-        clientList = clientList.sort((a, b) => {
-          if (title === "users" || title === "recruited") {
-            if (sortList[i].order === "ascending") {
-              return a[title].length - b[title].length;
-            } else {
-              return b[title].length - a[title].length;
-            }
-          } else {
-            if (sortList[i].order === "ascending") {
-              return a[title] - b[title];
-            } else {
-              return b[title] - a[title];
-            }
+    clientList.forEach(function(client) {
+      headLineArrayBack.forEach(function(title) {
+        if (title === "rating") {
+          client[title] = renderStars(client[title]);
+        } else if (title === "field") {
+          if (client[title].isArray) {
+            client[title] = client[title].map(function(e) {
+              return e.name;
+            });
+          } else if (client[title].name) {
+            client[title] = client[title].name;
           }
-        });
-      }
-    }
-
-    // *------ Filtre le clientList avec les filtres
-    // On crée un tableau qui stock les différentes listes filtrées
-    // A la base il a la première liste filtrée par le research
-    const filteredClientLists = [clientList];
-
-    //1. On applique les filtres, et on enregistre la nouvelle liste filtrée à chaque fois
-    let filters = this.state.filters;
-
-    if (filters) {
-      for (let i = 0; i < filters.length; i++) {
-        clientList = clientList.filter(element => {
-          let bool = false;
-          //cas field
-          if (filters[i].title === "field") {
-            for (let j = 0; j < filters[i].filter.length; j++) {
-              if (element[filters[i].title].name === filters[i].filter[j]) {
-                bool = true;
-              }
-            }
-            return bool;
-          } else {
-            //cas normal
-            for (let j = 0; j < filters[i].filter.length; j++) {
-              if (element[filters[i].title] === filters[i].filter[j]) {
-                bool = true;
-              }
-            }
-            return bool;
-          }
-        });
-        // On push la listefiltrée dans le tableau des listes filtrées
-        filteredClientLists.push(clientList);
-      }
-    }
+        } else if (
+          (title === "users" && client[title]) ||
+          (title === "recruited" && client[title])
+        ) {
+          client[title] = client[title].length;
+        }
+      });
+    });
     return (
-      <div className="content">
-        <div className="titlePage">
+      <div className="container">
+        <div className="title">
           <p> Clients</p>
-          <p className="number-of-clients"> Affichés : {clientList.length}</p>
+          <p> Affichés : {clientList.length}</p>
         </div>
-        <div className="frame">
-          <ClientListTools
-            searchFilter={this.state.searchFilter}
-            deleteFilter={this.state.deleteFilter}
-            handleChange={this.handleChange}
-            togglePopup={this.togglePopup}
-            handleClickDeleteFilter={this.handleClickDeleteFilter}
-            popUpAdd={this.state.popUpAdd}
-            token={this.props.token}
-          />
-
+        <Table
+          idItem={`${this.state.id}_table`}
+          tools={{
+            search: true,
+            searchPlaceholder: "Rechercher client, secteur, taille",
+            button: [
+              {
+                condition: "fixed",
+                type: "btn-primary",
+                text: "Ajouter un client",
+                logo: <i className="fas fa-plus" />,
+                logoPosition: -1,
+                onClick: this.togglePopUp
+              },
+              {
+                condition: "filter",
+                type: "btn-secondary",
+                text: "Supprimer les filtres",
+                logo: false,
+                onClick: "clearFilter"
+              }
+            ]
+          }}
+          headlineArray={this.state.titles}
+          headlineClass="line headline"
+          lineArray={clientList}
+          lineClass="line"
+          sortList={this.sortList}
+        />
+        {this.state.popUp && (
           <div>
-            <ClientListTitles
-              arrayOfList={filteredClientLists}
-              titles={this.state.titles}
-              sortList={this.state.sortList}
-              filters={this.state.filters}
-              filterBoxShown={this.state.filterBoxShown}
-              handleClickFilter={this.handleClickFilter}
-              handleClickSort={this.handleClickSort}
-              filterBox={this.filterBox}
-            />
-            <ClientListList
-              clientList={clientList}
-              renderStars={this.renderStars}
+            <PopUp
+              togglePopUp={this.togglePopUp}
+              popUpId="popUpId"
+              titleName="Ajouter un nouveau client"
+              logoCancel={
+                <i className="fas fa-times" onClick={this.togglePopUp} />
+              }
+              inputs={[
+                {
+                  title: "Entreprise",
+                  searchable: true,
+                  placeholder: "Nom de l'entreprise",
+                  inputValue: this.state.companyName,
+                  setValueInput: this.setCompanyName,
+                  id: "popUp_companyName"
+                },
+                {
+                  title: "Secteur",
+                  searchable: false,
+                  options: this.state.sectorList,
+                  placeholder:
+                    "Sélectionnez le secteur d'activité de l'entreprise",
+                  inputValue: this.state.sector,
+                  setValueInput: this.setSector,
+                  id: "popUp_sector"
+                },
+                {
+                  title: "Taille de l'Entreprise",
+                  options: this.state.optionsSize,
+                  searchable: false,
+                  placeholder: "Sélectionnez la taille de l'entreprise",
+                  inputValue: this.state.size,
+                  setValueInput: this.setSize,
+                  id: "popUp_size"
+                },
+                {
+                  title: "Email",
+                  searchable: true,
+                  placeholder: "Email..",
+                  inputValue: this.state.email,
+                  setValueInput: this.setEmail,
+                  id: "popUp_email"
+                }
+              ]}
+              button={[
+                {
+                  type: "btn-cancel",
+                  text: "Annuler",
+                  logo: <i className="fas fa-plus" />,
+                  onClick: this.togglePopUp
+                },
+                {
+                  type: "btn-primary",
+                  text: "Envoyer",
+                  logo: false,
+                  onClick: this.handleSubmit
+                }
+              ]}
             />
           </div>
-        </div>
+        )}
       </div>
     );
   }
   async componentDidMount() {
+    this.targetElement = document.querySelector("#popUpId");
     this.props.setPageActive("admin/client");
     const response = await axios.get(
       "https://erneste-server-improved.herokuapp.com/client",
       { headers: { authorization: `Bearer ${this.props.token}` } }
     );
-
+    const response2 = await axios.get(
+      "https://erneste-server-improved.herokuapp.com/sector/",
+      { headers: { authorization: `Bearer ${this.props.token}` } }
+    );
+    let sectorList = response2.data.map(e => {
+      return e.name;
+    });
     this.setState({
       clientList: response.data,
+      sectorList: sectorList,
       isLoading: false
     });
   }
